@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="w-full">
       <Header />
-      <div className="flex justify-center">
+      <div className="flex justify-center min-h-[81vh]">
         <div className="max-w-1200 w-full">
           <Outlet />
         </div>
