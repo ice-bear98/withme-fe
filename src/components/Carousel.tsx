@@ -23,6 +23,20 @@ const Carousel: React.FC<CarouselProps> = ({ title, data }) => {
     pauseOnFocus: true,
     pauseOnHover: true,
     dots: true,
+    responsive: [
+      {
+        breakpoint: 860,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 660,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
 
   const navigate = useNavigate();
