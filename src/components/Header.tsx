@@ -36,18 +36,24 @@ export default function Header() {
       <div>
         <div className="flex justify-center bg-brand_3 p-2">
           <ul className="flex max-w-1200 w-1200 justify-evenly font-sans text-slate-800">
-            <li className="flex items-center">
-              <FaSketch />
-              <span className="ml-2">이벤트</span>
-            </li>
-            <li className="flex items-center">
-              <FaUserFriends />
-              <span className="ml-2">모임</span>
-            </li>
-            <li className="flex items-center">
-              <FaMagic />
-              <span className="ml-2">이벤트 모임 만들기</span>
-            </li>
+            <Link to={'/event'}>
+              <li className="flex items-center">
+                <FaSketch />
+                <span className="ml-2">이벤트</span>
+              </li>
+            </Link>
+            <Link to={'/meeting'}>
+              <li className="flex items-center">
+                <FaUserFriends />
+                <span className="ml-2">모임</span>
+              </li>
+            </Link>
+            <Link to={'/write'}>
+              <li className="flex items-center">
+                <FaMagic />
+                <span className="ml-2">이벤트 모임 만들기</span>
+              </li>
+            </Link>
             <li className="flex items-center">
               <FaCalendarAlt />
               <span className="ml-2">이벤트 모임 관리</span>
