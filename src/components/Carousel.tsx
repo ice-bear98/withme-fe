@@ -1,8 +1,16 @@
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { EventItem } from '../pages/Home';
+import { useNavigate } from 'react-router-dom';
+import { ImFire } from 'react-icons/im';
 
-function Carousel() {
+interface CarouselProps {
+  title: string;
+  data: EventItem[];
+}
+
+const Carousel: React.FC<CarouselProps> = ({ title, data }) => {
   const settings = {
     className: 'center',
     centerMode: true,
@@ -10,48 +18,55 @@ function Carousel() {
     centerPadding: '0px',
     slidesToShow: 3,
     speed: 200,
-    autoplay: false,
+    autoplay: true,
     autoplaySpeed: 3000,
     pauseOnFocus: true,
     pauseOnHover: true,
     dots: true,
   };
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (id: number) => {
+    navigate(`/postDetail/${id}`);
+  };
+
+  // like가 가장 높은 아이템 찾기
+  const maxLikeItem = data.reduce((prev, current) => (prev.like > current.like ? prev : current));
+
   return (
-    <div className="slider-container">
+    <div className="slider-container mb-10 font-['TAEBAEKmilkyway']">
+      <h1 className="p-5">{title}</h1>
       <Slider {...settings}>
-        <div className="relative">
-          <div className="absolute top-5 left-5">
-            <h2 className="bg-white text-center p-1">제목</h2>
-            <h3 className="bg-white text-center p-1 mt-2">작성자</h3>
+        {data.map((it) => (
+          <div key={it.id} className="relative border border-white border-x-2 dark:border-black">
+            <div className="absolute top-5 left-5">
+              <h2 className="bg-brand_3 dark:text-black text-center py-1 px-2 rounded-md text-base">{it.title}</h2>
+            </div>
+            {/* like가 가장 높은 아이템에만 표시 */}
+            {it.id === maxLikeItem.id && (
+              <div className="absolute top-5 right-5">
+                <span className="flex items-center bg-red-500 py-1 px-2 rounded-2xl text-white">
+                  <ImFire />
+                  <p className="ml-1">HOT</p>
+                </span>
+              </div>
+            )}
+            <div className="absolute bottom-14 right-5">
+              <button
+                className="bg-brand_1 text-white py-1 px-2 rounded-lg font-['LINESeedKR-Bd']"
+                onClick={() => handleNavigate(it.id)}
+              >
+                상세보기
+              </button>
+            </div>
+            <img className="h-72 w-full object-cover" src={it.img} alt="" />
+            <p className="text-center bg-brand_4 dark:bg-brand_1 dark:text-black p-2">{it.content}</p>
           </div>
-          <div className="absolute bottom-3 left-5">
-            <span>내용</span>
-          </div>
-          <img src="https://cdn.pixabay.com/photo/2021/11/08/11/59/students-6779002_960_720.jpg" alt="" />
-        </div>
-        <div>
-          <h3>2</h3>
-          <img src="https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557399_1280.jpg" alt="" />
-        </div>
-        <div>
-          <h3>3</h3>
-          <img src="https://cdn.pixabay.com/photo/2023/07/11/08/50/fireworks-8119898_1280.jpg" alt="" />
-        </div>
-        <div>
-          <h3>4</h3>
-          <img src="https://cdn.pixabay.com/photo/2018/08/22/15/35/beer-3623913_1280.jpg" alt="" />
-        </div>
-        <div>
-          <h3>5</h3>
-          <img src="https://cdn.pixabay.com/photo/2016/11/22/19/25/man-1850181_1280.jpg" alt="" />
-        </div>
-        <div>
-          <h3>6</h3>
-          <img src="https://cdn.pixabay.com/photo/2021/11/26/02/39/dog-6824999_1280.jpg" alt="" />
-        </div>
+        ))}
       </Slider>
     </div>
   );
-}
+};
 
 export default Carousel;

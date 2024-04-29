@@ -1,10 +1,11 @@
+/* TailWind 설정 */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 폰트 */
-
 /* 로고 폰트 */
+
 @font-face {
   font-family: 'KCC-Hanbit';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/KCC-Hanbit.woff2') format('woff2');
@@ -13,6 +14,7 @@
 }
 
 /* 메뉴바, 버튼, 제목 강조 폰트 */
+
 @font-face {
   font-family: 'LINESeedKR-Bd';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
@@ -21,9 +23,16 @@
 }
 
 /* 가독성 고딕 폰트 */
+
 @font-face {
   font-family: 'TAEBAEKmilkyway';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/TAEBAEKmilkyway.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+}
+
+/* 애니메이션 속도 */
+
+* {
+  transition: all 0.1s ease-out;
 }
