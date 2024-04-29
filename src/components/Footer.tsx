@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export default function Footer() {
-  return <div>Footer</div>;
+  return <footer className="bg-brand_2 flex justify-center p-5">Footer</footer>;
 }
