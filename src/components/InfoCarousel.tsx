@@ -17,6 +17,20 @@ const InfoCarousel: React.FC<CarouselProps> = ({ data }) => {
     speed: 1000,
     autoplaySpeed: 3000,
     cssEase: 'linear',
+    responsive: [
+      {
+        breakpoint: 660,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 460,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
   return (
     <div className="slider-container mb-10 font-['TAEBAEKmilkyway']">
