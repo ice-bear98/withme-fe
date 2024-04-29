@@ -1,13 +1,17 @@
-import "./App.css";
-import { Outlet } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import './App.css';
+import { Outlet } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
   return (
-    <div>
+    <div className="w-full">
       <Header />
-      <Outlet />
+      <div className="flex justify-center">
+        <div className="max-w-1200 w-full">
+          <Outlet />
+        </div>
+      </div>
       <Footer />
     </div>
   );
