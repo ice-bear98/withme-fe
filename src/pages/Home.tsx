@@ -1,5 +1,11 @@
-import React from "react";
+import React from 'react';
 
 export default function Home() {
-  return <div>Home</div>;
+  return (
+    <main>
+      <section>
+        <h2>가장 인기있는 모임</h2>
+      </section>
+    </main>
+  );
 }
