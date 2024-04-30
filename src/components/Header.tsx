@@ -4,10 +4,17 @@ import { IoPersonCircle } from 'react-icons/io5';
 import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt, FaCalendarPlus } from 'react-icons/fa';
 
 import ThemeButton from './ThemeBtn';
+import useUserStore from '../store/store';
 
 export default function Header() {
   const navigate = useNavigate();
+  const { isLoggedIn, logout } = useUserStore();
   const navbarStyle = "cursor-pointer font-['LINESeedKR-Bd']";
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <header className="flex-col bg-brand_1">
@@ -16,10 +23,16 @@ export default function Header() {
           <h1 className="pt-1 text-white text-2xl font-['KCC-Hanbit']">With Me</h1>
         </Link>
         <ul className="flex items-center space-x-6 text-slate-100 text-xl">
-          <Link to={'/login'}>
-            <li className={navbarStyle}>로그인</li>
-          </Link>
-          <li className={navbarStyle}>로그아웃</li>
+          {isLoggedIn ? (
+            <li className={navbarStyle} onClick={handleLogout}>
+              로그아웃
+            </li>
+          ) : (
+            <Link to={'/login'}>
+              <li className={navbarStyle}>로그인</li>
+            </Link>
+          )}
+
           <li className="text-2xl pt-1.5">
             <ThemeButton />
           </li>
