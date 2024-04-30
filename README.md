@@ -19,18 +19,52 @@
 ***
 
 #### ℹ️ 프로젝트 정보
-- 인원 : 프론트 2 백엔드 3
-- 기간 : 2023.04.18 ~ 05.30
-- 활용 : 일정 관리 및 문서화 Notion, Github, 소통 및 커뮤니케이션 zep, google meet
+<table style="margin-left: 0;">
+  <tr>
+    <th style="text-align: center;">팀원</th>
+    <th style="text-align: center;">역할</th>
+    <th style="text-align: center;">GitHub Profile</th>
+  </tr>
+  <tr>
+    <td style="text-align: center;">우승찬</td>
+    <td style="text-align: center;">Frontend</td>
+    <td style="text-align: center;"><a href="https://github.com/ice-bear98"><img src="https://github.com/ice-bear98.png" width="80" height="80"></a></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">이수광</td>
+    <td style="text-align: center;">Frontendr</td>
+    <td style="text-align: center;"><a href="https://github.com/sueWavy"><img src="https://github.com/sueWavy.png" width="80" height="80"></a></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">임국희</td>
+    <td style="text-align: center;">Backend & Team Lead</td>
+    <td style="text-align: center;"><a href="https://github.com/gamgyul163"><img src="https://github.com/gamgyul163.png" width="80" height="80"></a></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">박강락</td>
+    <td style="text-align: center;">Backend</td>
+    <td style="text-align: center;"><a href="https://github.com/DevelopingStone"><img src="https://github.com/DevelopingStone.png" width="80" height="80"></a></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">박지은</td>
+    <td style="text-align: center;">Backend</td>
+    <td style="text-align: center;"><a href="https://github.com/je-pa"><img src="https://github.com/je-pa.png" width="80" height="80"></a></td>
+  </tr>
+</table>
+
+#### 기간 : 2023.04.18 ~ 05.30
+#### 활용 프로그램 : 일정 관리 문서화, 소통 및 커뮤니케이션 <br/>
+<img src="https://img.shields.io/badge/notion-585858?style=for-the-badge&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/googlemeet-00897B?style=for-the-badge&logo=googlemeet&logoColor=white"> <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
+
 
 ***
 
-### ⚙️ ERD
+#### ⚙️ ERD
 ![With Me](https://github.com/WithUS-ZB/withme-fe/assets/148526219/78b95638-f402-4396-9874-ccdfbd0319e8)
 
 ***
 
-### 🏞️ Pigma wire-frame
+#### 🏞️ Pigma wire-frame
 
 ![KakaoTalk_Image_2024-04-30-17-35-50](https://github.com/WithUS-ZB/withme-fe/assets/148526219/7d2610bd-77a4-4708-b175-86478635cf43)
 
