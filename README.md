@@ -8,7 +8,7 @@
 
 ***
 
-### 🖥️ Skill Stack
+### 🖥️ 사용 기술
 - Vite, Yarn, Git
 - React.ts, React-Query, React-Router-Dom, React-hook-form
 - Axios, zustand
