@@ -1,5 +1,5 @@
 # With Me 
-윗미는 개인이 모임 및 이벤트를 개최하는 미팅 사이트 프로젝트입니다.
+### 윗미는 개인이 모임 및 이벤트를 개최하는 미팅 사이트 프로젝트입니다.
 
 - 개인이 모임을 개최하고 진행할 수 있습니다. 
 - 자영업자 및 소상공인이 이벤트를 개최하여 홍보하고 사람들의 관심 및 참여를 유도할 수 있습니다. 
@@ -8,15 +8,17 @@
 
 ***
 
-### 🖥️ 사용 기술
-- Vite, Yarn, Git
-- React.ts, React-Query, React-Router-Dom, React-hook-form, Axios, zustand
-- Tailwind CSS, Eslint, Prettier
-- Vercel
+#### 🖥️ 사용 기술
+<img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white"> <img src="https://img.shields.io/badge/Yarn-2C8EBB?style=for-the-badge&logo=Yarn&logoColor=white"> <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white">
+
+<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=black"> <img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"> <img src="https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"> <img src="https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white"> 
+
+<img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"> <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> <img src="https://img.shields.io/badge/prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white"> <img src="https://img.shields.io/badge/eslint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white"> <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+
 
 ***
 
-### ℹ️ 프로젝트 정보
+#### ℹ️ 프로젝트 정보
 - 인원 : 프론트 2 백엔드 3
 - 기간 : 2023.04.18 ~ 05.30
 - 활용 : 일정 관리 및 문서화 Notion, Github, 소통 및 커뮤니케이션 zep, google meet
