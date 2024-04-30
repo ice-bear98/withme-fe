@@ -52,7 +52,7 @@
   </tr>
 </table>
 
-#### 기간 : 2023.04.18 ~ 05.30
+#### 기간 : 2023. 04. 18 ~ 05. 30
 #### 활용 프로그램 : 일정 관리 문서화, 소통 및 커뮤니케이션 <br/>
 <img src="https://img.shields.io/badge/notion-585858?style=for-the-badge&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/googlemeet-00897B?style=for-the-badge&logo=googlemeet&logoColor=white"> <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> <img src="https://img.shields.io/badge/kakaotalk-FFCD00?style=for-the-badge&logo=kakaotalk&logoColor=black"> <img src="https://img.shields.io/badge/zep-9F81F7?style=for-the-badge&logo=&logoColor=black">
 
