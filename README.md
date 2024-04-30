@@ -10,9 +10,9 @@
 
 ### 🖥️ 사용 기술
 - Vite, Yarn, Git
-- React.ts, React-Query, React-Router-Dom, React-hook-form
-- Axios, zustand
+- React.ts, React-Query, React-Router-Dom, React-hook-form, Axios, zustand
 - Tailwind CSS, Eslint, Prettier
+- Vercel
 
 ***
 
@@ -29,6 +29,8 @@
 ***
 
 ### 🏞️ Pigma wire-frame
+
+![KakaoTalk_Image_2024-04-30-17-35-50](https://github.com/WithUS-ZB/withme-fe/assets/148526219/7d2610bd-77a4-4708-b175-86478635cf43)
 
 ***
 
