@@ -32,7 +32,7 @@
   </tr>
   <tr>
     <td style="text-align: center;">이수광</td>
-    <td style="text-align: center;">Frontendr</td>
+    <td style="text-align: center;">Frontend</td>
     <td style="text-align: center;"><a href="https://github.com/sueWavy"><img src="https://github.com/sueWavy.png" width="80" height="80"></a></td>
   </tr>
   <tr>
