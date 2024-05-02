@@ -1,12 +1,16 @@
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 interface IForm {
   email: string;
   password: string;
-  passwordConfirm: string;
-  date: string;
-  gender: string;
+  passwordChk: string;
+  birthDate: string;
+  gender: 'MALE' | 'FEMALE';
 }
+
+const SIGNUP_URL = 'http://43.200.85.230:8080/api/auth/signup';
 
 export default function Join() {
   const {
@@ -14,13 +18,24 @@ export default function Join() {
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
   } = useForm<IForm>();
 
-  const onSubmit = (data: any) => {
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: IForm) => {
     console.log(data);
+    try {
+      const res = await axios.post(SIGNUP_URL, data);
+      console.log('회원가입 성공', res.data);
+      reset();
+      navigate('/login');
+    } catch (error) {
+      console.log('회원가입 실패', error);
+    }
   };
 
-  const validatePassword = (value: any) => {
+  const validatePassword = (value: string) => {
     return value === watch('password') || '비밀번호가 일치하지 않습니다';
   };
 
@@ -48,7 +63,7 @@ export default function Join() {
               })}
               type="email"
               placeholder="이메일"
-              className="input input-bordered w-full bg-brand_3 text-brand_1 placeholder-brand_2"
+              className=" rounded-md w-full bg-brand_3 text-brand_1 placeholder-brand_2"
             />
             {errors.email && <p className="text-red-500">{errors.email.message}</p>}
           </div>
@@ -69,7 +84,7 @@ export default function Join() {
               })}
               type="password"
               placeholder="비밀번호"
-              className="input input-bordered w-full bg-brand_3 text-brand_1 placeholder-brand_2"
+              className=" rounded-md w-full bg-brand_3 text-brand_1 placeholder-brand_2"
             />
             {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
@@ -77,25 +92,25 @@ export default function Join() {
           <div className="flex flex-col">
             <label className="mb-2 text-left text-brand_1">패스워드 확인</label>
             <input
-              {...register('passwordConfirm', {
+              {...register('passwordChk', {
                 required: '비밀번호를 작성해주세요',
                 validate: validatePassword,
               })}
               type="password"
               placeholder="비밀번호 확인"
-              className="input input-bordered w-full bg-brand_3 text-brand_1 placeholder-brand_2"
+              className="rounded-md w-full bg-brand_3 text-brand_1 placeholder-brand_2"
             />
-            {errors.passwordConfirm && <p className="text-red-500">{errors.passwordConfirm.message}</p>}
+            {errors.passwordChk && <p className="text-red-500">{errors.passwordChk.message}</p>}
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center gap-2">
             <label className="md:w-1/4 text-left text-brand_1">생년월일</label>
             <input
-              {...register('date', {
+              {...register('birthDate', {
                 required: '생년월일을 입력해주세요',
               })}
               type="date"
-              className="input input-bordered w-full md:w-3/5 lg:w-2/5 bg-brand_4"
+              className="w-full md:w-3/5 lg:w-2/5 bg-brand_4"
             />
           </div>
 
@@ -105,11 +120,11 @@ export default function Join() {
               {...register('gender', {
                 required: '성별을 선택해주세요',
               })}
-              className="select select-bordered w-full md:w-3/5 lg:w-2/5 bg-brand_4"
+              className="w-full md:w-3/5 lg:w-2/5 bg-brand_4"
             >
               <option value="">성별 선택</option>
-              <option value="male">남성</option>
-              <option value="female">여성</option>
+              <option value="MALE">남성</option>
+              <option value="FEMALE">여성</option>
             </select>
             {errors.gender && <p className="text-red-500">{errors.gender.message}</p>}
           </div>
@@ -118,7 +133,7 @@ export default function Join() {
               type="button"
               value="가입하기"
               onClick={() => handleSubmit(onSubmit)()}
-              className="btn btn-primary w-full max-w-xs bg-brand_1 text-white hover:bg-brand_2"
+              className="rounded-md btn-primary w-full max-w-xs bg-brand_1 text-white hover:bg-brand_2"
             />
           </div>
         </form>
