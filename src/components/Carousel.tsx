@@ -4,6 +4,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { EventItem } from '../pages/Home';
 import { useNavigate } from 'react-router-dom';
 import { ImFire } from 'react-icons/im';
+import { RiVipCrownFill } from 'react-icons/ri';
 
 interface CarouselProps {
   title: string;
@@ -50,12 +51,17 @@ const Carousel: React.FC<CarouselProps> = ({ title, data }) => {
 
   return (
     <div className="slider-container mb-10 font-['TAEBAEKmilkyway']">
-      <h1 className="p-5">{title}</h1>
+      <h1 className="flex items-center p-5 text-xl font-['LINESeedKR-Bd']">
+        <RiVipCrownFill className="mr-2" />
+        {title}
+      </h1>
       <Slider {...settings}>
         {data.map((it) => (
           <div key={it.id} className="relative border border-white border-x-2 dark:border-black">
             <div className="absolute top-5 left-5">
-              <h2 className="bg-brand_3 dark:text-black text-center py-1 px-2 rounded-md text-base">{it.title}</h2>
+              <h2 className="bg-brand_3 dark:text-black text-center py-1 px-2 rounded-md text-base font-['KCC-Hanbit']">
+                {it.title}
+              </h2>
             </div>
             {/* like가 가장 높은 아이템에만 표시 */}
             {it.id === maxLikeItem.id && (
@@ -74,8 +80,8 @@ const Carousel: React.FC<CarouselProps> = ({ title, data }) => {
                 상세보기
               </button>
             </div>
-            <img className="h-72 w-full object-cover" src={it.img} alt="" />
-            <p className="text-center bg-brand_4 dark:bg-brand_1 dark:text-black p-2">{it.content}</p>
+            <img className="h-72 w-full object-cover rounded-t-2xl" src={it.img} alt="" />
+            <p className="text-center bg-brand_4 dark:bg-brand_1 rounded-b-2xl dark:text-black p-2">{it.content}</p>
           </div>
         ))}
       </Slider>
