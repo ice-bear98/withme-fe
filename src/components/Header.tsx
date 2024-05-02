@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoPersonCircle } from 'react-icons/io5';
-import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt, FaCalendarPlus } from 'react-icons/fa';
+import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt } from 'react-icons/fa';
 
 import ThemeButton from './ThemeBtn';
 

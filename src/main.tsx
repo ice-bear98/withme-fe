@@ -18,9 +18,16 @@ import UserPage from './pages/UserPage.tsx';
 import MyManage from './pages/MyManage.tsx';
 import MyFollow from './pages/MyFollow.tsx';
 import Write from './pages/Write.tsx';
-import Meeting from './pages/\bMeeting.tsx';
+import Meeting from './pages/Meeting.tsx';
 
 // const KAKAO_KEY: string | undefined = import.meta.env.VITE_REACT_APP_KAKAO_API;
+
+declare global {
+  interface Window {
+    kakao: any;
+    daum: any;
+  }
+}
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
