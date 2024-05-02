@@ -2,9 +2,23 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface User {
-  name: string;
+  member_id: number;
   email: string;
-  accessToken: string;
+  pw: string;
+  date: string;
+  nick_name: string;
+  gender: string;
+  phone_number: string;
+  profile_img: string;
+  role: string;
+  signup_path: string;
+  signup_dttm: string;
+  text_authentication_dttm: string;
+  text_authentication_number: string;
+  membership: string;
+  created_dttm: string;
+  modified_dttm: string;
+  deleted_dttm: string | null;
 }
 
 interface UserState {
@@ -19,11 +33,14 @@ const useUserStore = create(
     (set) => ({
       user: null,
       isLoggedIn: false,
-      setUser: (user: User) => set({ user, isLoggedIn: true }),
+      setUser: (user: User) => {
+        console.log('유저 데이터:', user);
+        set({ user, isLoggedIn: true });
+      },
       logout: () => set({ user: null, isLoggedIn: false }),
     }),
     {
-      name: 'user-storage',
+      name: 'userStorage',
       getStorage: () => localStorage,
     },
   ),
