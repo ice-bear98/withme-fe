@@ -22,6 +22,13 @@ import Meeting from './pages/Meeting.tsx';
 
 // const KAKAO_KEY: string | undefined = import.meta.env.VITE_REACT_APP_KAKAO_API;
 
+declare global {
+  interface Window {
+    kakao: any;
+    daum: any;
+  }
+}
+
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {

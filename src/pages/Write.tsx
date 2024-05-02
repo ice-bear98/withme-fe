@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FiMapPin } from 'react-icons/fi';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
+import KakaoMap from '../components/KakaoMap';
 
 interface IForm {
   title: string;
@@ -12,6 +13,7 @@ interface IForm {
   time: string;
   personnel: number;
   address: string;
+  address_detail: string;
   location: string;
   writer: string;
   pay: number;
@@ -38,6 +40,7 @@ export default function Write() {
       time: '',
       personnel: 0,
       address: '',
+      address_detail: '',
       location: '',
       writer: '',
       pay: 0,
@@ -53,8 +56,50 @@ export default function Write() {
     console.log(data);
   };
 
+  const [daumAddress, setDaumAddress] = useState<string>('');
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+
+  /** 다음 주소찾기 API */
+  const onClickAddr = () => {
+    window.daum.postcode.load(() => {
+      const postcode = new window.daum.Postcode({
+        oncomplete: async function (data: any) {
+          console.log(data);
+          setDaumAddress(data.address);
+
+          try {
+            const coords = await getAddressCoords(data.address);
+            setCoords(coords);
+          } catch (error) {
+            console.error('Error fetching coordinates:', error);
+          }
+        },
+      });
+      postcode.open({
+        autoClose: true,
+      });
+    });
+  };
+
+  // 주소 검색후 위도 경도 찾기
+  const getAddressCoords = (address: string): Promise<{ lat: number; lng: number }> => {
+    const geoCoder = new kakao.maps.services.Geocoder();
+    return new Promise((resolve, reject) => {
+      geoCoder.addressSearch(address, (result: any, status: any) => {
+        if (status === kakao.maps.services.Status.OK) {
+          const lat = result[0].y;
+          const lng = result[0].x;
+          resolve({ lat, lng });
+        } else {
+          reject(status);
+        }
+        console.log(coords);
+      });
+    });
+  };
+
   return (
-    <main className="py-10 font-['TAEBAEKmilkyway']">
+    <main className="py-10 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5">
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 최상단바 (제목, 카테고리 분류) */}
         <div className="flex justify-around border border-brand_1 mb-5">
@@ -136,16 +181,19 @@ export default function Write() {
                 장소
               </label>
               <input
-                className="placeholder:text-center outline-none"
+                className="placeholder:text-center outline-none w-2/4 text-center"
+                value={daumAddress}
                 type="text"
                 id="address"
                 readOnly
-                // {...register('address', {
-                //   required: true,
-                // })}
+                {...register('address', {
+                  required: true,
+                })}
                 placeholder="주소를 확인하세요"
               />
-              <button className="bg-brand_4 px-2 rounded-xl hover:bg-brand_3">주소 검색하기</button>
+              <button onClick={onClickAddr} className="bg-brand_4 px-2 rounded-xl hover:bg-brand_3">
+                주소 검색하기
+              </button>
             </div>
 
             <div className="flex justify-center items-center p-2 border-2">
@@ -267,14 +315,27 @@ export default function Write() {
           <FiMapPin />
           <span>주소 검색으로 등록된 맵입니다.</span>
         </h3>
-        <div className="border-2 mt-5 p-3 h-40 border-brand_3">
-          <p>지도맵을 이곳에 띄워야한다.</p>
+
+        <KakaoMap coords={coords} />
+
+        <div className="flex-col bg-brand_4 items-center justify-center space-y-3 mt-5 p-5  rounded-3xl">
+          <h3 className="text-center">주소 : {daumAddress}</h3>
+          <div className="flex justify-center">
+            <input
+              type="text"
+              className="w-3/4 rounded-2xl border-2 text-center p-2"
+              placeholder="찾아오기 쉽게 상세주소를 더 작성해주세요."
+              {...register('address_detail', {
+                required: true,
+              })}
+            />
+          </div>
         </div>
 
         {/* 최하단바 (등록버튼) */}
         <button
           onClick={handleSubmit(onSubmit)}
-          className="w-full mt-5 text-center p-3 bg-brand_2 font-['LINESeedKR-Bd'] text-white text-xl hover:bg-brand_1"
+          className="w-full mt-10 rounded-full text-center p-3 bg-brand_2 font-['LINESeedKR-Bd'] text-white text-xl hover:bg-brand_1"
         >
           게시하기
         </button>
