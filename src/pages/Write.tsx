@@ -14,7 +14,7 @@ interface IForm {
   personnel: number;
   address: string;
   address_detail: string;
-  location: string;
+  location: any;
   writer: string;
   pay: number;
   method: string;
@@ -25,34 +25,10 @@ interface IForm {
 }
 
 export default function Write() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IForm>({
-    mode: 'onChange',
-    defaultValues: {
-      title: '',
-      kind: 'meeting',
-      like: 0,
-      date_st: '',
-      date_end: '',
-      time: '',
-      personnel: 0,
-      address: '',
-      address_detail: '',
-      location: '',
-      writer: '',
-      pay: 0,
-      method: 'first_come',
-      target: 'no_restrinctions',
-      title_img: '',
-      sub_img: [],
-      content: '',
-    },
-  });
-
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: IForm) => {
+    if (coords) {
+      data.location = coords;
+    }
     console.log(data);
   };
 
@@ -80,6 +56,33 @@ export default function Write() {
       });
     });
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>({
+    mode: 'onChange',
+    defaultValues: {
+      title: '',
+      kind: 'meeting',
+      like: 0,
+      date_st: '',
+      date_end: '',
+      time: '',
+      personnel: 0,
+      address: '',
+      address_detail: '',
+      location: null,
+      writer: '',
+      pay: 0,
+      method: 'first_come',
+      target: 'no_restrinctions',
+      title_img: '',
+      sub_img: [],
+      content: '',
+    },
+  });
 
   // 주소 검색후 위도 경도 찾기
   const getAddressCoords = (address: string): Promise<{ lat: number; lng: number }> => {
