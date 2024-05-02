@@ -20,13 +20,32 @@ export default function Login() {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
 
-  const onSubmit = async (data: IForm) => {
-    console.log(data);
+  async function fetchUserDetails(token: string) {
+    try {
+      const response = await axios.get('http://43.200.85.230:8080/api/member/detail', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('Response:', response);
+      return response.data;
+    } catch (error) {
+      console.error('사용자 상세 정보 가져오기 실패:', error);
+      return null;
+    }
+  }
 
+  const onSubmit = async (data: IForm) => {
     try {
       const res = await axios.post(SIGNIN_URL, data);
-      setUser({ ...res.data.user, accessToken: res.data.accessToken });
-      console.log(res);
+      const { accessToken } = res.data;
+      setUser({ ...res.data.user, accessToken });
+
+      const userDetails = await fetchUserDetails(accessToken);
+      if (userDetails) {
+        setUser(userDetails);
+      }
+
       reset();
       navigate('/');
     } catch (error) {

@@ -12,6 +12,7 @@ export default function Header() {
   const navbarStyle = "cursor-pointer font-['LINESeedKR-Bd']";
 
   const handleLogout = () => {
+    localStorage.removeItem('accessToken');
     logout();
     navigate('/');
   };
