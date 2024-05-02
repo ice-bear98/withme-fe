@@ -1,8 +1,9 @@
+import useUserStore from '../store/store';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { SiKakaotalk } from 'react-icons/si';
-import axios from 'axios';
-import useUserStore from '../store/store';
+import { RiKakaoTalkFill } from 'react-icons/ri';
+import { FaRegFaceSmileWink } from 'react-icons/fa6';
 
 interface IForm {
   email: string;
@@ -54,12 +55,13 @@ export default function Login() {
   };
 
   return (
-    <div className="py-10 flex justify-center">
-      <div className="max-w-lg w-full p-4 border-2 rounded-xl">
-        <div className="text-center mb-4 text-blue-500">로그인</div>
+    <div className="py-10 flex justify-center font-['TAEBAEKmilkyway']">
+      <div className="max-w-lg w-full p-10 border border-gray-200 rounded-xl shadow-md dark:bg-brand_4">
+        <h1 className="flex  items-center justify-center text-center mb-6 text-2xl text-blue-500 font-['KCC-Hanbit']">
+          Login
+        </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex flex-col">
-            <label className="mb-2 text-left text-brand_1">이메일</label>
+          <div className="flex justify-center">
             <input
               {...register('email', {
                 required: '이메일을 작성해주세요',
@@ -69,42 +71,55 @@ export default function Login() {
                 },
               })}
               type="email"
-              placeholder="이메일"
-              className=" rounded-md w-full bg-brand_3 text-brand_1 placeholder-brand_2"
+              placeholder="가입한 이메일을 입력해주세요"
+              className="rounded-md w-3/4 border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans"
             />
-            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
           </div>
+          {errors.email && <p className="text-red-500 text-center">{errors.email.message}</p>}
 
-          <div className="flex flex-col">
-            <label className="mb-2 text-left text-brand_1">패스워드</label>
+          <div className="flex justify-center">
             <input
               {...register('password', {
                 required: '비밀번호를 작성해주세요',
               })}
               type="password"
-              placeholder="비밀번호"
-              className=" rounded-md w-full bg-brand_3 text-brand_1 placeholder-brand_2"
+              placeholder="비밀번호를 입력해주세요"
+              className="rounded-md w-3/4 border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans"
             />
-            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
+          {errors.password && <p className="text-red-500 text-center">{errors.password.message}</p>}
 
-          <div className="text-center mt-4">
-            <button className="flex items-center bg-yellow-300 hover:bg-yellow-400 rounded-md p-1 text-sm">
-              <SiKakaotalk className="text-2xl" />
-              카카오 로그인
-            </button>
-          </div>
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-center items-center mt-4">
             <input
               type="submit"
               value="로그인"
-              className="btn btn-primary max-w-xs rounded-md p-1 bg-brand_1 text-white hover:bg-brand_2"
+              className="btn btn-primary cursor-pointer max-w-xs rounded-md py-1 px-3 bg-brand_1 text-white hover:bg-brand_2 font-['LINESeedKR-Bd']"
             />
-
-            <div className="text-cente rounded-md p-1 bg-brand_1 text-white hover:bg-brand_2 ">
-              <Link to={'/join'}>회원가입</Link>
+            <span className="ml-2 mr-2">또는</span>
+            <div className="text-center">
+              <button className="flex items-center bg-yellow-300 hover:bg-yellow-400 rounded-md py-1 px-3 text-sm font-['LINESeedKR-Bd']">
+                <RiKakaoTalkFill className="text-2xl mr-1" />
+                카카오로 로그인하기
+              </button>
             </div>
           </div>
+          <div className="flex justify-center">
+            <span className="border-t-2 w-64"></span>
+          </div>
+          <div className="flex-col text-center">
+            <span className="">아직 계정이 없다면</span>
+            <Link to={'/join'}>
+              <span className="ml-1 text-blue-600 font-['LINESeedKR-Bd']">회원가입</span>
+            </Link>
+          </div>
+          <div className="flex justify-center">
+            <span className="border-t-2 w-64"></span>
+          </div>
+          <p className="text-center text-gray-500 text-sm">
+            윗미 서비스를 제대로 이용하기 위해서는 계정이 필요해요.
+            <br />
+            회원가입 또는 카카오 로그인으로 편하게 계정을 만들어 사용하세요.
+          </p>
         </form>
       </div>
     </div>
