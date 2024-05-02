@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+import KakaoMap from '../components/KakaoMap';
 import { useForm } from 'react-hook-form';
 import { FiMapPin } from 'react-icons/fi';
+import { FaMagic } from 'react-icons/fa';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
-import KakaoMap from '../components/KakaoMap';
-
 interface IForm {
   title: string;
   kind: string;
@@ -99,15 +99,21 @@ export default function Write() {
   };
 
   return (
-    <main className="py-10 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5">
+    <main className="py-10 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">
+      <h1 className="flex justify-center mb-10 font-['LINESeedKR-Bd'] text-2xl">
+        <div className="flex justify-center items-center bg-brand_3 px-5 py-2 rounded-2xl">
+          <FaMagic className="mr-3" />
+          이벤트 및 모임 주최하기
+        </div>
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 최상단바 (제목, 카테고리 분류) */}
-        <div className="flex justify-around border border-brand_1 mb-5">
+        <div className="flex justify-around border border-brand_1 mb-5 dark:bg-brand_2">
           <label className="py-3 font-['LINESeedKR-Bd']" htmlFor="title">
             제목
           </label>
           <input
-            className="w-2/4 placeholder:text-center p-3 outline-none"
+            className="w-2/4 placeholder:text-center p-3 outline-none text-center"
             type="text"
             {...register('title', {
               required: true,
@@ -137,7 +143,7 @@ export default function Write() {
         {errors.title && <p className="text-red-500 mb-5">{errors.title.message}</p>}
 
         {/* 상단바 (썸네일, 설정작성) */}
-        <h3 className="flex mt-5 items-center space-x-2">
+        <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
           <CiCircleInfo />
           <span>대표로 노출되는 썸네일 이미지와 설정을 입력해주세요.</span>
         </h3>
@@ -152,22 +158,24 @@ export default function Write() {
             />
           </div>
 
-          <div className="flex-col content-center space-y-3 border-2 w-1/2 h-96 ">
-            <div className="flex justify-center items-center p-2 border-2">
+          <div className="flex-col content-center space-y-3 w-1/2 h-96">
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="date_st" className="mr-2 font-['LINESeedKR-Bd']">
                 모집 시작일
               </label>
               <input
+                className="text-center px-1"
                 type="date"
                 id="date_st"
                 {...register('date_st', {
                   required: true,
                 })}
               />
-              <label htmlFor="date_ed" className="mr-2 font-['LINESeedKR-Bd']">
+              <label htmlFor="date_ed" className="ml-2 mr-2 font-['LINESeedKR-Bd']">
                 모집 마감일
               </label>
               <input
+                className="text-center px-1"
                 type="date"
                 id="date_ed"
                 {...register('date_end', {
@@ -176,7 +184,7 @@ export default function Write() {
               />
             </div>
 
-            <div className="flex justify-center items-center p-2 border-2">
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="address" className="font-['LINESeedKR-Bd'] mr-2">
                 장소
               </label>
@@ -191,17 +199,17 @@ export default function Write() {
                 })}
                 placeholder="주소를 확인하세요"
               />
-              <button onClick={onClickAddr} className="bg-brand_4 px-2 rounded-xl hover:bg-brand_3">
+              <button onClick={onClickAddr} className="bg-brand_4 px-2 ml-2 rounded-xl hover:bg-brand_3">
                 주소 검색하기
               </button>
             </div>
 
-            <div className="flex justify-center items-center p-2 border-2">
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="time" className="font-['LINESeedKR-Bd'] mr-2">
                 모임 및 이벤트 집합 시간
               </label>
               <input
-                className="text-center outline-none"
+                className="text-center outline-none px-1"
                 type="time"
                 id="time"
                 {...register('time', {
@@ -210,7 +218,7 @@ export default function Write() {
               />
             </div>
 
-            <div className="flex justify-center items-center p-2 border-2">
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="personnel" className="font-['LINESeedKR-Bd'] mr-2">
                 모집 인원
               </label>
@@ -223,10 +231,10 @@ export default function Write() {
                   required: true,
                 })}
               />
-              <span>명</span>
+              <span className="ml-2">명</span>
             </div>
 
-            <div className="flex justify-center items-center p-2 border-2">
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="pay" className="font-['LINESeedKR-Bd'] mr-2">
                 참가 비용
               </label>
@@ -239,10 +247,10 @@ export default function Write() {
                   required: true,
                 })}
               />
-              <span>원</span>
+              <span className="ml-2">원</span>
             </div>
 
-            <div className="flex justify-center items-center p-2 border-2">
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="target" className="font-['LINESeedKR-Bd'] mr-2">
                 참가 제한
               </label>
@@ -258,7 +266,7 @@ export default function Write() {
               </select>
             </div>
 
-            <div className="flex justify-center items-center p-2 border-2">
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="method" className="font-['LINESeedKR-Bd'] mr-2">
                 참가 방법
               </label>
@@ -276,7 +284,7 @@ export default function Write() {
         </div>
 
         {/* 중단바 (이미지 3장) */}
-        <h3 className="flex mt-5 items-center space-x-2">
+        <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
           <CiImageOn />
           <span>관련 이미지를 등록하여 흥미를 높이세요. ( 필수사항 X )</span>
         </h3>
@@ -293,12 +301,12 @@ export default function Write() {
         </div>
 
         {/* 하단바 (내용 작성) */}
-        <h3 className="flex mt-5 items-center space-x-2">
+        <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
           <CiPen />
           <span>주최하는 모임 및 이벤트 내용에 대해 설명해주세요.</span>
           {errors.content && <p className="text-red-500">{errors.content.message}</p>}
         </h3>
-        <div className="border-2 mt-5 p-3 border-brand_3">
+        <div className="border-2 mt-5 p-3 dark:bg-white dark:border-none">
           <textarea
             className="w-full outline-none min-h-40"
             id="content"
@@ -311,12 +319,12 @@ export default function Write() {
         </div>
 
         {/* 하단바 (지도맵) */}
-        <h3 className="flex mt-5 items-center space-x-2">
+        <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
           <FiMapPin />
           <span>주소 검색으로 등록된 맵입니다.</span>
         </h3>
 
-        <KakaoMap coords={coords} />
+        {daumAddress && <KakaoMap coords={coords} />}
 
         <div className="flex-col bg-brand_4 items-center justify-center space-y-3 mt-5 p-5  rounded-3xl">
           <h3 className="text-center">주소 : {daumAddress}</h3>
