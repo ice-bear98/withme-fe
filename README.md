@@ -23,7 +23,7 @@
   <tr>
     <th style="text-align: center;">팀원</th>
     <th style="text-align: center;">역할</th>
-    <th style="text-align: center;">GitHub Profile</th>
+    <th style="text-align: center;">깃허브</th>
   </tr>
   <tr>
     <td style="text-align: center;">우승찬</td>
