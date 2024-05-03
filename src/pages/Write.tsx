@@ -102,7 +102,7 @@ export default function Write() {
   };
 
   return (
-    <main className="py-10 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">
+    <main className="pb-10 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">
       <h1 className="flex justify-center mb-10 font-['LINESeedKR-Bd'] text-2xl">
         <div className="flex justify-center items-center bg-brand_3 px-5 py-2 rounded-2xl">
           <FaMagic className="mr-3" />
