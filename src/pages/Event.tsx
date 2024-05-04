@@ -1,6 +1,8 @@
 import PostCard from '../components/PostCard';
 import SearchBar from '../components/SearchBar';
 
+// cherry-pick 해결용 주석
+
 export default function Event() {
   return (
     <div className="mb-10">
