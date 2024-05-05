@@ -9,7 +9,7 @@ import ScrollTopBtn from './ScrollUpBtn';
 
 export default function Header() {
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useUserStore();
+  const { user, isLoggedIn, logout } = useUserStore();
   const navbarStyle = "cursor-pointer font-['LINESeedKR-Bd']";
 
   const handleLogout = () => {
@@ -46,7 +46,7 @@ export default function Header() {
           <li className="text-2xl pt-1.5">
             <ThemeButton />
           </li>
-          <Link to={'/mypage:id'}>
+          <Link to={`/mypage/${user?.member_id}`}>
             <li className="text-3xl">
               <IoPersonCircle />
             </li>
