@@ -5,13 +5,13 @@ export const handlers = [
     return HttpResponse.json({
       memberId: 1,
       email: 'example1@example.com',
-      nickName: '78cf1feb-eac3-4bfa-8e7a-fefda2300a40',
+      nickname: '승찬',
       birthDate: '1990-01-01',
       gender: 'MALE',
       phoneNumber: null,
       profileImg: null,
-      signupPath: 'NORMAL',
-      signupDttm: '2024-04-30T22:57:59.187977',
+      signup_Path: 'NORMAL',
+      signup_Dttm: '2024-04-30T22:57:59.187977',
       membership: 'FREE',
     });
   }),
