@@ -14,7 +14,7 @@ export default function PostCard() {
       </div>
       <div className="flex justify-center gap-4">
         <img
-          className="w-48 h-48 object-cover rounded-2xl"
+          className="w-48 h-48 mx-3 object-cover rounded-2xl"
           src="https://cdn.pixabay.com/photo/2023/05/22/20/17/ai-generated-8011407_1280.jpg"
           alt=""
         />
