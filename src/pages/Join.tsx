@@ -1,12 +1,17 @@
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { IoIosReturnLeft } from 'react-icons/io';
 
 interface IForm {
   email: string;
   password: string;
-  passwordConfirm: string;
-  date: string;
-  gender: string;
+  passwordChk: string;
+  birthDate: string;
+  gender: 'MALE' | 'FEMALE';
 }
+
+const SIGNUP_URL = 'http://43.200.85.230:8080/api/auth/signup';
 
 export default function Join() {
   const {
@@ -14,26 +19,36 @@ export default function Join() {
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
   } = useForm<IForm>();
 
-  const onSubmit = (data: any) => {
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: IForm) => {
     console.log(data);
+    try {
+      const res = await axios.post(SIGNUP_URL, data);
+      console.log('회원가입 성공', res.data);
+      reset();
+      navigate('/login');
+    } catch (error) {
+      console.log('회원가입 실패', error);
+    }
   };
 
-  const validatePassword = (value: any) => {
+  const validatePassword = (value: string) => {
     return value === watch('password') || '비밀번호가 일치하지 않습니다';
   };
 
   return (
-    <div className="py-10 flex justify-center">
-      <div className="max-w-lg w-full p-4 border-2 rounded-xl">
-        <div className="text-center mb-4 text-blue-500">
-          회원가입을 위해 <br />
-          정보를 입력해주세요.
+    <div className="py-10 flex justify-center font-['TAEBAEKmilkyway']">
+      <div className="max-w-lg w-full p-4 py-10 border rounded-xl shadow-md dark:bg-brand_4">
+        <div className="text-center mb-6 text-2xl text-blue-500 font-['KCC-Hanbit']">
+          <h1>Join</h1>
+          <p className="text-base mt-2 text-blue-400">회원가입을 위한 정보를 입력해주세요</p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex flex-col">
-            <label className="mb-2 text-left text-brand_1">이메일</label>
+          <div className="flex justify-center items-center">
             <input
               {...register('email', {
                 required: '이메일을 작성해주세요',
@@ -47,14 +62,13 @@ export default function Join() {
                 },
               })}
               type="email"
-              placeholder="이메일"
-              className="input input-bordered w-full bg-brand_3 text-brand_1 placeholder-brand_2"
+              placeholder="사용할 아이디 이메일을 적어주세요"
+              className="rounded-md w-3/4 border-2 p-1 placeholder-brand_2 placeholder:text-center font-sans"
             />
-            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
           </div>
+          {errors.email && <p className="text-red-500 text-center">{errors.email.message}</p>}
 
-          <div className="flex flex-col">
-            <label className="mb-2 text-left text-brand_1">패스워드</label>
+          <div className="flex justify-center items-center">
             <input
               {...register('password', {
                 required: '비밀번호를 작성해주세요',
@@ -68,58 +82,64 @@ export default function Join() {
                 },
               })}
               type="password"
-              placeholder="비밀번호"
-              className="input input-bordered w-full bg-brand_3 text-brand_1 placeholder-brand_2"
+              placeholder="사용할 비밀번호를 입력하세요"
+              className="rounded-md w-3/4 p-1 border-2 placeholder-brand_2 placeholder:text-center font-sans"
             />
-            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
+          {errors.password && <p className="text-red-500 text-center">{errors.password.message}</p>}
 
-          <div className="flex flex-col">
-            <label className="mb-2 text-left text-brand_1">패스워드 확인</label>
+          <div className="flex justify-center items-center">
             <input
-              {...register('passwordConfirm', {
+              {...register('passwordChk', {
                 required: '비밀번호를 작성해주세요',
                 validate: validatePassword,
               })}
               type="password"
-              placeholder="비밀번호 확인"
-              className="input input-bordered w-full bg-brand_3 text-brand_1 placeholder-brand_2"
-            />
-            {errors.passwordConfirm && <p className="text-red-500">{errors.passwordConfirm.message}</p>}
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-center gap-2">
-            <label className="md:w-1/4 text-left text-brand_1">생년월일</label>
-            <input
-              {...register('date', {
-                required: '생년월일을 입력해주세요',
-              })}
-              type="date"
-              className="input input-bordered w-full md:w-3/5 lg:w-2/5 bg-brand_4"
+              placeholder="사용할 비밀번호 재확인"
+              className="rounded-md w-3/4 p-1 border-2 placeholder-brand_2 placeholder:text-center font-sans"
             />
           </div>
+          {errors.passwordChk && <p className="text-red-500 text-center">{errors.passwordChk.message}</p>}
 
-          <div className="flex flex-col md:flex-row md:items-center gap-2">
-            <label className="md:w-1/4 text-left text-brand_1">성별</label>
-            <select
-              {...register('gender', {
-                required: '성별을 선택해주세요',
-              })}
-              className="select select-bordered w-full md:w-3/5 lg:w-2/5 bg-brand_4"
-            >
-              <option value="">성별 선택</option>
-              <option value="male">남성</option>
-              <option value="female">여성</option>
-            </select>
-            {errors.gender && <p className="text-red-500">{errors.gender.message}</p>}
+          <div className="flex justify-center">
+            <div className="flex justify-center w-3/4 border-2 items-center p-2 gap-2 rounded-md dark:bg-brand_3 dark:border-none">
+              <label className="md:w-1/4 text-left text-slate-600 text-md font-['LINESeedKR-Bd']">생년월일</label>
+              <input
+                {...register('birthDate', {
+                  required: '생년월일을 입력해주세요',
+                })}
+                type="date"
+                className="w-full md:w-3/5 lg:w-2/4 text-center p-1 bg-brand_4 rounded-3xl"
+              />
+            </div>
           </div>
-          <div className="flex justify-center mt-4">
+
+          <div className="flex justify-center">
+            <div className="flex justify-center w-3/4 border-2 items-center p-2 gap-2 rounded-md dark:bg-brand_3 dark:border-none">
+              <label className="md:w-1/4 text-left text-slate-600 text-md font-['LINESeedKR-Bd']">성별</label>
+              <select
+                {...register('gender', {
+                  required: '성별을 선택해주세요',
+                })}
+                className="w-full md:w-3/5 lg:w-2/5 bg-brand_4 text-center p-1 rounded-3xl"
+              >
+                <option value="">성별 선택</option>
+                <option value="MALE">남성</option>
+                <option value="FEMALE">여성</option>
+              </select>
+            </div>
+          </div>
+          {errors.gender && <p className="text-red-500 text-center">{errors.gender.message}</p>}
+          <div className="flex justify-center mt-4 ">
             <input
               type="button"
               value="가입하기"
               onClick={() => handleSubmit(onSubmit)()}
-              className="btn btn-primary w-full max-w-xs bg-brand_1 text-white hover:bg-brand_2"
+              className="rounded-lg btn-primary w-full max-w-xs cursor-pointer p-2 text-lg bg-brand_1 text-white hover:bg-brand_2 font-['LINESeedKR-Bd']"
             />
+            <Link to={'/login'} className="p-3 bg-brand_3 rounded-lg ml-2 hover:bg-brand_2 cursor-pointer">
+              <IoIosReturnLeft />
+            </Link>
           </div>
         </form>
       </div>

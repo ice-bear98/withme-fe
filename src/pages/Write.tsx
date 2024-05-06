@@ -11,6 +11,7 @@ interface IForm {
   date_st: string;
   date_end: string;
   time: string;
+  category: string;
   personnel: number;
   address: string;
   address_detail: string;
@@ -25,10 +26,35 @@ interface IForm {
 }
 
 export default function Write() {
-  const onSubmit = (data: IForm) => {
-    if (coords) {
-      data.location = coords;
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>({
+    mode: 'onChange',
+    defaultValues: {
+      title: '',
+      category: '',
+      kind: 'meeting',
+      like: 0,
+      date_st: '',
+      date_end: '',
+      time: '',
+      personnel: 0,
+      address: '',
+      address_detail: '',
+      location: '',
+      writer: '',
+      pay: 0,
+      method: 'first_come',
+      target: 'no_restrinctions',
+      title_img: '',
+      sub_img: [],
+      content: '',
+    },
+  });
+
+  const onSubmit = (data: any) => {
     console.log(data);
   };
 
@@ -56,33 +82,6 @@ export default function Write() {
       });
     });
   };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IForm>({
-    mode: 'onChange',
-    defaultValues: {
-      title: '',
-      kind: 'meeting',
-      like: 0,
-      date_st: '',
-      date_end: '',
-      time: '',
-      personnel: 0,
-      address: '',
-      address_detail: '',
-      location: null,
-      writer: '',
-      pay: 0,
-      method: 'first_come',
-      target: 'no_restrinctions',
-      title_img: '',
-      sub_img: [],
-      content: '',
-    },
-  });
 
   // 주소 검색후 위도 경도 찾기
   const getAddressCoords = (address: string): Promise<{ lat: number; lng: number }> => {
@@ -126,6 +125,20 @@ export default function Write() {
             placeholder="제목을 입력하세요"
             name="title"
           />
+          <label className="py-3 font-['LINESeedKR-Bd']" htmlFor="category">
+            카테고리
+          </label>
+          <input
+            className="placeholder:text-center p-3 outline-none text-center"
+            type="text"
+            {...register('category', {
+              required: true,
+              minLength: { value: 2, message: '카테고리를 적어주세요 예) 독서, 산책, 운동' },
+              maxLength: { value: 8, message: '카테고리는 8글자 이내로 작성해주세요.' },
+            })}
+            placeholder="카테고리를 적어주세요"
+            name="category"
+          />
           <div className="flex space-x-5 items-center">
             <label className="font-['LINESeedKR-Bd']" htmlFor="kind">
               분류를 골라주세요
@@ -144,6 +157,7 @@ export default function Write() {
         </div>
 
         {errors.title && <p className="text-red-500 mb-5">{errors.title.message}</p>}
+        {errors.category && <p className="text-red-500 mb-5">{errors.category.message}</p>}
 
         {/* 상단바 (썸네일, 설정작성) */}
         <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
