@@ -1,5 +1,5 @@
-import Carousel from '../components/Home/Carousel';
-import InfoCarousel from '../components/Home/InfoCarousel';
+import Carousel from '../components/home/Carousel';
+import InfoCarousel from '../components/home/InfoCarousel';
 
 export interface EventItem {
   id: number;

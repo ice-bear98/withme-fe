@@ -1,7 +1,7 @@
-import PostCard from '../components/PostCard';
-import SearchBar from '../components/SearchBar';
-
 // cherry-pick 해결용 주석
+
+import PostCard from '../components/post/PostCard';
+import SearchBar from '../components/post/SearchBar';
 
 export default function Event() {
   return (
