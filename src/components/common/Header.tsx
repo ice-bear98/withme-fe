@@ -77,10 +77,12 @@ export default function Header() {
                 <span className="ml-2">이벤트 모임 만들기</span>
               </li>
             </Link>
-            <li className={`${navBtnStyle}`}>
-              <FaCalendarAlt />
-              <span className="ml-2">이벤트 모임 관리</span>
-            </li>
+            <Link to={`/mymanage/${user?.member_id}`}>
+              <li className={`${navBtnStyle}`}>
+                <FaCalendarAlt />
+                <span className="ml-2">이벤트 모임 관리</span>
+              </li>
+            </Link>
           </ul>
         </div>
       </div>
