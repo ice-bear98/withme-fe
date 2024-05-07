@@ -1,5 +1,5 @@
-import PostCard from '../components/PostCard';
-import SearchBar from '../components/SearchBar';
+import PostCard from '../components/post/PostCard';
+import SearchBar from '../components/post/SearchBar';
 
 // cherry-pick 해결용 주석
 
