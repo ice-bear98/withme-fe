@@ -7,8 +7,8 @@ import { FiMapPin } from 'react-icons/fi';
 import { FaMagic, FaPlusCircle } from 'react-icons/fa';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
 
-import KakaoMap from '../components/KakaoMap';
 import useUserStore from '../store/store';
+import KakaoMap from '../components/post/KakaoMap';
 interface IForm {
   title: string;
   kind: string;
