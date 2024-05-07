@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import KakaoMap from '../components/KakaoMap';
+
 import { useForm } from 'react-hook-form';
+import { useStore } from 'zustand';
+
 import { FiMapPin } from 'react-icons/fi';
-import { FaMagic } from 'react-icons/fa';
+import { FaMagic, FaPlusCircle } from 'react-icons/fa';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
+
+import KakaoMap from '../components/KakaoMap';
+import useUserStore from '../store/store';
 interface IForm {
   title: string;
   kind: string;
@@ -15,13 +20,13 @@ interface IForm {
   personnel: number;
   address: string;
   address_detail: string;
-  location: string;
-  writer: string;
+  location: { lat: number; lng: number } | null;
+  writer: number | undefined;
   pay: number;
   method: string;
   target: string;
-  title_img: string;
-  sub_img: string[];
+  title_img: any;
+  sub_img: any[];
   content: string;
 }
 
@@ -40,11 +45,11 @@ export default function Write() {
       date_st: '',
       date_end: '',
       time: '',
-      personnel: 0,
+      personnel: 1,
       address: '',
       address_detail: '',
-      location: '',
-      writer: '',
+      location: null,
+      writer: undefined,
       pay: 0,
       method: 'first_come',
       target: 'no_restrinctions',
@@ -54,12 +59,12 @@ export default function Write() {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
-
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [images, setImages] = useState<any[]>([]);
+  const userId = useUserStore((state) => state);
+
+  console.log(userId);
 
   /** 다음 주소찾기 API */
   const onClickAddr = () => {
@@ -98,6 +103,29 @@ export default function Write() {
         console.log(coords);
       });
     });
+  };
+
+  /** 이미지 추가 핸들러 */
+  const handleImageAdd = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImages((prevImages) => {
+        const updatedImages = [...prevImages];
+        updatedImages[index] = imageUrl;
+        return updatedImages;
+      });
+    }
+  };
+
+  /** Submit 핸들러 */
+  const onSubmit = (data: IForm) => {
+    data.location = coords;
+    data.title_img = images[0];
+    data.sub_img = images.slice(1, 4);
+    data.writer = userId.user?.member_id;
+
+    console.log(data);
   };
 
   return (
@@ -166,13 +194,26 @@ export default function Write() {
         </h3>
 
         <div className="flex justify-between space-x-5 mt-5">
-          <div className="border-2 w-1/2 h-96 ">
+          <div className="flex justify-center items-center border-2 w-1/2 h-96 relative">
+            <label htmlFor="title_img">
+              <FaPlusCircle
+                className={`cursor-pointer w-12 h-12 text-brand_1
+              ${images[0] ? 'absolute top-5 left-5 w-10 h-10' : 'block'}
+              `}
+              />
+            </label>
+
             <input
               type="file"
-              // {...register('title_img', {
-              //   required: true,
-              // })}
+              id="title_img"
+              className="hidden"
+              {...(register('title_img'),
+              {
+                required: true,
+              })}
+              onChange={handleImageAdd(0)}
             />
+            {images[0] && <img src={images[0]} className="w-full h-full object-cover" />}
           </div>
 
           <div className="flex-col content-center space-y-3 w-1/2 h-96">
@@ -246,11 +287,12 @@ export default function Write() {
                 placeholder="인원수를 지정해주세요"
                 {...register('personnel', {
                   required: true,
+                  min: { value: 1, message: '1명 이상은 모집해야합니다.' },
                 })}
               />
               <span className="ml-2">명</span>
             </div>
-
+            {errors.personnel && <p className="text-red-500 mb-5 text-center">{errors.personnel.message}</p>}
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="pay" className="font-['LINESeedKR-Bd'] mr-2">
                 참가 비용
@@ -262,10 +304,12 @@ export default function Write() {
                 id="pay"
                 {...register('pay', {
                   required: true,
+                  min: { value: 0, message: '마이너스는 불가능합니다.' },
                 })}
               />
               <span className="ml-2">원</span>
             </div>
+            {errors.pay && <p className="text-red-500 mb-5 text-center">{errors.pay.message}</p>}
 
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="target" className="font-['LINESeedKR-Bd'] mr-2">
@@ -303,18 +347,28 @@ export default function Write() {
         {/* 중단바 (이미지 3장) */}
         <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
           <CiImageOn />
-          <span>관련 이미지를 등록하여 흥미를 높이세요. ( 필수사항 X )</span>
+          <span>관련 이미지를 등록하여 관심도를 높이세요.</span>
         </h3>
         <div className="flex space-x-5 mt-5">
-          <div className="border-2 w-1/3 h-96">
-            <input type="file" />
-          </div>
-          <div className="border-2 w-1/3 h-96">
-            <input type="file" />
-          </div>
-          <div className="border-2 w-1/3 h-96">
-            <input type="file" />
-          </div>
+          {[1, 2, 3].map((index) => (
+            <div key={index} className="flex justify-center items-center border-2 w-1/2 h-96 relative">
+              <label htmlFor={`sub_img${index}`}>
+                <FaPlusCircle
+                  className={`cursor-pointer w-12 h-12 text-brand_1 ${
+                    images[index] ? 'absolute top-5 left-5 w-10 h-10' : 'block'
+                  }`}
+                />
+              </label>
+              <input
+                type="file"
+                id={`sub_img${index}`}
+                className="hidden"
+                {...register(`sub_img`)}
+                onChange={handleImageAdd(index)}
+              />
+              {images[index] && <img src={images[index]} className="w-full h-full object-cover" />}
+            </div>
+          ))}
         </div>
 
         {/* 하단바 (내용 작성) */}
@@ -352,9 +406,11 @@ export default function Write() {
               placeholder="찾아오기 쉽게 상세주소를 더 작성해주세요."
               {...register('address_detail', {
                 required: true,
+                minLength: { value: 5, message: '5글자 이상 작성해주세요.' },
               })}
             />
           </div>
+          {errors.address_detail && <p className="text-red-500 text-center mb-5">{errors.address_detail.message}</p>}
         </div>
 
         {/* 최하단바 (등록버튼) */}
