@@ -1,10 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
+import { useStore } from 'zustand';
+
 import { FiMapPin } from 'react-icons/fi';
 import { FaMagic, FaPlusCircle } from 'react-icons/fa';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
+
 import KakaoMap from '../components/KakaoMap';
+import useUserStore from '../store/store';
 interface IForm {
   title: string;
   kind: string;
@@ -17,7 +21,7 @@ interface IForm {
   address: string;
   address_detail: string;
   location: { lat: number; lng: number } | null;
-  writer: string;
+  writer: number | undefined;
   pay: number;
   method: string;
   target: string;
@@ -45,7 +49,7 @@ export default function Write() {
       address: '',
       address_detail: '',
       location: null,
-      writer: '',
+      writer: undefined,
       pay: 0,
       method: 'first_come',
       target: 'no_restrinctions',
@@ -55,16 +59,12 @@ export default function Write() {
     },
   });
 
-  const onSubmit = (data: IForm) => {
-    data.location = coords;
-    data.title_img = images[0];
-    data.sub_img = images.slice(1, 4);
-    console.log(data);
-  };
-
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [images, setImages] = useState<any[]>([]);
+  const userId = useUserStore((state) => state);
+
+  console.log(userId);
 
   /** 다음 주소찾기 API */
   const onClickAddr = () => {
@@ -116,6 +116,16 @@ export default function Write() {
         return updatedImages;
       });
     }
+  };
+
+  /** Submit 핸들러 */
+  const onSubmit = (data: IForm) => {
+    data.location = coords;
+    data.title_img = images[0];
+    data.sub_img = images.slice(1, 4);
+    data.writer = userId.user?.member_id;
+
+    console.log(data);
   };
 
   return (
