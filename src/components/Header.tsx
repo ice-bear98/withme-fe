@@ -21,7 +21,7 @@ export default function Header() {
   const navBtnStyle = 'flex items-center bg-brand_4 py-1 px-2 rounded-lg hover:brightness-110';
 
   return (
-    <header className="flex-col bg-brand_1">
+    <header className="flex-col bg-brand_1 shadow-lg">
       <ScrollTopBtn />
       <div className="flex justify-between py-5 px-52 ml:px-10">
         <Link to={'/'} className="flex items-center">
