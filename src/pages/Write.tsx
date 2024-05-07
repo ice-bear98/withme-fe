@@ -69,7 +69,16 @@ export default function Write() {
   /** 다음 주소찾기 API */
   const onClickAddr = () => {
     window.daum.postcode.load(() => {
+      let width = 500;
+      let height = 600;
+
+      const leftOffset = (window.screen.width - width) / 2;
+      const topOffset = (window.screen.height - height) / 2;
+
       const postcode = new window.daum.Postcode({
+        width: width,
+        height: height,
+
         oncomplete: async function (data: any) {
           console.log(data);
           setDaumAddress(data.address);
@@ -84,6 +93,8 @@ export default function Write() {
       });
       postcode.open({
         autoClose: true,
+        left: leftOffset,
+        top: topOffset,
       });
     });
   };
