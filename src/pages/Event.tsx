@@ -1,9 +1,17 @@
+import { useEffect } from 'react';
 import PostCard from '../components/PostCard';
 import SearchBar from '../components/SearchBar';
-
-// cherry-pick 해결용 주석
+import axios from 'axios';
 
 export default function Event() {
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await axios.get('http://43.200.85.230:8080/api/gathering/list').then((res) => console.log(res));
+  };
+
   return (
     <div className="mb-10">
       <SearchBar />
