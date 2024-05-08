@@ -1,3 +1,6 @@
+import PostCard from '../components/post/PostCard';
+import SearchBar from '../components/post/SearchBar';
+
 // cherry-pick 해결용 주석
 
 import PostCard from '../components/post/PostCard';
