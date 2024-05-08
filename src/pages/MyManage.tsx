@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaMapMarkerAlt, FaHeart } from 'react-icons/fa';
 import { MdManageAccounts } from 'react-icons/md';
+import AppStatusModal from './modal/AppStatusModal';
+import Modal from './modal/Modal';
 export default function MyManage() {
+  const [isOpen, setOpen] = useState(false);
+
   return (
     <div className="p-4 max-w-4xl m-auto">
       <div className="h-10 leading-10 mb-5 text-xl font-['LINESeedKR-Bd'] flex items-center j">
@@ -44,9 +48,15 @@ export default function MyManage() {
               <p className="bg-white p-1 rounded-lg">현재 모집중 ( 2 / 8 )</p>
             </div>
           </div>
-          <button className="mt-2 bg-brand_2 border-t-2 border-bg_blue-300  w-full text-center p-2 text-white">
+          <button
+            onClick={() => setOpen(true)}
+            className="mt-2 bg-brand_2 border-t-2 border-bg_blue-300  w-full text-center p-2 text-white"
+          >
             신청 현황 보기
           </button>
+          <Modal isOpen={isOpen} onClose={() => setOpen(false)}>
+            <AppStatusModal />
+          </Modal>
         </div>
       </div>
     </div>
