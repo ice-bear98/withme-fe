@@ -44,6 +44,7 @@ export default function Login() {
     try {
       const res = await axios.post(SIGNIN_URL, data);
       const accessToken = res.headers['authorization'];
+      localStorage.setItem('accessToken', accessToken);
 
       if (accessToken) {
         const userDetails = await fetchUserDetails(accessToken);
