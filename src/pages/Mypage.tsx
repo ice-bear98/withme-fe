@@ -4,7 +4,7 @@ import defaultImg from '../assets/default_profile.jpg';
 
 export default function Mypage() {
   const { user, logout } = useUserStore();
-  const [image, setImage] = useState(user?.profile_img || defaultImg);
+  const [image, setImage] = useState(user?.profileImg || defaultImg);
 
   const handleImageChange = (event: any) => {
     const file = event.target.files[0];
@@ -13,11 +13,12 @@ export default function Mypage() {
   };
 
   const genderText = user?.gender === 'MALE' ? '남자' : '여자';
-  const date = user?.signup_Dttm.slice(0, 10);
+  const nickName = user?.nickName.slice(0, 8);
+  const date = user?.signupDttm.slice(0, 10);
 
   return (
     <div className="p-4 max-w-4xl m-auto">
-      <h1 className="text-center text-2xl font-bold mb-4">{user?.nickname}님의 마이페이지</h1>
+      <h1 className="text-center text-2xl font-bold mb-4">{nickName}님의 마이페이지</h1>
 
       <div className="flex justify-center items-start gap-4">
         <div className="w-72 h-96 flex flex-col justify-center items-center bg-brand_4 p-4 rounded-lg text-center">
@@ -34,7 +35,7 @@ export default function Mypage() {
         </div>
         <div className="relative font-['LINESeedKR-Bd'] w-72 h-96 flex flex-col justify-between p-4 bg-gray-100 rounded-lg">
           <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            닉네임: {user?.nickname}
+            닉네임: {nickName}
           </p>
           <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
             이메일: {user?.email}
@@ -46,13 +47,13 @@ export default function Mypage() {
             성별: {genderText}
           </p>
           <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            Phone Number: {user?.phone_number || 'Not provided'}
+            Phone Number: {user?.phoneNumber || 'Not provided'}
           </p>
           <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
             멤버 등급: {user?.membership}
           </p>
           <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            가입 경로: {user?.signup_Path}
+            가입 경로: {user?.signupPath}
           </p>
           <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
             가입 일: {date}

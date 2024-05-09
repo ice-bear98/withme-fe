@@ -2,15 +2,15 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface User {
-  member_id: number;
+  memberId: number;
   email: string;
   birthDate: string;
-  nickname: string;
+  nickName: string;
   gender: string;
-  phone_number: null;
-  profile_img: null;
-  signup_Path: string;
-  signup_Dttm: string;
+  phoneNumber: null;
+  profileImg: null;
+  signupPath: string;
+  signupDttm: string;
   membership: string;
 }
 
