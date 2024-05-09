@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoIosReturnLeft } from 'react-icons/io';
+import { useState } from 'react';
 
 interface IForm {
   email: string;
@@ -13,6 +14,7 @@ interface IForm {
 
 const SIGNUP_URL = 'http://43.200.85.230:8080/api/auth/signup';
 const EMAIL_CHECK_URL = 'http://43.200.85.230:8080/api/member/check/email';
+
 export default function Join() {
   const {
     register,
@@ -23,7 +25,7 @@ export default function Join() {
     clearErrors,
     reset,
   } = useForm<IForm>();
-
+  const [emailStatus, setEmailStatus] = useState('');
   const navigate = useNavigate();
 
   const onSubmit = async (data: IForm) => {
@@ -47,11 +49,14 @@ export default function Join() {
       const { data } = await axios.get(`${EMAIL_CHECK_URL}?email=${email}`);
       if (data) {
         setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' });
+        setEmailStatus('');
       } else {
         clearErrors('email');
+        setEmailStatus('사용 가능한 이메일입니다.');
       }
     } catch (error) {
       console.error('이메일 중복 확인 실패', error);
+      setEmailStatus('이메일 중복 확인에 실패했습니다.');
     }
   };
 
@@ -75,6 +80,7 @@ export default function Join() {
                   value: 20,
                   message: '20글자 미만 작성해주세요',
                 },
+                onChange: (e) => validateEmail(e.target.value),
               })}
               type="email"
               placeholder="사용할 아이디 이메일을 적어주세요"
@@ -91,7 +97,7 @@ export default function Join() {
             </button>
           </div>
           {errors.email && <p className="text-red-500 text-center">{errors.email.message}</p>}
-
+          {emailStatus && <p className="text-green-500 text-center">{emailStatus}</p>}
           <div className="flex justify-center items-center">
             <input
               {...register('password', {
