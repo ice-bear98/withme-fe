@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-
-import { get, useForm } from 'react-hook-form';
-import { useStore } from 'zustand';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { FiMapPin } from 'react-icons/fi';
 import { FaMagic, FaPlusCircle } from 'react-icons/fa';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
 
-import useUserStore from '../store/store';
 import KakaoMap from '../components/post/KakaoMap';
 import useWrite from '../Hooks/useWrite';
 interface IForm {
@@ -23,7 +20,6 @@ interface IForm {
   address: string;
   detailedAddress: string;
   location: { lat: number; lng: number } | null;
-  writer: number | undefined;
   fee: number;
   participantSelectionMethod: string;
   participantsType: string;
@@ -54,7 +50,6 @@ export default function Write() {
       address: '',
       detailedAddress: '',
       location: null,
-      writer: undefined,
       fee: 0,
       participantSelectionMethod: 'first_come',
       participantsType: 'no_restrinctions',
@@ -67,7 +62,6 @@ export default function Write() {
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [images, setImages] = useState<any[]>([]);
-  const userId = useUserStore((state) => state.user?.memberId);
 
   /** 다음 주소찾기 API */
   const onClickAddr = () => {
@@ -137,7 +131,6 @@ export default function Write() {
     data.location = coords;
     data.mainImg = images[0];
     data.subImg = images.slice(1, 4);
-    data.writer = userId;
     console.log(data);
 
     addPost(data);
