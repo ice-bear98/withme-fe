@@ -11,24 +11,42 @@ import useUserStore from '../store/store';
 import KakaoMap from '../components/post/KakaoMap';
 interface IForm {
   title: string;
-  kind: string;
+  gatheringType: string;
   like: number;
-  date_st: string;
-  date_end: string;
+  startDttm: string;
+  endDttm: string;
   time: string;
   category: string;
-  personnel: number;
+  maximumParticipant: number;
   address: string;
-  address_detail: string;
+  detailedAddress: string;
   location: { lat: number; lng: number } | null;
   writer: number | undefined;
-  pay: number;
-  method: string;
-  target: string;
-  title_img: any;
-  sub_img: any[];
+  fee: number;
+  participantSelectionMethod: string;
+  participantsType: string;
+  mainImg: any;
+  subImg: any[];
   content: string;
 }
+
+// {
+//   "title": "등산모임",
+//   "content": "이 모임은 백두산 등산 모임입니다. 함께하시죠",
+//   "gatheringType": "MEETING",
+//   "maximumParticipant": 4,
+//   "startDttm": "2024-03-12T22:00:00",
+//   "endDttm": "2024-03-12T23:00:00",
+//   "category" : "여행",
+//   "applicationDeadLine": "2024-03-11T22:00:00",
+//   "address": "국희시 강락구 승찬동 155-1번지",
+//   "detailedAddress": "123동 456호",
+//   "location": "POINT(경도,위도)",
+//   "mainImg": "img link",
+//   "participantsType": "ADULT",
+//   "fee": 10000,
+//   "participantSelectionMethod": "FIRST_COME"
+// }
 
 export default function Write() {
   const {
@@ -40,21 +58,21 @@ export default function Write() {
     defaultValues: {
       title: '',
       category: '',
-      kind: 'meeting',
+      gatheringType: 'meeting',
       like: 0,
-      date_st: '',
-      date_end: '',
+      startDttm: '',
+      endDttm: '',
       time: '',
-      personnel: 1,
+      maximumParticipant: 1,
       address: '',
-      address_detail: '',
+      detailedAddress: '',
       location: null,
       writer: undefined,
-      pay: 0,
-      method: 'first_come',
-      target: 'no_restrinctions',
-      title_img: '',
-      sub_img: [],
+      fee: 0,
+      participantSelectionMethod: 'first_come',
+      participantsType: 'no_restrinctions',
+      mainImg: '',
+      subImg: [],
       content: '',
     },
   });
@@ -140,7 +158,7 @@ export default function Write() {
   };
 
   return (
-    <main className="py-10 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">
+    <main className="py-5 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">
       <h1 className="flex justify-center mb-10 font-['LINESeedKR-Bd'] text-2xl">
         <div className="flex justify-center items-center bg-brand_3 px-5 py-2 rounded-2xl">
           <FaMagic className="mr-3" />
