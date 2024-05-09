@@ -30,24 +30,6 @@ interface IForm {
   content: string;
 }
 
-// {
-//   "title": "등산모임",
-//   "content": "이 모임은 백두산 등산 모임입니다. 함께하시죠",
-//   "gatheringType": "MEETING",
-//   "maximumParticipant": 4,
-//   "startDttm": "2024-03-12T22:00:00",
-//   "endDttm": "2024-03-12T23:00:00",
-//   "category" : "여행",
-//   "applicationDeadLine": "2024-03-11T22:00:00",
-//   "address": "국희시 강락구 승찬동 155-1번지",
-//   "detailedAddress": "123동 456호",
-//   "location": "POINT(경도,위도)",
-//   "mainImg": "img link",
-//   "participantsType": "ADULT",
-//   "fee": 10000,
-//   "participantSelectionMethod": "FIRST_COME"
-// }
-
 export default function Write() {
   const {
     register,
