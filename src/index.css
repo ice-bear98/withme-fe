@@ -36,31 +36,3 @@
 * {
   transition: all 0.1s ease-out;
 }
-
-/* src/styles/scrollbar.css */
-/* 스크롤바 전체 스타일 */
-::-webkit-scrollbar {
-  width: 10px; /* 스크롤바의 너비 조정 */
-  height: 8px; /* 수평 스크롤바의 높이 조정 */
-}
-
-/* 스크롤바 트랙 */
-::-webkit-scrollbar-track {
-  background: #f1f1f1; /* 트랙의 배경 색상 */
-}
-
-/* 스크롤바 핸들 */
-::-webkit-scrollbar-thumb {
-  background: #51588c; /* 핸들의 배경 색상 */
-  border-radius: 5px; /* 핸들의 모서리 둥글기 */
-}
-
-/* 스크롤바 핸들 :hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #c46fb2; /* 호버 시 핸들의 배경 색상 */
-}
-
-/* brand_1: '#B1B2FF',
-        brand_2: '#AAC4FF',
-        brand_3: '#D2DAFF',
-        brand_4: '#EEF1FF', */

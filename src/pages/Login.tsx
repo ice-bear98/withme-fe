@@ -9,7 +9,8 @@ interface IForm {
   email: string;
   password: string;
 }
-const SIGNIN_URL = 'http://43.200.85.230:8080/api/auth/signin';
+
+const URL = import.meta.env.VITE_SERVER_URL;
 
 export default function Login() {
   const {
@@ -23,7 +24,7 @@ export default function Login() {
 
   async function fetchUserDetails(token: string) {
     try {
-      const response = await axios.get('http://43.200.85.230:8080/api/member/detail', {
+      const response = await axios.get(`${URL}/api/member/detail`, {
         headers: {
           Authorization: `${token}`,
         },
@@ -42,7 +43,7 @@ export default function Login() {
 
   const onSubmit = async (data: IForm) => {
     try {
-      const res = await axios.post(SIGNIN_URL, data);
+      const res = await axios.post(`${URL}/api/auth/signin`, data);
       const accessToken = res.headers['authorization'];
       localStorage.setItem('accessToken', accessToken);
 
