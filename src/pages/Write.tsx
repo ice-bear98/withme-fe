@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { useForm } from 'react-hook-form';
+import { get, useForm } from 'react-hook-form';
 import { useStore } from 'zustand';
 
 import { FiMapPin } from 'react-icons/fi';
@@ -9,12 +9,14 @@ import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
 
 import useUserStore from '../store/store';
 import KakaoMap from '../components/post/KakaoMap';
+import useWrite from '../Hooks/useWrite';
 interface IForm {
   title: string;
   gatheringType: string;
   like: number;
   startDttm: string;
   endDttm: string;
+  day: string;
   time: string;
   category: string;
   maximumParticipant: number;
@@ -31,6 +33,8 @@ interface IForm {
 }
 
 export default function Write() {
+  const { addPost } = useWrite();
+
   const {
     register,
     handleSubmit,
@@ -44,6 +48,7 @@ export default function Write() {
       like: 0,
       startDttm: '',
       endDttm: '',
+      day: '',
       time: '',
       maximumParticipant: 1,
       address: '',
@@ -62,9 +67,17 @@ export default function Write() {
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [images, setImages] = useState<any[]>([]);
-  const userId = useUserStore((state) => state);
+  const userId = useUserStore((state) => state.user?.memberId);
 
-  console.log(userId);
+  const storedStateString: any = localStorage.getItem('state');
+  const storedState = JSON.parse(storedStateString);
+
+  if (storedState && storedState.accessToken) {
+    const token = storedState.accessToken;
+    console.log(token);
+  } else {
+    console.log('accessToken이 로컬스토리지에 저장되어 있지 않습니다.');
+  }
 
   /** 다음 주소찾기 API */
   const onClickAddr = () => {
@@ -132,10 +145,9 @@ export default function Write() {
   /** Submit 핸들러 */
   const onSubmit = (data: IForm) => {
     data.location = coords;
-    data.title_img = images[0];
-    data.sub_img = images.slice(1, 4);
-    data.writer = userId.user?.memberId;
-
+    data.mainImg = images[0];
+    data.subImg = images.slice(1, 4);
+    data.writer = userId;
     console.log(data);
   };
 
@@ -185,7 +197,7 @@ export default function Write() {
             <select
               className="outline-none bg-brand_3 p-1 rounded-xl"
               id="kind"
-              {...register('kind', {
+              {...register('gatheringType', {
                 required: true,
               })}
             >
@@ -218,7 +230,7 @@ export default function Write() {
               type="file"
               id="title_img"
               className="hidden"
-              {...(register('title_img'),
+              {...(register('mainImg'),
               {
                 required: true,
               })}
@@ -236,7 +248,7 @@ export default function Write() {
                 className="text-center px-1"
                 type="date"
                 id="date_st"
-                {...register('date_st', {
+                {...register('startDttm', {
                   required: true,
                 })}
               />
@@ -247,7 +259,7 @@ export default function Write() {
                 className="text-center px-1"
                 type="date"
                 id="date_ed"
-                {...register('date_end', {
+                {...register('endDttm', {
                   required: true,
                 })}
               />
@@ -288,6 +300,20 @@ export default function Write() {
             </div>
 
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
+              <label htmlFor="day" className="font-['LINESeedKR-Bd'] mr-2">
+                모임 및 이벤트 당일
+              </label>
+              <input
+                className="text-center outline-none px-1"
+                type="date"
+                id="day"
+                {...register('day', {
+                  required: true,
+                })}
+              />
+            </div>
+
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="personnel" className="font-['LINESeedKR-Bd'] mr-2">
                 모집 인원
               </label>
@@ -296,14 +322,16 @@ export default function Write() {
                 type="number"
                 id="personnel"
                 placeholder="인원수를 지정해주세요"
-                {...register('personnel', {
+                {...register('maximumParticipant', {
                   required: true,
                   min: { value: 1, message: '1명 이상은 모집해야합니다.' },
                 })}
               />
               <span className="ml-2">명</span>
             </div>
-            {errors.personnel && <p className="text-red-500 mb-5 text-center">{errors.personnel.message}</p>}
+            {errors.maximumParticipant && (
+              <p className="text-red-500 mb-5 text-center">{errors.maximumParticipant.message}</p>
+            )}
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="pay" className="font-['LINESeedKR-Bd'] mr-2">
                 참가 비용
@@ -313,14 +341,14 @@ export default function Write() {
                 type="number"
                 placeholder="금액을 적어주세요"
                 id="pay"
-                {...register('pay', {
+                {...register('fee', {
                   required: true,
                   min: { value: 0, message: '마이너스는 불가능합니다.' },
                 })}
               />
               <span className="ml-2">원</span>
             </div>
-            {errors.pay && <p className="text-red-500 mb-5 text-center">{errors.pay.message}</p>}
+            {errors.fee && <p className="text-red-500 mb-5 text-center">{errors.fee.message}</p>}
 
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="target" className="font-['LINESeedKR-Bd'] mr-2">
@@ -328,7 +356,7 @@ export default function Write() {
               </label>
               <select
                 id="target"
-                {...register('target', {
+                {...register('participantsType', {
                   required: true,
                 })}
               >
@@ -344,7 +372,7 @@ export default function Write() {
               </label>
               <select
                 id="method"
-                {...register('method', {
+                {...register('participantSelectionMethod', {
                   required: true,
                 })}
               >
@@ -374,7 +402,7 @@ export default function Write() {
                 type="file"
                 id={`sub_img${index}`}
                 className="hidden"
-                {...register(`sub_img`)}
+                {...register(`subImg`)}
                 onChange={handleImageAdd(index)}
               />
               {images[index] && <img src={images[index]} className="w-full h-full object-cover" />}
@@ -415,13 +443,13 @@ export default function Write() {
               type="text"
               className="w-3/4 rounded-2xl border-2 text-center p-2"
               placeholder="찾아오기 쉽게 상세주소를 더 작성해주세요."
-              {...register('address_detail', {
+              {...register('detailedAddress', {
                 required: true,
                 minLength: { value: 5, message: '5글자 이상 작성해주세요.' },
               })}
             />
           </div>
-          {errors.address_detail && <p className="text-red-500 text-center mb-5">{errors.address_detail.message}</p>}
+          {errors.detailedAddress && <p className="text-red-500 text-center mb-5">{errors.detailedAddress.message}</p>}
         </div>
 
         {/* 최하단바 (등록버튼) */}
