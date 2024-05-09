@@ -88,31 +88,28 @@ const AppStatusModal = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-lg font-semibold text-center mt-2 my-4">
-        {participants.length > 0 ? participants[0].eventName : '모임 제목'} 신청 현황 상세 정보
-      </h2>
-      <ul>
+      <ul className="space-y-7">
         {participants.map((participant) => (
-          <li key={participant.id} className="flex items-center mb-2.5">
-            <img src={participant.profilePic} alt="profile" className="w-24 h-24 mr-2.5 rounded-full" />
+          <li key={participant.id} className="flex bg-brand_4 items-center shadow-md p-5 rounded-lg relative">
+            <img src={participant.profilePic} alt="profile" className="w-24 h-24 mr-2.5 object-cover rounded-full" />
             <div className="flex-grow">
-              <div className="font-medium">
+              <div className="font-medium text-lg">
                 <strong>{participant.name}</strong>님이 {participant.eventName}에 참여를 신청했습니다.
               </div>
               <div>신청일자: {participant.applyDate}</div>
               <div>생년월일: {participant.dob}</div>
               <div>성별: {participant.gender}</div>
             </div>
-            <div>
+            <div className="absolute right-0 mr-5 bottom-5">
               <button
                 onClick={() => handleAccept(participant.id)}
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded focus:outline-none"
+                className="bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded focus:outline-none"
               >
                 수락
               </button>
               <button
                 onClick={() => handleReject(participant.id)}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded focus:outline-none ml-2"
+                className="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-4 rounded focus:outline-none ml-2"
               >
                 거절
               </button>

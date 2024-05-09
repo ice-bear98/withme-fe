@@ -54,7 +54,7 @@ export default function MyManage() {
           >
             신청 현황 보기
           </button>
-          <Modal isOpen={isOpen} onClose={() => setOpen(false)}>
+          <Modal title="모임 및 이벤트 신청 현황" isOpen={isOpen} onClose={() => setOpen(false)}>
             <AppStatusModal />
           </Modal>
         </div>
