@@ -9,7 +9,6 @@ import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
 
 import useUserStore from '../store/store';
 import KakaoMap from '../components/post/KakaoMap';
-
 interface IForm {
   title: string;
   kind: string;
