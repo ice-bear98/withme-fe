@@ -69,16 +69,6 @@ export default function Write() {
   const [images, setImages] = useState<any[]>([]);
   const userId = useUserStore((state) => state.user?.memberId);
 
-  const storedStateString: any = localStorage.getItem('state');
-  const storedState = JSON.parse(storedStateString);
-
-  if (storedState && storedState.accessToken) {
-    const token = storedState.accessToken;
-    console.log(token);
-  } else {
-    console.log('accessToken이 로컬스토리지에 저장되어 있지 않습니다.');
-  }
-
   /** 다음 주소찾기 API */
   const onClickAddr = () => {
     window.daum.postcode.load(() => {
@@ -149,6 +139,8 @@ export default function Write() {
     data.subImg = images.slice(1, 4);
     data.writer = userId;
     console.log(data);
+
+    addPost(data);
   };
 
   return (
