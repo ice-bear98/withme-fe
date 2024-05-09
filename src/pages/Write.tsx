@@ -124,7 +124,7 @@ export default function Write() {
     data.location = coords;
     data.title_img = images[0];
     data.sub_img = images.slice(1, 4);
-    data.writer = userId.user?.member_id;
+    data.writer = userId.user?.memberId;
 
     console.log(data);
   };
