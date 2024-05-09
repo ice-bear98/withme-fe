@@ -25,35 +25,41 @@ export default function Login() {
     try {
       const response = await axios.get('http://43.200.85.230:8080/api/member/detail', {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${token}`,
         },
       });
-      console.log('Response:', response);
+
       return response.data;
     } catch (error) {
-      console.error('사용자 상세 정보 가져오기 실패:', error);
       return null;
     }
+  }
+
+  function handleKakaoLogin() {
+    const kakaoLoginUrl = `http://localhost:8080/oauth2/authorization/kakao?redirect_uri=${encodeURIComponent('http://localhost:3000/login/oauth2/code/kakao')}`;
+    window.location.href = kakaoLoginUrl;
   }
 
   const onSubmit = async (data: IForm) => {
     try {
       const res = await axios.post(SIGNIN_URL, data);
-      const { accessToken } = res.data;
-      setUser({ ...res.data.user, accessToken });
+      const accessToken = res.headers['authorization'];
 
-      const userDetails = await fetchUserDetails(accessToken);
-      if (userDetails) {
-        setUser(userDetails);
+      if (accessToken) {
+        const userDetails = await fetchUserDetails(accessToken);
+
+        if (userDetails) {
+          setUser({ ...userDetails, accessToken });
+        }
+        reset();
+        navigate('/');
+      } else {
+        console.error('로그인 실패: 토큰이 반환되지 않았습니다.');
       }
-
-      reset();
-      navigate('/');
     } catch (error) {
       console.error('로그인 실패', error);
     }
   };
-
   return (
     <div className="py-10 flex justify-center font-['TAEBAEKmilkyway']">
       <div className="max-w-lg w-full p-10 border border-gray-200 rounded-xl shadow-md dark:bg-brand_4">
@@ -97,7 +103,10 @@ export default function Login() {
             />
             <span className="ml-2 mr-2">또는</span>
             <div className="text-center">
-              <button className="flex items-center bg-yellow-300 hover:bg-yellow-400 rounded-md py-1 px-3 text-sm font-['LINESeedKR-Bd']">
+              <button
+                onClick={handleKakaoLogin}
+                className="flex items-center bg-yellow-300 hover:bg-yellow-400 rounded-md py-1 px-3 text-sm font-['LINESeedKR-Bd']"
+              >
                 <RiKakaoTalkFill className="text-2xl mr-1" />
                 카카오로 로그인하기
               </button>
