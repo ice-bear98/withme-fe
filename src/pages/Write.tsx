@@ -7,8 +7,8 @@ import { FiMapPin } from 'react-icons/fi';
 import { FaMagic, FaPlusCircle } from 'react-icons/fa';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
 
-import KakaoMap from '../components/KakaoMap';
 import useUserStore from '../store/store';
+import KakaoMap from '../components/post/KakaoMap';
 interface IForm {
   title: string;
   kind: string;
@@ -134,7 +134,7 @@ export default function Write() {
     data.location = coords;
     data.title_img = images[0];
     data.sub_img = images.slice(1, 4);
-    data.writer = userId.user?.member_id;
+    data.writer = userId.user?.memberId;
 
     console.log(data);
   };

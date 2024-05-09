@@ -2,15 +2,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoPersonCircle } from 'react-icons/io5';
 import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt } from 'react-icons/fa';
+import { useState } from 'react';
 
+import defaultImg from '../../assets/default_profile.jpg';
 import ThemeButton from './ThemeBtn';
-import useUserStore from '../store/store';
+import useUserStore from '../../store/store';
 import ScrollTopBtn from './ScrollUpBtn';
 
 export default function Header() {
   const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useUserStore();
   const navbarStyle = "cursor-pointer font-['LINESeedKR-Bd']";
+  const [image, setImage] = useState(user?.profileImg || defaultImg);
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
@@ -34,8 +37,9 @@ export default function Header() {
         </Link>
         <ul className="flex items-center space-x-6 text-slate-100 text-xl">
           {isLoggedIn ? (
-            <li className={navbarStyle} onClick={handleLogout}>
-              로그아웃
+            <li className={`${navbarStyle} flex items-center space-x-2`} onClick={handleLogout}>
+              <img src={image} alt="Profile" className="rounded-full object-cover h-10 w-10" />
+              <p className="pt-2">로그아웃</p>
             </li>
           ) : (
             <Link to={'/login'}>
@@ -46,7 +50,7 @@ export default function Header() {
           <li className="text-2xl pt-1.5">
             <ThemeButton />
           </li>
-          <Link to={`/mypage/${user?.member_id}`}>
+          <Link to={`/mypage/${user?.memberId}`}>
             <li className="text-3xl">
               <IoPersonCircle />
             </li>
@@ -77,10 +81,12 @@ export default function Header() {
                 <span className="ml-2">이벤트 모임 만들기</span>
               </li>
             </Link>
-            <li className={`${navBtnStyle}`}>
-              <FaCalendarAlt />
-              <span className="ml-2">이벤트 모임 관리</span>
-            </li>
+            <Link to={`/mymanage/${user?.memberId}`}>
+              <li className={`${navBtnStyle}`}>
+                <FaCalendarAlt />
+                <span className="ml-2">이벤트 모임 관리</span>
+              </li>
+            </Link>
           </ul>
         </div>
       </div>
