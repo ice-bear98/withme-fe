@@ -1,7 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoPersonCircle } from 'react-icons/io5';
 import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt } from 'react-icons/fa';
+import { AiFillAppstore } from 'react-icons/ai';
 
 import useUserStore from '../../store/store';
 import ScrollTopBtn from './ScrollUpBtn';
@@ -18,8 +21,9 @@ export default function Header() {
     navigate('/');
   };
 
-  const navBtnStyle =
-    'flex items-center bg-white py-2 px-3 rounded-lg dark:bg-brand_1 dark:text-white hover:brightness-110 shadow-sm text-slate-700 hover:bg-brand_3 cursor-pointer';
+  // for commit
+
+  const navBtnStyle = 'flex items-center bg-brand_4 py-1 px-2 rounded-lg hover:brightness-110';
 
   return (
     <header className="flex-col w-full bg-white shadow-md dark:bg-brand_1 fixed top-0 z-50">
@@ -79,7 +83,42 @@ export default function Header() {
           </li>
         </ul>
       </div>
-      <div></div>
+      <div>
+        <div className="flex justify-center bg-brand_3 p-2">
+          <ul className="flex max-w-1200 w-1200 justify-center font-sans text-slate-800 space-x-20 md:space-x-10 s:space-x-1">
+            <Link to={'/post?type=all'}>
+              <li className={`${navBtnStyle}`}>
+                <AiFillAppstore />
+                <span className="ml-2">이벤트 모임 전체보기</span>
+              </li>
+            </Link>
+            <Link to={'/post?type=event'}>
+              <li className={`${navBtnStyle}`}>
+                <FaSketch />
+                <span className="ml-2">이벤트</span>
+              </li>
+            </Link>
+            <Link to={'/post?type=meeting'}>
+              <li className={`${navBtnStyle}`}>
+                <FaUserFriends />
+                <span className="ml-2">모임</span>
+              </li>
+            </Link>
+            <Link to={'/write'}>
+              <li className={`${navBtnStyle}`}>
+                <FaMagic />
+                <span className="ml-2">이벤트 모임 만들기</span>
+              </li>
+            </Link>
+            <Link to={`/mymanage/${user?.memberId}`}>
+              <li className={`${navBtnStyle}`}>
+                <FaCalendarAlt />
+                <span className="ml-2">이벤트 모임 관리</span>
+              </li>
+            </Link>
+          </ul>
+        </div>
+      </div>
     </header>
   );
 }
