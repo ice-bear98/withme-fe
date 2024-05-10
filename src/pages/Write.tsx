@@ -17,7 +17,8 @@ interface IForm {
   category: string;
   address: string;
   detailedAddress: string;
-  location: { lat: number; lng: number } | null;
+  lat: any;
+  lng: any;
   mainImg: any;
   day: string;
   time: string;
@@ -49,7 +50,8 @@ export default function Write() {
       maximumParticipant: 1,
       address: '',
       detailedAddress: '',
-      location: null,
+      lat: '',
+      lng: '',
       fee: 0,
       participantSelectionMethod: 'FIRST_COME',
       participantsType: 'NO_RESTRICTIONS',
@@ -60,7 +62,7 @@ export default function Write() {
   });
 
   const [daumAddress, setDaumAddress] = useState<string>('');
-  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [coords, setCoords] = useState<{ lat: any; lng: any } | null>(null);
   const [images, setImages] = useState<any[]>([]);
 
   /** 다음 주소찾기 API */
@@ -128,10 +130,13 @@ export default function Write() {
 
   /** Submit 핸들러 */
   const onSubmit = (data: IForm) => {
-    data.location = coords;
+    data.lat = coords?.lat;
+    data.lng = coords?.lng;
     data.mainImg = images[0];
     data.subImg = images.slice(1, 4);
     console.log(data);
+    console.log(typeof data.lat);
+    console.log(typeof data.lng);
 
     addPost(data);
   };
