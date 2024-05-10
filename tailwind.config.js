@@ -6,11 +6,12 @@ module.exports = {
     extend: {
       screens: {
         mobile: { max: '360px' },
-        s: { max: '620px' },
-        sm: { max: '840px' },
-        md: { max: '1080px' },
-        ml: { max: '1200px' },
-        l: { max: '1600px' },
+        xs: { max: '460px' },
+        s: { max: '680px' },
+        sm: { max: '920px' },
+        md: { max: '1060px' },
+        ml: { max: '1220px' },
+        l: { max: '1620px' },
       },
       colors: {
         brand_1: '#B1B2FF',
