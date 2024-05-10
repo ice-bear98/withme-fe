@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoPersonCircle } from 'react-icons/io5';
 import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt } from 'react-icons/fa';
-import { useState } from 'react';
+import { AiFillAppstore } from 'react-icons/ai';
 
 import defaultImg from '../../assets/default_profile.jpg';
 import ThemeButton from './ThemeBtn';
@@ -63,13 +65,19 @@ export default function Header() {
       <div>
         <div className="flex justify-center bg-brand_3 p-2">
           <ul className="flex max-w-1200 w-1200 justify-center font-sans text-slate-800 space-x-20 md:space-x-10 s:space-x-1">
-            <Link to={'/post'}>
+            <Link to={'/post?type=all'}>
+              <li className={`${navBtnStyle}`}>
+                <AiFillAppstore />
+                <span className="ml-2">이벤트 모임 전체보기</span>
+              </li>
+            </Link>
+            <Link to={'/post?type=event'}>
               <li className={`${navBtnStyle}`}>
                 <FaSketch />
                 <span className="ml-2">이벤트</span>
               </li>
             </Link>
-            <Link to={'/post'}>
+            <Link to={'/post?type=meeting'}>
               <li className={`${navBtnStyle}`}>
                 <FaUserFriends />
                 <span className="ml-2">모임</span>

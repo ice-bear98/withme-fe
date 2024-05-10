@@ -2,20 +2,35 @@ import axios from 'axios';
 import PostCard from '../components/post/PostCard';
 import SearchBar from '../components/post/SearchBar';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function Post() {
-  useEffect(() => {
-    getData();
-  }, []);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const postType = searchParams.get('type');
+
+  console.log(postType);
 
   const getData = async () => {
     try {
       const response = await axios.get('http://43.200.85.230:8080/api/gathering/list');
-      setPosts(response.data);
+      if (postType !== 'all') {
+        const filteredPosts = response.data.filter((post: any) => {
+          const isMatch = post.kind === postType?.toUpperCase();
+          return isMatch;
+        });
+        setPosts(filteredPosts);
+      } else {
+        setPosts(response.data);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+
+  useEffect(() => {
+    getData();
+  }, [postType]);
 
   const [posts, setPosts] = useState<any>([]);
 
