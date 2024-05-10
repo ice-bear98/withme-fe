@@ -35,14 +35,14 @@ const InfoCarousel: React.FC<CarouselProps> = ({ data }) => {
   };
   return (
     <div className="slider-container mb-10 font-['TAEBAEKmilkyway']">
-      <h2 className="flex items-center p-5 text-xl font-['LINESeedKR-Bd']">
+      <h2 className="flex items-center p-5 text-xl font-['LINESeedKR-Bd'] text-brand_1">
         <AiFillAliwangwang className="mr-2" />
         최신의 지역 축제를 확인하세요
       </h2>
       <Slider {...settings}>
         {data.map((it) => (
-          <div key={it.id} className="h-[560px] border-x-2 dark:border-black bg-gray-200">
-            <img src={it.img} alt="" className="rounded-xl" />
+          <div key={it.id} className="h-[560px] px-2 bg-inherit">
+            <img src={it.img} alt="" className="rounded-xl object-cover" />
           </div>
         ))}
       </Slider>
