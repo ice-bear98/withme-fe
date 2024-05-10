@@ -23,6 +23,8 @@ export default function Header() {
     navigate('/');
   };
 
+  // for commit
+
   const navBtnStyle = 'flex items-center bg-brand_4 py-1 px-2 rounded-lg hover:brightness-110';
 
   return (
