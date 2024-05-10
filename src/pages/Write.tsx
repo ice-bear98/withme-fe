@@ -61,6 +61,8 @@ export default function Write() {
     },
   });
 
+  //  체크
+
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: any; lng: any } | null>(null);
   const [images, setImages] = useState<any[]>([]);
