@@ -7,7 +7,6 @@ const useWrite = () => {
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const addPost = async (data: any) => {
-    console.log(data);
     try {
       await axios
         .post(
