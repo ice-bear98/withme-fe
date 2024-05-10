@@ -72,7 +72,7 @@ export default function PostCard({ data }: any) {
   return (
     <div className="flex-col gap-4 w-[540px] bg-white pt-4 rounded-2xl border shadow-lg overflow-hidden cursor-pointer md:w-full md:p-2">
       <h3 className="flex items-center mb-3 px-3 text-lg justify-between">
-        <span className="flex items-center">
+        <span className="flex items-center ml-3">
           <img className="w-12 h-12 rounded-full object-cover mr-2" src={title_img} alt="" />
           {nickname}
         </span>

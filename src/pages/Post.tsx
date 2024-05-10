@@ -3,11 +3,14 @@ import PostCard from '../components/post/PostCard';
 import SearchBar from '../components/post/SearchBar';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import useGetPost from '../Hooks/useGetPost';
 
 export default function Post() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const postType = searchParams.get('type');
+
+  const { getPost } = useGetPost();
 
   console.log(postType);
 
@@ -31,6 +34,7 @@ export default function Post() {
 
   useEffect(() => {
     getData();
+    getPost();
   }, [postType]);
 
   const [posts, setPosts] = useState<any>([]);
