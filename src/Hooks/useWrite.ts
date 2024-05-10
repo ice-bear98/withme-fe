@@ -1,22 +1,4 @@
-// {
-//     "title": "등산모임",
-//     "content": "이 모임은 백두산 등산 모임입니다. 함께하시죠",
-//     "gatheringType": "MEETING",
-//     "maximumParticipant": 4,
-//     "recruitmentStartDt": "2024-03-10",
-//     "recruitmentEndDt": "2024-03-12",
-//     "category": "여행",
-//     "address": "국희시 강락구 승찬동 155-1번지",
-//     "detailedAddress": "123동 456호",
-//     "location": "POINT(경도,위도)",
-//     "mainImg": "img link",
-//     "participantsType": "ADULT",
-//     "fee": 10000,
-//     "participantSelectionMethod": "FIRST_COME",
-//     "likeCount": 10,
-//   }
-
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const useWrite = () => {
@@ -27,37 +9,38 @@ const useWrite = () => {
   const addPost = async (data: any) => {
     console.log(data);
     try {
-      const res = await axios.post(
-        `${URL}/api/gathering`,
-        {
-          title: data.title,
-          category: data.category,
-          gatheringType: data.gatheringType,
-          likeCount: data.like,
-          recruitmentStartDt: data.starDttm,
-          recruitmentEndDt: data.endDttm,
-          day: data.day,
-          time: data.time,
-          maximumParticipant: data.maximumParticipant,
-          address: data.address,
-          detailedAddress: data.detailedAddress,
-          location: data.location,
-          fee: data.fee,
-          participantSelectionMethod: data.participantSelectionMethod,
-          participantsType: data.participantsType,
-          mainImg: data.mainImg,
-          subImg: data.subImg,
-          content: data.content,
-        },
-        {
-          headers: {
-            Authorization: token,
+      await axios
+        .post(
+          `${URL}/api/gathering`,
+          {
+            title: '제목제목제목제목제목',
+            content: '내용내용내용내용내용내용내용내용내용내용내용내용내용',
+            gatheringType: 'MEETING',
+            maximumParticipant: 1,
+            recruitmentStartDt: '2024-05-10',
+            recruitmentEndDt: '2024-05-11',
+            category: '카테고리',
+            address: '경기 오산시 부산중앙로 11',
+            detailedAddress: '상세주소소',
+            location: 'fadfadfadf',
+            mainImg: 'blob:http://localhost:5173/edd74f1c-3276-4b85-a80d-ebde5e950cff',
+            day: '2024-05-12',
+            time: '15:45',
+            participantsType: 'NO_RESTRICTIONS',
+            fee: 0,
+            participantSelectionMethod: 'FIRST_COME',
+            likeCount: 0,
           },
-        },
-      );
-      console.log(res.data);
+          {
+            headers: {
+              Authorization: token,
+            },
+            responseType: 'json',
+          },
+        )
+        .then((res) => console.log(res.data, res.status));
     } catch (error) {
-      console.error(error);
+      console.error('Error : ', error);
     }
   };
 

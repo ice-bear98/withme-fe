@@ -9,23 +9,23 @@ import KakaoMap from '../components/post/KakaoMap';
 import useWrite from '../Hooks/useWrite';
 interface IForm {
   title: string;
+  content: string;
   gatheringType: string;
-  like: number;
-  startDttm: string;
-  endDttm: string;
-  day: string;
-  time: string;
-  category: string;
   maximumParticipant: number;
+  recruitmentStartDt: string;
+  recruitmentEndDt: string;
+  category: string;
   address: string;
   detailedAddress: string;
   location: { lat: number; lng: number } | null;
+  mainImg: any;
+  day: string;
+  time: string;
+  like: number;
+  participantsType: string;
   fee: number;
   participantSelectionMethod: string;
-  participantsType: string;
-  mainImg: any;
   subImg: any[];
-  content: string;
 }
 
 export default function Write() {
@@ -40,10 +40,10 @@ export default function Write() {
     defaultValues: {
       title: '',
       category: '',
-      gatheringType: 'meeting',
+      gatheringType: 'MEETING',
       like: 0,
-      startDttm: '',
-      endDttm: '',
+      recruitmentStartDt: '',
+      recruitmentEndDt: '',
       day: '',
       time: '',
       maximumParticipant: 1,
@@ -51,8 +51,8 @@ export default function Write() {
       detailedAddress: '',
       location: null,
       fee: 0,
-      participantSelectionMethod: 'first_come',
-      participantsType: 'no_restrinctions',
+      participantSelectionMethod: 'FIRST_COME',
+      participantsType: 'NO_RESTRICTIONS',
       mainImg: '',
       subImg: [],
       content: '',
@@ -186,8 +186,8 @@ export default function Write() {
                 required: true,
               })}
             >
-              <option value="meeting">모임</option>
-              <option value="event">이벤트</option>
+              <option value="MEETING">모임</option>
+              <option value="EVENT">이벤트</option>
             </select>
           </div>
         </div>
@@ -233,7 +233,7 @@ export default function Write() {
                 className="text-center px-1"
                 type="date"
                 id="date_st"
-                {...register('startDttm', {
+                {...register('recruitmentStartDt', {
                   required: true,
                 })}
               />
@@ -244,7 +244,7 @@ export default function Write() {
                 className="text-center px-1"
                 type="date"
                 id="date_ed"
-                {...register('endDttm', {
+                {...register('recruitmentEndDt', {
                   required: true,
                 })}
               />
@@ -345,9 +345,9 @@ export default function Write() {
                   required: true,
                 })}
               >
-                <option value="no_restrinctions">제한없음</option>
-                <option value="adult">성인</option>
-                <option value="minor">미성년자</option>
+                <option value="NO_RESTRICTIONS">제한없음</option>
+                <option value="ADULT">성인</option>
+                <option value="MINOR">미성년자</option>
               </select>
             </div>
 
@@ -361,8 +361,8 @@ export default function Write() {
                   required: true,
                 })}
               >
-                <option value="first_come">선착순</option>
-                <option value="orgainzer_selection">선별 모집</option>
+                <option value="FIRST_COME">선착순</option>
+                <option value="UNLIMITED_APPLICATION">선별 모집</option>
               </select>
             </div>
           </div>
