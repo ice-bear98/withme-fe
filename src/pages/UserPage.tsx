@@ -1,4 +1,3 @@
-import React from 'react';
 import { PiGenderMaleBold } from 'react-icons/pi';
 import PostCard from '../components/PostCard';
 
