@@ -43,9 +43,9 @@ export default function Join() {
   return (
     <div className="py-10 flex justify-center font-['TAEBAEKmilkyway']">
       <div className="max-w-lg w-full p-4 py-10 border rounded-xl shadow-md dark:bg-brand_4">
-        <div className="text-center mb-6 text-2xl text-blue-500 font-['KCC-Hanbit']">
-          <h1>Join</h1>
-          <p className="text-base mt-2 text-blue-400">회원가입을 위한 정보를 입력해주세요</p>
+        <div className="text-center mb-6 text-2xl text-blue-500">
+          <h1 className="font-['BagelFatOne-Regular']">회원가입</h1>
+          <p className="text-base mt-2 text-blue-400 font-['LINESeedKR-Bd']">회원가입을 위한 정보를 입력해주세요</p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="flex justify-center items-center">

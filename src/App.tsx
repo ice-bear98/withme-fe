@@ -7,8 +7,8 @@ function App() {
   return (
     <div className="w-full dark:bg-gray-800">
       <Header />
-      <div className="flex justify-center min-h-[81vh]">
-        <div className="max-w-1200 w-full">
+      <div className="flex justify-center min-h-[81vh] mt-[90px]">
+        <div className="max-w-1200 w-full py-3">
           <Outlet />
         </div>
       </div>
