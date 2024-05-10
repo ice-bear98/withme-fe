@@ -12,22 +12,23 @@ const useWrite = () => {
         .post(
           `${URL}/api/gathering`,
           {
-            title: '제목제목제목제목제목',
-            content: '내용내용내용내용내용내용내용내용내용내용내용내용내용',
-            gatheringType: 'MEETING',
-            maximumParticipant: 1,
-            recruitmentStartDt: '2024-05-10',
-            recruitmentEndDt: '2024-05-11',
-            category: '카테고리',
-            address: '경기 오산시 부산중앙로 11',
-            detailedAddress: '상세주소소',
-            location: 'fadfadfadf',
-            mainImg: 'blob:http://localhost:5173/edd74f1c-3276-4b85-a80d-ebde5e950cff',
-            day: '2024-05-12',
-            time: '15:45',
-            participantsType: 'NO_RESTRICTIONS',
+            title: data.title,
+            content: data.content,
+            gatheringType: data.gatheringType,
+            maximumParticipant: data.maximumParticipant,
+            recruitmentStartDt: data.recruitmentStartDt,
+            recruitmentEndDt: data.recruitmentEndDt,
+            category: data.category,
+            address: data.address,
+            detailedAddress: data.detailedAddress,
+            lat: data.lat,
+            lng: data.lng,
+            mainImg: data.mainImg,
+            day: data.day,
+            time: data.time,
+            participantsType: data.participantsType,
             fee: 0,
-            participantSelectionMethod: 'FIRST_COME',
+            participantSelectionMethod: data.participantSelectionMethod,
             likeCount: 0,
           },
           {
@@ -37,7 +38,7 @@ const useWrite = () => {
             responseType: 'json',
           },
         )
-        .then((res) => console.log(res.data, res.status));
+        .then((res) => console.log('결과 데이터 : ', res.data, '통신 결과 : ', res));
     } catch (error) {
       console.error('Error : ', error);
     }
