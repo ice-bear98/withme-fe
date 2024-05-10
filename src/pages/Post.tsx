@@ -11,6 +11,7 @@ export default function Post() {
 
   console.log(postType);
 
+  /** searchParams에 따라 게시글 분류하여 받아오기 */
   const getData = async () => {
     try {
       const response = await axios.get('http://43.200.85.230:8080/api/gathering/list');
