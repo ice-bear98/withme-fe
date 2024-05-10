@@ -1,5 +1,9 @@
-import React from 'react';
-import { FaMapMarkerAlt, FaHeart } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import { FaMapMarkerAlt, FaHeart, FaCalendarDay } from 'react-icons/fa';
+import { IoPeopleSharp } from 'react-icons/io5';
+import { IoIosTime } from 'react-icons/io';
+
+import useFormat from '../../Hooks/useFormat';
 
 export default function PostCard({ data }: any) {
   const {
@@ -13,74 +17,117 @@ export default function PostCard({ data }: any) {
     category,
     personnel,
     address,
-    address_detail,
-    location,
-    writer,
-    pay,
-    method,
-    target,
+    nickname,
+    fee,
+    participantSelectionMethod,
+    participantsType,
     title_img,
     day,
-    sub_img,
-    content,
+    inn,
   } = data;
 
-  const formatTime = (time: any) => {
-    if (!time) return '';
-    const [hours, minutes] = time.split(':');
-    const hour = parseInt(hours, 10);
-    const period = hour >= 12 ? '오후' : '오전';
-    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-    const formattedTime = `${period} ${formattedHour}시 ${minutes}분`;
-    return formattedTime;
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isKind, setIsKind] = useState<string>('');
+
+  const kindOf = (kind: string) => {
+    if (kind === 'MEETING') {
+      setIsKind('미팅');
+    } else {
+      setIsKind('이벤트');
+    }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    };
-
-    const formattedDate = date.toLocaleDateString('ko-KR', options);
-    return formattedDate;
+  const isPay = (pay: number) => {
+    if (pay > 0) {
+      return '비용있음';
+    } else {
+      return '무료참여';
+    }
   };
+
+  const isAge = (type: string) => {
+    if (type === 'ADULT') {
+      return '성인';
+    } else if (type === 'MINOR') {
+      return '미성년';
+    } else {
+      return '나이제한 없음';
+    }
+  };
+
+  const isMethod = (method: string) => {
+    if (method === 'FIRST_COME') {
+      return '선착순 참여';
+    } else {
+      return '신청선별 참여';
+    }
+  };
+
+  useEffect(() => {
+    kindOf(kind);
+  }, []);
+
+  const { formatDate, formatTime } = useFormat();
 
   return (
-    <div className="flex-col gap-4 w-[520px] bg-white pt-4 rounded-2xl border shadow-lg overflow-hidden cursor-pointer md:w-full">
-      <div className="flex justify-between px-3 mb-2">
+    <div className="flex-col gap-4 w-[540px] bg-white pt-4 rounded-2xl border shadow-lg overflow-hidden cursor-pointer md:w-full md:p-2">
+      <h3 className="flex items-center mb-3 px-3 text-lg justify-between">
+        <span className="flex items-center">
+          <img className="w-12 h-12 rounded-full object-cover mr-2" src={title_img} alt="" />
+          {nickname}
+        </span>
+
+        <span className="text-gray-300 text-sm">{formatDate(posted)} 작성</span>
+      </h3>
+      <div className="flex justify-around px-3 mb-2">
         <span className="flex items-center text-gray-400">
           <p className="bg-red-400 px-2 mr-2 rounded-lg text-white">HOT</p>
           <p className="bg-brand_1 px-2 mr-2 rounded-lg text-white">{category}</p>
+          <p
+            className={`bg-brand_2 px-2 mr-2 rounded-lg text-white ${isKind === '미팅' ? 'bg-orange-300' : 'bg-brand_2'}`}
+          >
+            {isKind}
+          </p>
           <FaHeart className="mr-2 cursor-pointer" /> {like}
         </span>
-        <span className="text-gray-300 text-sm">{posted} 작성</span>
+        <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd']">{title}</h2>
       </div>
       <div className="flex justify-center gap-4 mt-6">
         <img className="w-48 h-48 mx-3 object-cover rounded-2xl" src={title_img} alt="" />
         <div className="ml-2">
-          <h2 className="py-2 rounded-3xl mb-4">{title}</h2>
-          <div className="text-sm">
-            <span className="bg-green-300 py-1 px-2 rounded-lg mr-2">나이제한 없음</span>
-            <span className="bg-yellow-300 py-1 px-2 rounded-lg mr-2">무료참여</span>
-            <span className="bg-orange-300 py-1 px-2 rounded-lg mr-2">선착순</span>
+          <div className="text-sm mt-5">
+            <span className="bg-green-300 py-1 px-2 rounded-lg mr-2">{isAge(participantsType)}</span>
+            <span className="bg-yellow-300 py-1 px-2 rounded-lg mr-2">{isPay(fee)}</span>
+            <span className="bg-blue-200 py-1 px-2 rounded-lg mr-2">{isMethod(participantSelectionMethod)}</span>
           </div>
-          <p className="flex items-center bg-white mt-3 p-1 rounded-lg">
-            <FaMapMarkerAlt className="mr-2" /> {address}
-          </p>
-          <p className="bg-white p-1 rounded-lg">
-            {formatDate(day)} <br /> {formatTime(time)}
-          </p>
-          <p className="bg-white p-1 rounded-lg">작성자 : {writer}</p>
-          <p className="bg-white p-1 rounded-lg">모집인원 : {personnel}</p>
+          <div className="mt-3 font-['TAEBAEKmilkyway']">
+            <p className="flex items-center bg-white mt-2 p-1 rounded-lg">
+              <FaMapMarkerAlt className="mr-2" /> {address}
+            </p>
+            <p className="flex  items-center bg-white p-1 rounded-lg">
+              <FaCalendarDay className="mr-2" />
+              일시 - {formatDate(day)}
+            </p>
+            <p className="flex  items-center bg-white p-1 rounded-lg">
+              <IoIosTime className="mr-2" />
+              시간 - {formatTime(time)}
+            </p>
+            <p className="flex items-center bg-white p-1 rounded-lg">
+              <IoPeopleSharp className="mr-2" />
+              인원 - {personnel} 명
+            </p>
+          </div>
         </div>
       </div>
-      <p className="bg-green-300 mt-2 text-center p-2 text-white">· · · 현재 모집중 ( 2 / 8 ) · · ·</p>
-      <p className="bg-brand_1 text-center p-2 text-white">
-        모집기간 : {date_st} ~ {date_end}
+      <p
+        className={`bg-brand_2 text-lg mt-5 text-center p-2 text-white hover:bg-brand_1 md:rounded-2xl md:mb-3 ${isHovered ? 'cursor-pointer' : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {isHovered ? '상세보기' : `· · · 현재 모집중 ( ${inn} / ${personnel} ) · · ·`}
+      </p>
+      <p className="bg-slate-100 text-center p-2 font-['TAEBAEKmilkyway'] md:rounded-2xl">
+        참여 기간 : {formatDate(date_st)} ~ {formatDate(date_end)}
       </p>
     </div>
   );
