@@ -1,3 +1,4 @@
+import Banner from '../components/home/Banner';
 import Carousel from '../components/home/Carousel';
 import InfoCarousel from '../components/home/InfoCarousel';
 
@@ -108,7 +109,7 @@ export default function Home() {
   const dummyItem3: InfoItem[] = [
     { id: 1, img: 'https://blog.kakaocdn.net/dn/q87fN/btqMPhm4b2H/6MAonAY8fnhFdrPNKhuaI1/img.jpg' },
     { id: 2, img: 'https://www.contestkorea.com/admincenter/files/meet/202208111034482446084.jpeg' },
-    { id: 3, img: 'https://cdn.sisamagazine.co.kr/news/photo/202108/368599_378478_5330.png' },
+    { id: 3, img: 'https://cdn.emetro.co.kr/data2/content/image/2021/10/15/.cache/512/20211015500073.jpg' },
     { id: 4, img: 'https://blog.kakaocdn.net/dn/bD8H9X/btrA1BKlzsS/iwa8pNCIQf98dHKp5OqEDk/img.webp' },
     { id: 5, img: 'https://blog.kakaocdn.net/dn/cOQK9p/btrQgLEx2YJ/r7GVmCaDVeCcWnqtZWObek/img.jpg' },
     {
@@ -119,6 +120,10 @@ export default function Home() {
 
   return (
     <main className="dark:bg-gray-800 dark:text-white">
+      <section className="xs:hidden">
+        <Banner />
+      </section>
+
       <section>
         <Carousel title={'가장 인기있는 이벤트'} data={dummyItem2} />
         <Carousel title={'가장 인기있는 모임'} data={dummyItem} />

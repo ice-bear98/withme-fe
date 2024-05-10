@@ -70,49 +70,52 @@ export default function PostCard({ data }: any) {
   const { formatDate, formatTime } = useFormat();
 
   return (
-    <div className="flex-col gap-4 w-[540px] bg-white pt-4 rounded-2xl border shadow-lg overflow-hidden cursor-pointer md:w-full md:p-2">
-      <h3 className="flex items-center mb-3 px-3 text-lg justify-between">
-        <span className="flex items-center ml-3">
-          <img className="w-12 h-12 rounded-full object-cover mr-2" src={title_img} alt="" />
+    <div className="flex-col gap-4 w-[540px] bg-white pt-4 rounded-2xl border shadow-lg overflow-hidden dark:bg-slate-700 dark:border-none md:w-full md:p-2 ">
+      <h3 className="flex items-center my-3 px-3 text-lg justify-between">
+        <span className="flex items-center ml-3 dark:text-gray-100">
+          <img
+            className="w-12 h-12 rounded-full object-cover mr-2 cursor-pointer"
+            src={title_img}
+            alt="userProfile_Img"
+          />
           {nickname}
         </span>
-
         <span className="text-gray-300 text-sm">{formatDate(posted)} 작성</span>
       </h3>
       <div className="flex justify-around px-3 mb-2">
         <span className="flex items-center text-gray-400">
-          <p className="bg-red-400 px-2 mr-2 rounded-lg text-white">HOT</p>
-          <p className="bg-brand_1 px-2 mr-2 rounded-lg text-white">{category}</p>
+          <p className="bg-red-400 px-2 mr-2 rounded-lg text-white dark:text-black">HOT</p>
+          <p className="bg-brand_1 px-2 mr-2 rounded-lg text-white dark:text-black">{category}</p>
           <p
-            className={`bg-brand_2 px-2 mr-2 rounded-lg text-white ${isKind === '미팅' ? 'bg-orange-300' : 'bg-brand_2'}`}
+            className={`bg-brand_2 px-2 mr-2 rounded-lg text-white dark:text-black ${isKind === '미팅' ? 'bg-orange-300' : 'bg-brand_2'}`}
           >
             {isKind}
           </p>
           <FaHeart className="mr-2 cursor-pointer" /> {like}
         </span>
-        <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd']">{title}</h2>
+        <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd'] dark:text-gray-100">{title}</h2>
       </div>
       <div className="flex justify-center gap-4 mt-6">
         <img className="w-48 h-48 mx-3 object-cover rounded-2xl" src={title_img} alt="" />
         <div className="ml-2">
-          <div className="text-sm mt-5">
+          <div className="text-sm mt-5 s:text-xs">
             <span className="bg-green-300 py-1 px-2 rounded-lg mr-2">{isAge(participantsType)}</span>
             <span className="bg-yellow-300 py-1 px-2 rounded-lg mr-2">{isPay(fee)}</span>
             <span className="bg-blue-200 py-1 px-2 rounded-lg mr-2">{isMethod(participantSelectionMethod)}</span>
           </div>
           <div className="mt-3 font-['TAEBAEKmilkyway']">
-            <p className="flex items-center bg-white mt-2 p-1 rounded-lg">
+            <p className="flex items-center bg-white mt-2 p-1 rounded-lg dark:bg-inherit dark:text-gray-100">
               <FaMapMarkerAlt className="mr-2" /> {address}
             </p>
-            <p className="flex  items-center bg-white p-1 rounded-lg">
+            <p className="flex  items-center bg-white p-1 rounded-lg dark:bg-inherit dark:text-gray-100">
               <FaCalendarDay className="mr-2" />
               일시 - {formatDate(day)}
             </p>
-            <p className="flex  items-center bg-white p-1 rounded-lg">
+            <p className="flex  items-center bg-white p-1 rounded-l dark:bg-inherit dark:text-gray-100">
               <IoIosTime className="mr-2" />
               시간 - {formatTime(time)}
             </p>
-            <p className="flex items-center bg-white p-1 rounded-lg">
+            <p className="flex items-center bg-white p-1 rounded-lg dark:bg-inherit dark:text-gray-100">
               <IoPeopleSharp className="mr-2" />
               인원 - {personnel} 명
             </p>
@@ -120,13 +123,13 @@ export default function PostCard({ data }: any) {
         </div>
       </div>
       <p
-        className={`bg-brand_2 text-lg mt-5 text-center p-2 text-white hover:bg-brand_1 md:rounded-2xl md:mb-3 ${isHovered ? 'cursor-pointer' : ''}`}
+        className={`bg-brand_2 text-base mt-5 text-center p-2 text-white hover:bg-brand_1 md:rounded-2xl md:mb-3 dark:bg-slate-600 ${isHovered ? 'cursor-pointer' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {isHovered ? '상세보기' : `· · · 현재 모집중 ( ${inn} / ${personnel} ) · · ·`}
       </p>
-      <p className="bg-slate-100 text-center p-2 font-['TAEBAEKmilkyway'] md:rounded-2xl">
+      <p className="bg-slate-100 text-center p-2 font-['TAEBAEKmilkyway'] md:rounded-2xl dark:bg-gray-700 dark:text-gray-100">
         참여 기간 : {formatDate(date_st)} ~ {formatDate(date_end)}
       </p>
     </div>

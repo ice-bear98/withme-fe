@@ -31,6 +31,15 @@
   font-style: normal;
 }
 
+/* 홈 메인 배너 폰트 */
+@font-face {
+  font-family: 'seolleimcool-SemiBold';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2312-1@1.1/seolleimcool-SemiBold.woff2')
+    format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* 애니메이션 속도 */
 
 * {

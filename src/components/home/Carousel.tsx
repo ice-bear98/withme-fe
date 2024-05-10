@@ -51,24 +51,24 @@ const Carousel: React.FC<CarouselProps> = ({ title, data }) => {
 
   return (
     <div className="slider-container mb-10 font-['TAEBAEKmilkyway']">
-      <h1 className="flex items-center p-5 text-xl font-['LINESeedKR-Bd']">
+      <h1 className="flex items-center p-5 text-xl font-['LINESeedKR-Bd'] text-brand_1">
         <RiVipCrownFill className="mr-2" />
         {title}
       </h1>
       <Slider {...settings}>
         {data.map((it) => (
-          <div key={it.id} className="relative border border-white border-x-2 dark:border-black">
+          <div key={it.id} className="relative px-2">
             <div className="absolute top-5 left-5">
-              <h2 className="bg-brand_3 dark:text-black text-center py-1 px-2 rounded-md text-base font-['KCC-Hanbit']">
+              <h2 className="bg-brand_4 dark:text-white dark:bg-slate-600 text-center py-1 px-2 rounded-md text-lg font-['LINESeedKR-Bd']">
                 {it.title}
               </h2>
             </div>
             {/* like가 가장 높은 아이템에만 표시 */}
             {it.id === maxLikeItem.id && (
-              <div className="absolute top-5 right-5">
-                <span className="flex items-center bg-red-500 py-1 px-2 rounded-2xl text-white">
+              <div className="absolute top-6 right-5">
+                <span className="flex items-center text-sm bg-orange-400 py-1 px-2 rounded-2xl text-white">
                   <ImFire />
-                  <p className="ml-1">HOT</p>
+                  <p className="ml-1">인기</p>
                 </span>
               </div>
             )}
@@ -81,7 +81,12 @@ const Carousel: React.FC<CarouselProps> = ({ title, data }) => {
               </button>
             </div>
             <img className="h-72 w-full object-cover rounded-t-2xl" src={it.img} alt="" />
-            <p className="text-center bg-brand_4 dark:bg-brand_1 rounded-b-2xl dark:text-black p-2">{it.content}</p>
+            <p
+              className={`bg-brand_4 dark:bg-brand_1 rounded-b-2xl dark:text-black p-2 text-center
+        ${it.content.length > 21 ? 'truncate overflow-ellipsis' : ''}`}
+            >
+              {it.content}
+            </p>
           </div>
         ))}
       </Slider>
