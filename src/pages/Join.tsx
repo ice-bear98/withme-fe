@@ -12,8 +12,8 @@ interface IForm {
   gender: 'MALE' | 'FEMALE';
 }
 
-const SIGNUP_URL = 'http://43.200.85.230:8080/api/auth/signup';
-const EMAIL_CHECK_URL = 'http://43.200.85.230:8080/api/member/check/email';
+const URL = import.meta.env.VITE_SERVER_URL;
+const EMAIL_CHECK_URL = `${URL}/api/member/check/email`;
 
 export default function Join() {
   const {
@@ -31,7 +31,7 @@ export default function Join() {
   const onSubmit = async (data: IForm) => {
     console.log(data);
     try {
-      const res = await axios.post(SIGNUP_URL, data);
+      const res = await axios.post(`${URL}/api/auth/signup`, data);
       alert('회원가입 성공');
       reset();
       navigate('/login');
