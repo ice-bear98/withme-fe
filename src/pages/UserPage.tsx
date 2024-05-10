@@ -1,6 +1,8 @@
 import { PiGenderMaleBold } from 'react-icons/pi';
 import PostCard from '../components/PostCard';
 
+// PR test
+
 export default function UserPage() {
   const infoListStyle = 'flex items-center justify-center bg-white text-center rounded-xl text-xl py-1 px-5';
 
