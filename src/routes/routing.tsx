@@ -5,7 +5,6 @@ import Login from '../pages/Login.tsx';
 import Join from '../pages/Join.tsx';
 import SocialJoin from '../pages/SocialJoin.tsx';
 import Mypage from '../pages/Mypage.tsx';
-import Event from '../pages/Event.tsx';
 import PostDetail from '../pages/PostDetail.tsx';
 import Chat from '../pages/Chat.tsx';
 import Payment from '../pages/Payment.tsx';
@@ -13,7 +12,7 @@ import UserPage from '../pages/UserPage.tsx';
 import MyManage from '../pages/MyManage.tsx';
 import MyFollow from '../pages/MyFollow.tsx';
 import Write from '../pages/Write.tsx';
-import Meeting from '../pages/Meeting.tsx';
+import Post from '../pages/Post.tsx';
 import App from '../App.tsx';
 import ProtectedRoute from './protectedRoute.tsx';
 
@@ -27,8 +26,7 @@ const router = createBrowserRouter([
       { path: '/login', element: <Login /> },
       { path: '/join', element: <Join /> },
       { path: '/socialJoin', element: <SocialJoin /> },
-      { path: '/event', element: <Event /> },
-      { path: '/meeting', element: <Meeting /> },
+      { path: '/post', element: <Post /> },
       {
         element: <ProtectedRoute />,
         children: [

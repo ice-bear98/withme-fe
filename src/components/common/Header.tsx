@@ -24,7 +24,7 @@ export default function Header() {
   const navBtnStyle = 'flex items-center bg-brand_4 py-1 px-2 rounded-lg hover:brightness-110';
 
   return (
-    <header className="flex-col bg-brand_1">
+    <header className="flex-col bg-brand_1 shadow-lg">
       <ScrollTopBtn />
       <div className="flex justify-between py-5 px-52 ml:px-10">
         <Link to={'/'} className="flex items-center">
@@ -63,13 +63,13 @@ export default function Header() {
       <div>
         <div className="flex justify-center bg-brand_3 p-2">
           <ul className="flex max-w-1200 w-1200 justify-center font-sans text-slate-800 space-x-20 md:space-x-10 s:space-x-1">
-            <Link to={'/event'}>
+            <Link to={'/post'}>
               <li className={`${navBtnStyle}`}>
                 <FaSketch />
                 <span className="ml-2">이벤트</span>
               </li>
             </Link>
-            <Link to={'/meeting'}>
+            <Link to={'/post'}>
               <li className={`${navBtnStyle}`}>
                 <FaUserFriends />
                 <span className="ml-2">모임</span>
