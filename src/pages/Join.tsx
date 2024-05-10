@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoIosReturnLeft } from 'react-icons/io';
+import { useState } from 'react';
 
 interface IForm {
   email: string;
@@ -11,7 +12,8 @@ interface IForm {
   gender: 'MALE' | 'FEMALE';
 }
 
-const SIGNUP_URL = 'http://43.200.85.230:8080/api/auth/signup';
+const URL = import.meta.env.VITE_SERVER_URL;
+const EMAIL_CHECK_URL = `${URL}/api/member/check/email`;
 
 export default function Join() {
   const {
@@ -19,25 +21,43 @@ export default function Join() {
     handleSubmit,
     formState: { errors },
     watch,
+    setError,
+    clearErrors,
     reset,
   } = useForm<IForm>();
-
+  const [emailStatus, setEmailStatus] = useState('');
   const navigate = useNavigate();
 
   const onSubmit = async (data: IForm) => {
     console.log(data);
     try {
-      const res = await axios.post(SIGNUP_URL, data);
-      console.log('회원가입 성공', res.data);
+      const res = await axios.post(`${URL}/api/auth/signup`, data);
+      alert('회원가입 성공');
       reset();
       navigate('/login');
     } catch (error) {
-      console.log('회원가입 실패', error);
+      alert('회원가입 실패 서버상태 불량');
     }
   };
 
   const validatePassword = (value: string) => {
     return value === watch('password') || '비밀번호가 일치하지 않습니다';
+  };
+
+  const validateEmail = async (email: string) => {
+    try {
+      const { data } = await axios.get(`${EMAIL_CHECK_URL}?email=${email}`);
+      if (data) {
+        setError('email', { type: 'manual', message: '이미 사용 중인 이메일입니다.' });
+        setEmailStatus('');
+      } else {
+        clearErrors('email');
+        setEmailStatus('사용 가능한 이메일입니다.');
+      }
+    } catch (error) {
+      console.error('이메일 중복 확인 실패', error);
+      setEmailStatus('이메일 중복 확인에 실패했습니다.');
+    }
   };
 
   return (
@@ -60,14 +80,24 @@ export default function Join() {
                   value: 20,
                   message: '20글자 미만 작성해주세요',
                 },
+                onChange: (e) => validateEmail(e.target.value),
               })}
               type="email"
               placeholder="사용할 아이디 이메일을 적어주세요"
               className="rounded-md w-3/4 border-2 p-1 placeholder-brand_2 placeholder:text-center font-sans"
             />
           </div>
+          <div className="text-center">
+            <span className="mr-2 font-sans text-slate-600">중복되는 이메일인지 확인해주세요</span>
+            <button
+              onClick={() => validateEmail(watch(`email`))}
+              className="bg-green-400 py-1 px-2 rounded-lg text-white font-sans"
+            >
+              이메일 중복확인
+            </button>
+          </div>
           {errors.email && <p className="text-red-500 text-center">{errors.email.message}</p>}
-
+          {emailStatus && <p className="text-green-500 text-center">{emailStatus}</p>}
           <div className="flex justify-center items-center">
             <input
               {...register('password', {

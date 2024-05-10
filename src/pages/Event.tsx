@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import PostCard from '../components/PostCard';
-import SearchBar from '../components/SearchBar';
 import axios from 'axios';
+import PostCard from '../components/post/PostCard';
+import SearchBar from '../components/post/SearchBar';
+import { useEffect } from 'react';
 
 export default function Event() {
   useEffect(() => {

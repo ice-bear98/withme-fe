@@ -1,31 +1,36 @@
-import React, { useEffect, useRef, useState } from 'react';
-import KakaoMap from '../components/KakaoMap';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+
 import { FiMapPin } from 'react-icons/fi';
-import { FaMagic } from 'react-icons/fa';
+import { FaMagic, FaPlusCircle } from 'react-icons/fa';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
+
+import KakaoMap from '../components/post/KakaoMap';
+import useWrite from '../Hooks/useWrite';
 interface IForm {
   title: string;
-  kind: string;
+  gatheringType: string;
   like: number;
-  date_st: string;
-  date_end: string;
+  startDttm: string;
+  endDttm: string;
+  day: string;
   time: string;
   category: string;
-  personnel: number;
+  maximumParticipant: number;
   address: string;
-  address_detail: string;
-  location: string;
-  writer: string;
-  pay: number;
-  method: string;
-  target: string;
-  title_img: string;
-  sub_img: string[];
+  detailedAddress: string;
+  location: { lat: number; lng: number } | null;
+  fee: number;
+  participantSelectionMethod: string;
+  participantsType: string;
+  mainImg: any;
+  subImg: any[];
   content: string;
 }
 
 export default function Write() {
+  const { addPost } = useWrite();
+
   const {
     register,
     handleSubmit,
@@ -35,36 +40,42 @@ export default function Write() {
     defaultValues: {
       title: '',
       category: '',
-      kind: 'meeting',
+      gatheringType: 'meeting',
       like: 0,
-      date_st: '',
-      date_end: '',
+      startDttm: '',
+      endDttm: '',
+      day: '',
       time: '',
-      personnel: 0,
+      maximumParticipant: 1,
       address: '',
-      address_detail: '',
-      location: '',
-      writer: '',
-      pay: 0,
-      method: 'first_come',
-      target: 'no_restrinctions',
-      title_img: '',
-      sub_img: [],
+      detailedAddress: '',
+      location: null,
+      fee: 0,
+      participantSelectionMethod: 'first_come',
+      participantsType: 'no_restrinctions',
+      mainImg: '',
+      subImg: [],
       content: '',
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
-
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [images, setImages] = useState<any[]>([]);
 
   /** 다음 주소찾기 API */
   const onClickAddr = () => {
     window.daum.postcode.load(() => {
+      let width = 500;
+      let height = 600;
+
+      const leftOffset = (window.screen.width - width) / 2;
+      const topOffset = (window.screen.height - height) / 2;
+
       const postcode = new window.daum.Postcode({
+        width: width,
+        height: height,
+
         oncomplete: async function (data: any) {
           console.log(data);
           setDaumAddress(data.address);
@@ -79,6 +90,8 @@ export default function Write() {
       });
       postcode.open({
         autoClose: true,
+        left: leftOffset,
+        top: topOffset,
       });
     });
   };
@@ -100,8 +113,31 @@ export default function Write() {
     });
   };
 
+  /** 이미지 추가 핸들러 */
+  const handleImageAdd = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImages((prevImages) => {
+        const updatedImages = [...prevImages];
+        updatedImages[index] = imageUrl;
+        return updatedImages;
+      });
+    }
+  };
+
+  /** Submit 핸들러 */
+  const onSubmit = (data: IForm) => {
+    data.location = coords;
+    data.mainImg = images[0];
+    data.subImg = images.slice(1, 4);
+    console.log(data);
+
+    addPost(data);
+  };
+
   return (
-    <main className="py-10 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">
+    <main className="py-5 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">
       <h1 className="flex justify-center mb-10 font-['LINESeedKR-Bd'] text-2xl">
         <div className="flex justify-center items-center bg-brand_3 px-5 py-2 rounded-2xl">
           <FaMagic className="mr-3" />
@@ -146,7 +182,7 @@ export default function Write() {
             <select
               className="outline-none bg-brand_3 p-1 rounded-xl"
               id="kind"
-              {...register('kind', {
+              {...register('gatheringType', {
                 required: true,
               })}
             >
@@ -166,13 +202,26 @@ export default function Write() {
         </h3>
 
         <div className="flex justify-between space-x-5 mt-5">
-          <div className="border-2 w-1/2 h-96 ">
+          <div className="flex justify-center items-center border-2 w-1/2 h-96 relative">
+            <label htmlFor="title_img">
+              <FaPlusCircle
+                className={`cursor-pointer w-12 h-12 text-brand_1
+              ${images[0] ? 'absolute top-5 left-5 w-10 h-10' : 'block'}
+              `}
+              />
+            </label>
+
             <input
               type="file"
-              // {...register('title_img', {
-              //   required: true,
-              // })}
+              id="title_img"
+              className="hidden"
+              {...(register('mainImg'),
+              {
+                required: true,
+              })}
+              onChange={handleImageAdd(0)}
             />
+            {images[0] && <img src={images[0]} className="w-full h-full object-cover" />}
           </div>
 
           <div className="flex-col content-center space-y-3 w-1/2 h-96">
@@ -184,7 +233,7 @@ export default function Write() {
                 className="text-center px-1"
                 type="date"
                 id="date_st"
-                {...register('date_st', {
+                {...register('startDttm', {
                   required: true,
                 })}
               />
@@ -195,7 +244,7 @@ export default function Write() {
                 className="text-center px-1"
                 type="date"
                 id="date_ed"
-                {...register('date_end', {
+                {...register('endDttm', {
                   required: true,
                 })}
               />
@@ -236,6 +285,20 @@ export default function Write() {
             </div>
 
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
+              <label htmlFor="day" className="font-['LINESeedKR-Bd'] mr-2">
+                모임 및 이벤트 당일
+              </label>
+              <input
+                className="text-center outline-none px-1"
+                type="date"
+                id="day"
+                {...register('day', {
+                  required: true,
+                })}
+              />
+            </div>
+
+            <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="personnel" className="font-['LINESeedKR-Bd'] mr-2">
                 모집 인원
               </label>
@@ -244,13 +307,16 @@ export default function Write() {
                 type="number"
                 id="personnel"
                 placeholder="인원수를 지정해주세요"
-                {...register('personnel', {
+                {...register('maximumParticipant', {
                   required: true,
+                  min: { value: 1, message: '1명 이상은 모집해야합니다.' },
                 })}
               />
               <span className="ml-2">명</span>
             </div>
-
+            {errors.maximumParticipant && (
+              <p className="text-red-500 mb-5 text-center">{errors.maximumParticipant.message}</p>
+            )}
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="pay" className="font-['LINESeedKR-Bd'] mr-2">
                 참가 비용
@@ -260,12 +326,14 @@ export default function Write() {
                 type="number"
                 placeholder="금액을 적어주세요"
                 id="pay"
-                {...register('pay', {
+                {...register('fee', {
                   required: true,
+                  min: { value: 0, message: '마이너스는 불가능합니다.' },
                 })}
               />
               <span className="ml-2">원</span>
             </div>
+            {errors.fee && <p className="text-red-500 mb-5 text-center">{errors.fee.message}</p>}
 
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="target" className="font-['LINESeedKR-Bd'] mr-2">
@@ -273,7 +341,7 @@ export default function Write() {
               </label>
               <select
                 id="target"
-                {...register('target', {
+                {...register('participantsType', {
                   required: true,
                 })}
               >
@@ -289,7 +357,7 @@ export default function Write() {
               </label>
               <select
                 id="method"
-                {...register('method', {
+                {...register('participantSelectionMethod', {
                   required: true,
                 })}
               >
@@ -303,18 +371,28 @@ export default function Write() {
         {/* 중단바 (이미지 3장) */}
         <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
           <CiImageOn />
-          <span>관련 이미지를 등록하여 흥미를 높이세요. ( 필수사항 X )</span>
+          <span>관련 이미지를 등록하여 관심도를 높이세요.</span>
         </h3>
         <div className="flex space-x-5 mt-5">
-          <div className="border-2 w-1/3 h-96">
-            <input type="file" />
-          </div>
-          <div className="border-2 w-1/3 h-96">
-            <input type="file" />
-          </div>
-          <div className="border-2 w-1/3 h-96">
-            <input type="file" />
-          </div>
+          {[1, 2, 3].map((index) => (
+            <div key={index} className="flex justify-center items-center border-2 w-1/2 h-96 relative">
+              <label htmlFor={`sub_img${index}`}>
+                <FaPlusCircle
+                  className={`cursor-pointer w-12 h-12 text-brand_1 ${
+                    images[index] ? 'absolute top-5 left-5 w-10 h-10' : 'block'
+                  }`}
+                />
+              </label>
+              <input
+                type="file"
+                id={`sub_img${index}`}
+                className="hidden"
+                {...register(`subImg`)}
+                onChange={handleImageAdd(index)}
+              />
+              {images[index] && <img src={images[index]} className="w-full h-full object-cover" />}
+            </div>
+          ))}
         </div>
 
         {/* 하단바 (내용 작성) */}
@@ -350,11 +428,13 @@ export default function Write() {
               type="text"
               className="w-3/4 rounded-2xl border-2 text-center p-2"
               placeholder="찾아오기 쉽게 상세주소를 더 작성해주세요."
-              {...register('address_detail', {
+              {...register('detailedAddress', {
                 required: true,
+                minLength: { value: 5, message: '5글자 이상 작성해주세요.' },
               })}
             />
           </div>
+          {errors.detailedAddress && <p className="text-red-500 text-center mb-5">{errors.detailedAddress.message}</p>}
         </div>
 
         {/* 최하단바 (등록버튼) */}

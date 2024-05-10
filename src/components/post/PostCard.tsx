@@ -14,7 +14,7 @@ export default function PostCard() {
       </div>
       <div className="flex justify-center gap-4">
         <img
-          className="w-48 h-48 object-cover rounded-2xl"
+          className="w-48 h-48 mx-3 object-cover rounded-2xl"
           src="https://cdn.pixabay.com/photo/2023/05/22/20/17/ai-generated-8011407_1280.jpg"
           alt=""
         />
@@ -24,7 +24,6 @@ export default function PostCard() {
             <span className="bg-green-300 py-1 px-2 rounded-lg mr-2">나이제한 없음</span>
             <span className="bg-yellow-300 py-1 px-2 rounded-lg mr-2">무료참여</span>
             <span className="bg-orange-300 py-1 px-2 rounded-lg mr-2">선착순</span>
-            <span className="bg-sky-200 py-1 px-2 rounded-lg mr-2">무료</span>
           </div>
           <p className="flex items-center bg-white mt-3 p-1 rounded-lg">
             <FaMapMarkerAlt className="mr-2" /> 용산구 - 5월 10일 (금) 오후 7시
