@@ -39,7 +39,7 @@ export default function Banner() {
             자연을 좋아하는 사람들과 <b className="text-3xl mx-2">함께</b> 캠핑을 떠나던가
           </p>
         </div>
-        <div className="absolute bottom-10 right-10">
+        <div className="absolute bottom-10 right-20 s:right-10">
           <Link to={'/join'}>
             <b className="text-white bg-black py-3 px-6 rounded-full cursor-pointer text-lg hover:bg-brand_1 hover:text-black">
               윗미에 함께 참여하기
@@ -67,7 +67,7 @@ export default function Banner() {
             만나 신나거나
           </p>
         </div>
-        <div className="absolute bottom-10 right-10">
+        <div className="absolute bottom-10 right-20 s:right-10">
           <Link to={'/join'}>
             <b className="text-white bg-black py-3 px-6 rounded-full cursor-pointer text-lg hover:bg-brand_1 hover:text-black">
               윗미에 함께 참여하기
@@ -96,7 +96,7 @@ export default function Banner() {
             가게 이벤트를 알게되던가 이벤트를 알게된다던가
           </p>
         </div>
-        <div className="absolute bottom-10 right-10">
+        <div className="absolute bottom-10 right-20 s:right-10">
           <Link to={'/join'}>
             <b className="text-white bg-black py-3 px-6 rounded-full cursor-pointer text-lg hover:bg-brand_1 hover:text-black">
               윗미에 함께 참여하기
