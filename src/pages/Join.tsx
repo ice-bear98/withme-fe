@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoIosReturnLeft } from 'react-icons/io';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IForm {
   email: string;
@@ -26,12 +26,13 @@ export default function Join() {
     reset,
   } = useForm<IForm>();
   const [emailStatus, setEmailStatus] = useState('');
+  const [_, setEmailChecked] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (data: IForm) => {
     console.log(data);
     try {
-      const res = await axios.post(`${URL}/api/auth/signup`, data);
+      await axios.post(`${URL}/api/auth/signup`, data);
       alert('회원가입 성공');
       reset();
       navigate('/login');
@@ -44,7 +45,19 @@ export default function Join() {
     return value === watch('password') || '비밀번호가 일치하지 않습니다';
   };
 
-  const validateEmail = async (email: string) => {
+  const validateEmail = async () => {
+    const email = watch('email');
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!emailRegex.test(email)) {
+      setError('email', {
+        type: 'manual',
+        message: '이메일 형식에 맞춰 작성해주세요',
+      });
+      return;
+    }
+
+    setEmailChecked(true);
     try {
       const { data } = await axios.get(`${EMAIL_CHECK_URL}?email=${email}`);
       if (data) {
@@ -59,6 +72,17 @@ export default function Join() {
       setEmailStatus('이메일 중복 확인에 실패했습니다.');
     }
   };
+
+  useEffect(() => {
+    const subscription = watch((_, { name }) => {
+      if (name === 'email') {
+        setEmailChecked(false);
+        setEmailStatus('');
+        clearErrors('email');
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, clearErrors]);
 
   return (
     <div className="py-10 flex justify-center font-['TAEBAEKmilkyway']">
@@ -80,7 +104,6 @@ export default function Join() {
                   value: 20,
                   message: '20글자 미만 작성해주세요',
                 },
-                onChange: (e) => validateEmail(e.target.value),
               })}
               type="email"
               placeholder="사용할 아이디 이메일을 적어주세요"
@@ -90,7 +113,8 @@ export default function Join() {
           <div className="text-center">
             <span className="mr-2 font-sans text-slate-600">중복되는 이메일인지 확인해주세요</span>
             <button
-              onClick={() => validateEmail(watch(`email`))}
+              type="button"
+              onClick={validateEmail}
               className="bg-green-400 py-1 px-2 rounded-lg text-white font-sans"
             >
               이메일 중복확인
