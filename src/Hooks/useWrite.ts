@@ -38,7 +38,10 @@ const useWrite = () => {
             responseType: 'json',
           },
         )
-        .then((res) => console.log('결과 데이터 : ', res.data, '통신 결과 : ', res));
+        .then((res) => {
+          console.log('결과 데이터 : ', res.data, '통신 결과 : ', res);
+          navigate('/post?type=all');
+        });
     } catch (error) {
       console.error('Error : ', error);
     }
