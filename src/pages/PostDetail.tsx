@@ -9,6 +9,7 @@ import useFormat from '../Hooks/useFormat';
 import KakaoMap from '../components/post/KakaoMap';
 import Loader from '../components/common/Loader';
 import CommentBar from '../components/detail/CommentBar';
+import useParticipation from '../Hooks/useParticipation';
 
 export default function PostDetail() {
   const [data, setData] = useState<any>();
@@ -21,6 +22,7 @@ export default function PostDetail() {
   const { id }: any = useParams();
 
   const { formatDate, formatTime } = useFormat();
+  const { addParticipation } = useParticipation();
 
   const getData = async () => {
     try {
@@ -134,7 +136,10 @@ export default function PostDetail() {
         <KakaoMap coords={location} />
         <p className="mt-5 text-center border-2 p-2">상세주소 : {data.detailedAddress}</p>
         <div className="flex">
-          <button className="mt-5 w-full bg-brand_2 p-2 rounded-2xl hover:bg-brand_1 text-xl text-white">
+          <button
+            onClick={() => addParticipation(id)}
+            className="mt-5 w-full bg-brand_2 p-2 rounded-2xl hover:bg-brand_1 text-xl text-white"
+          >
             참여하기
           </button>
         </div>

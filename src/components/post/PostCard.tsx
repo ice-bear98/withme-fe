@@ -13,7 +13,7 @@ export default function PostCard({ data }: any) {
     id,
     title,
     gatheringType,
-    like,
+    likeCount,
     recruitmentStartDt,
     recruitmentEndDt,
     createdDttm,
@@ -98,7 +98,7 @@ export default function PostCard({ data }: any) {
           >
             {isKind}
           </p>
-          <FaHeart className="mr-2 cursor-pointer" /> {like}
+          <FaHeart className="mr-2 cursor-pointer" /> {likeCount}
         </span>
         <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd'] dark:text-gray-100">{title}</h2>
       </div>
