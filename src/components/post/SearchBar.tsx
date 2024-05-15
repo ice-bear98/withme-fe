@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function SearchBar() {
-  const [category, setCategory] = useState<string | null>('');
+  const [_, setCategory] = useState<string | null>('');
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
