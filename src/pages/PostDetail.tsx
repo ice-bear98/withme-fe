@@ -14,11 +14,9 @@ import useParticipation from '../Hooks/useParticipation';
 export default function PostDetail() {
   const [data, setData] = useState<any>();
   const [status, setStatus] = useState<string>('');
-  const [comments, setComments] = useState<any>();
   const [location, setLocation] = useState<any>({ lat: '', lng: '' });
 
   const URL = import.meta.env.VITE_SERVER_URL;
-  const token = localStorage.getItem('accessToken');
 
   const { id }: any = useParams();
 
@@ -27,18 +25,12 @@ export default function PostDetail() {
 
   const getData = async () => {
     try {
-      const [gatheringResponse, commentResponse] = await Promise.all([
-        axios.get(`${URL}/api/gathering/${id}`),
-        axios.get(`${URL}/api/comment/list/${id}?page=0&size=10&sort=id,desc`),
-      ]);
-
+      const gatheringResponse = await axios.get(`${URL}/api/gathering/${id}`);
       setData(gatheringResponse.data);
       setStatus(gatheringResponse.data.status);
-      setComments(commentResponse.data.content);
       setLocation({ lat: gatheringResponse.data.lat, lng: gatheringResponse.data.lng });
 
       console.log('게시글 정보:', gatheringResponse);
-      console.log('댓글 정보:', commentResponse);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -55,8 +47,6 @@ export default function PostDetail() {
       </div>
     );
   }
-
-  console.log(comments);
 
   const getLimited = (participantsType: string) => {
     switch (participantsType) {
@@ -146,7 +136,6 @@ export default function PostDetail() {
         </div>
       </div>
       <div className="mt-5 border border-brand_4 rounded-2xl shadow-lg py-2 px-4">
-        {/* <CommentBar data={comments} /> */}
         <CommentBar />
       </div>
     </div>
