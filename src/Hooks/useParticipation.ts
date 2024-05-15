@@ -7,13 +7,17 @@ const useParticipation = () => {
   const addParticipation = async (id: any) => {
     console.log(id);
 
-    await axios
-      .post(`${URL}/api/participation?gatheringid=${id}`, {
+    try {
+      const response = await axios.post(`${URL}/api/participation?gatheringid=${id}`, null, {
         headers: {
           Authorization: token,
         },
-      })
-      .then((res) => console.log('모임 참여 통신 결과 : ', res));
+      });
+
+      console.log('모임 참여 통신 결과:', response);
+    } catch (error) {
+      console.error('모임 참여 통신 에러:', error);
+    }
   };
 
   return { addParticipation };

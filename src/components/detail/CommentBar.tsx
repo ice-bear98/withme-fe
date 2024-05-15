@@ -8,6 +8,8 @@ export default function CommentBar({ data }: any) {
   const [comment, setComment] = useState<string>('');
   const [editContent, setEditContent] = useState<string>('');
   const [editStates, setEditStates] = useState<{ [key: string]: boolean }>({});
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const totalPages = Math.ceil(data.totalElements / data.size);
 
   const { id }: any = useParams();
   const commentRef: any = useRef();
@@ -68,9 +70,23 @@ export default function CommentBar({ data }: any) {
     editComment(id, editContent);
   };
 
+  const goToPreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < data.totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const commentsToShow = comments.slice(currentPage * data.size, (currentPage + 1) * data.size);
+
   return (
     <div className="space-y-7 mt-3">
-      {comments.map((comment: any) => (
+      {commentsToShow.map((comment: any) => (
         <div key={comment.id}>
           <div className="bg-gray-200 py-2 px-5 flex justify-between rounded-tl-lg rounded-tr-lg">
             <b>{comment.nickName} </b>

@@ -18,6 +18,7 @@ export default function PostDetail() {
   const [location, setLocation] = useState<any>({ lat: '', lng: '' });
 
   const URL = import.meta.env.VITE_SERVER_URL;
+  const token = localStorage.getItem('accessToken');
 
   const { id }: any = useParams();
 
@@ -43,8 +44,18 @@ export default function PostDetail() {
     }
   };
 
+  const getAppList = async () => {
+    const res = await axios.get(`${URL}/api/participation/mylist`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    console.log('참가 목록 가져오기 : ', res);
+  };
+
   useEffect(() => {
     getData();
+    getAppList();
   }, [id]);
 
   if (!data) {
