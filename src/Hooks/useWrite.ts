@@ -47,7 +47,22 @@ const useWrite = () => {
     }
   };
 
-  return { addPost };
+  const RemovePost = async (id: number) => {
+    try {
+      await axios
+        .delete(`${URL}/api/gathering/${id}`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => console.log('삭제 확인 : ', res));
+      navigate('/post?type=all');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return { addPost, RemovePost };
 };
 
 export default useWrite;

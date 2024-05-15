@@ -10,18 +10,22 @@ import KakaoMap from '../components/post/KakaoMap';
 import Loader from '../components/common/Loader';
 import CommentBar from '../components/detail/CommentBar';
 import useParticipation from '../Hooks/useParticipation';
+import useUserStore from '../store/store';
+import useWrite from '../Hooks/useWrite';
 
 export default function PostDetail() {
   const [data, setData] = useState<any>();
   const [status, setStatus] = useState<string>('');
   const [location, setLocation] = useState<any>({ lat: '', lng: '' });
 
+  const userId = useUserStore((state) => state.user?.memberId);
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const { id }: any = useParams();
 
   const { formatDate, formatTime } = useFormat();
   const { addParticipation } = useParticipation();
+  const { RemovePost } = useWrite();
 
   const getData = async () => {
     try {
@@ -47,6 +51,14 @@ export default function PostDetail() {
       </div>
     );
   }
+
+  const handleRemove = (id: number) => {
+    if (confirm('정말로 삭제하시겠습니까?')) {
+      RemovePost(id);
+    } else {
+      return;
+    }
+  };
 
   const getLimited = (participantsType: string) => {
     switch (participantsType) {
@@ -80,7 +92,20 @@ export default function PostDetail() {
           />
           <p className="ml-3 text2xl">{data.nickName}</p>
         </div>
-        <p>{formatDate(data.createdDttm)} 등록</p>
+        <div className="flex space-x-3 items-center">
+          <p>{formatDate(data.createdDttm)} 등록</p>
+          {data.memberId === userId && (
+            <div className="space-x-3">
+              <button className="bg-brand_4 py-1 px-3 border-2 hover:bg-brand_3">수정</button>
+              <button
+                onClick={() => handleRemove(data.gatheringId)}
+                className="bg-brand_4 py-1 px-3 border-2 hover:bg-red-200"
+              >
+                삭제
+              </button>
+            </div>
+          )}
+        </div>
       </h2>
       <h1 className="bg-brand_3 text-lg text-center flex justify-around py-3">
         <span className="flex items-center text-gray-500">
