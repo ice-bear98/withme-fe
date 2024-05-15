@@ -2,37 +2,63 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useComment from '../../Hooks/useComment';
 import useFormat from '../../Hooks/useFormat';
+import axios from 'axios';
+import useUserStore from '../../store/store';
 
-export default function CommentBar({ data }: any) {
+export default function CommentBar() {
   const [comments, setComments] = useState<any[]>([]);
   const [comment, setComment] = useState<string>('');
   const [editContent, setEditContent] = useState<string>('');
   const [editStates, setEditStates] = useState<{ [key: string]: boolean }>({});
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const totalPages = Math.ceil(data.totalElements / data.size);
+  const [totalPage, setTotalPage] = useState<number>(0);
+
+  const userName = useUserStore((state) => state.user?.nickName);
 
   const { id }: any = useParams();
   const commentRef: any = useRef();
+  const URL = import.meta.env.VITE_SERVER_URL;
 
   const { addComment, removeComment, editComment } = useComment();
   const { formatDate, formatTime } = useFormat();
 
+  /** 댓글 페이지 변경 함수 */
+  const changePage = (page: number) => {
+    const pageLimit = Math.max(0, Math.min(page, totalPage - 1));
+    setCurrentPage(pageLimit);
+    fetchComments(pageLimit);
+  };
+
+  /** 댓글 요청 함수 */
+  const fetchComments = async (page: number) => {
+    try {
+      const data = await axios.get(`${URL}/api/comment/list/${id}?page=${page}&size=10&sort=id,desc`);
+      console.log(data);
+      setComments(data.data.content);
+      setTotalPage(data.data.totalPages);
+    } catch (error) {
+      console.error('댓글 요청 실패 : ', error);
+    }
+  };
+
   useEffect(() => {
-    if (data && Array.isArray(data)) {
-      const commentsWithEditingFlag = data.map((comment) => ({
+    fetchComments(0);
+    if (comments && Array.isArray(comments)) {
+      const commentsWithEditingFlag = comments.map((comment) => ({
         ...comment,
         isEditing: false,
       }));
       setComments(commentsWithEditingFlag);
 
       const initialEditStates: { [key: string]: boolean } = {};
-      data.forEach((comment) => {
+      comments.forEach((comment) => {
         initialEditStates[comment.id] = false;
       });
       setEditStates(initialEditStates);
     }
-  }, [data]);
+  }, []);
 
+  /** 댓글 수정 토글 */
   const handleEditToggle = (commentId: string) => {
     setEditStates({
       ...editStates,
@@ -45,48 +71,53 @@ export default function CommentBar({ data }: any) {
         setEditContent(targetComment.commentContent);
       }
     }
-
-    console.log(editContent);
   };
 
+  /** 댓글 내용 입력(Add) 핸들러 */
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   };
 
+  /** 댓글 내용 변경(Edit) 핸들러 */
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditContent(e.target.value);
   };
 
-  const handleSubmit = () => {
+  /** 댓글 등록 */
+  const handleSubmit = async () => {
     if (comment.trim() === '') {
       return;
     }
-    addComment(comment, id);
+    await addComment(comment, id);
     setComment('');
+    fetchComments(currentPage);
   };
 
-  const handleEdit = (id: any) => {
+  /** 댓글 수정 */
+  const handleEdit = async (id: any) => {
+    await editComment(id, editContent);
+    fetchComments(currentPage);
     handleEditToggle(id);
-    editComment(id, editContent);
   };
 
-  const goToPreviousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
+  /** 댓글 삭제 */
+  const handleRemove = async (id: any) => {
+    await removeComment(id);
+    fetchComments(currentPage);
   };
-
-  const goToNextPage = () => {
-    if (currentPage < data.totalPages - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const commentsToShow = comments.slice(currentPage * data.size, (currentPage + 1) * data.size);
 
   return (
     <div className="space-y-7 mt-3">
-      {commentsToShow.map((comment: any) => (
+      <div className="flex justify-between px-5">
+        <button onClick={() => changePage(currentPage - 1)} className="border-2 shadow-sm py-1 px-3 rounded-2xl">
+          이전
+        </button>
+        <h4 className="text-lg">댓글</h4>
+        <button onClick={() => changePage(currentPage + 1)} className="border-2 shadow-sm py-1 px-3 rounded-2xl">
+          다음
+        </button>
+      </div>
+      {comments.map((comment: any) => (
         <div key={comment.id}>
           <div className="bg-gray-200 py-2 px-5 flex justify-between rounded-tl-lg rounded-tr-lg">
             <b>{comment.nickName} </b>
@@ -102,21 +133,23 @@ export default function CommentBar({ data }: any) {
               <p>{comment.commentContent} </p>
             )}
 
-            <div className="space-x-5">
-              {editStates[comment.id] ? (
-                <button className="px-2 rounded-lg bg-brand_3" onClick={() => handleEdit(comment.id)}>
-                  저장
-                </button>
-              ) : (
-                <button className="px-2 rounded-lg bg-brand_3" onClick={() => handleEditToggle(comment.id)}>
-                  수정
-                </button>
-              )}
+            {comment.nickName === userName && (
+              <div className="space-x-5">
+                {editStates[comment.id] ? (
+                  <button className="px-2 rounded-lg bg-brand_3" onClick={() => handleEdit(comment.id)}>
+                    저장
+                  </button>
+                ) : (
+                  <button className="px-2 rounded-lg bg-brand_3" onClick={() => handleEditToggle(comment.id)}>
+                    수정
+                  </button>
+                )}
 
-              <button className="px-2 rounded-lg bg-red-200" onClick={() => removeComment(comment.id)}>
-                삭제
-              </button>
-            </div>
+                <button className="px-2 rounded-lg bg-red-200" onClick={() => handleRemove(comment.id)}>
+                  삭제
+                </button>
+              </div>
+            )}
           </div>
         </div>
       ))}

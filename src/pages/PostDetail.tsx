@@ -44,18 +44,8 @@ export default function PostDetail() {
     }
   };
 
-  const getAppList = async () => {
-    const res = await axios.get(`${URL}/api/participation/mylist`, {
-      headers: {
-        Authorization: token,
-      },
-    });
-    console.log('참가 목록 가져오기 : ', res);
-  };
-
   useEffect(() => {
     getData();
-    getAppList();
   }, [id]);
 
   if (!data) {
@@ -156,8 +146,8 @@ export default function PostDetail() {
         </div>
       </div>
       <div className="mt-5 border border-brand_4 rounded-2xl shadow-lg py-2 px-4">
-        <h4 className="text-center text-lg mt-2">댓글창</h4>
-        <CommentBar data={comments} />
+        {/* <CommentBar data={comments} /> */}
+        <CommentBar />
       </div>
     </div>
   );
