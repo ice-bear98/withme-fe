@@ -60,11 +60,13 @@ export default function Header() {
               <span className="ml-1 hidden sm:block">개최</span>
             </li>
           </Link>
-          <li className={`${navBtnStyle}`}>
-            <FaCalendarAlt />
-            <span className="ml-1 sm:hidden">이벤트 모임 관리</span>
-            <span className="ml-1 hidden sm:block">관리</span>
-          </li>
+          <Link to={`/mymanage/${user?.memberId}`}>
+            <li className={`${navBtnStyle}`}>
+              <FaCalendarAlt />
+              <span className="ml-1 sm:hidden">이벤트 모임 관리</span>
+              <span className="ml-1 hidden sm:block">관리</span>
+            </li>
+          </Link>
         </ul>
 
         <ul className="flex items-center space-x-4 ml:space-x-2 text-brand_1 text-lg px-0 py-1 shadow-sm rounded-2xl dark:text-white ml:text-base xs:py-0">
