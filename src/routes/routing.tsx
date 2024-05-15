@@ -27,11 +27,11 @@ const router = createBrowserRouter([
       { path: '/join', element: <Join /> },
       { path: '/socialJoin', element: <SocialJoin /> },
       { path: '/post', element: <Post /> },
+      { path: '/postdetail/:id', element: <PostDetail /> },
       {
         element: <ProtectedRoute />,
         children: [
           { path: '/mypage/:id', element: <Mypage /> },
-          { path: '/postdetail/:id', element: <PostDetail /> },
           { path: '/payment', element: <Payment /> },
           { path: '/chat/:id', element: <Chat /> },
           { path: '/userpage/:id', element: <UserPage /> },

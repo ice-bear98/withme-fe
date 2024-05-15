@@ -25,8 +25,40 @@ const useComment = () => {
       .then((res) => console.log(res));
   };
 
+  const removeComment = async (commentId: any) => {
+    await axios
+      .delete(`${URL}/api/comment/${commentId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => console.log(res));
+  };
+
+  const editComment = async (commentId: any, commentContent: string) => {
+    try {
+      await axios
+        .put(
+          `${URL}/api/comment/${commentId}`,
+          {
+            commentContent: commentContent,
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          },
+        )
+        .then((res) => console.log('댓글 수정 : ', res));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return {
     addComment,
+    removeComment,
+    editComment,
   };
 };
 

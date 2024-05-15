@@ -9,11 +9,11 @@ import useFormat from '../Hooks/useFormat';
 import KakaoMap from '../components/post/KakaoMap';
 import Loader from '../components/common/Loader';
 import CommentBar from '../components/detail/CommentBar';
+import useParticipation from '../Hooks/useParticipation';
 
 export default function PostDetail() {
   const [data, setData] = useState<any>();
   const [status, setStatus] = useState<string>('');
-  const [comments, setComments] = useState<any>();
   const [location, setLocation] = useState<any>({ lat: '', lng: '' });
 
   const URL = import.meta.env.VITE_SERVER_URL;
@@ -21,21 +21,16 @@ export default function PostDetail() {
   const { id }: any = useParams();
 
   const { formatDate, formatTime } = useFormat();
+  const { addParticipation } = useParticipation();
 
   const getData = async () => {
     try {
-      const [gatheringResponse, commentResponse] = await Promise.all([
-        axios.get(`${URL}/api/gathering/${id}`),
-        axios.get(`${URL}/api/comment/list/${id}?page=0&size=10&sort=id,desc`),
-      ]);
-
+      const gatheringResponse = await axios.get(`${URL}/api/gathering/${id}`);
       setData(gatheringResponse.data);
       setStatus(gatheringResponse.data.status);
-      setComments(commentResponse.data.content);
       setLocation({ lat: gatheringResponse.data.lat, lng: gatheringResponse.data.lng });
 
       console.log('게시글 정보:', gatheringResponse);
-      console.log('댓글 정보:', commentResponse);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -52,8 +47,6 @@ export default function PostDetail() {
       </div>
     );
   }
-
-  console.log(comments);
 
   const getLimited = (participantsType: string) => {
     switch (participantsType) {
@@ -134,14 +127,16 @@ export default function PostDetail() {
         <KakaoMap coords={location} />
         <p className="mt-5 text-center border-2 p-2">상세주소 : {data.detailedAddress}</p>
         <div className="flex">
-          <button className="mt-5 w-full bg-brand_2 p-2 rounded-2xl hover:bg-brand_1 text-xl text-white">
+          <button
+            onClick={() => addParticipation(id)}
+            className="mt-5 w-full bg-brand_2 p-2 rounded-2xl hover:bg-brand_1 text-xl text-white"
+          >
             참여하기
           </button>
         </div>
       </div>
       <div className="mt-5 border border-brand_4 rounded-2xl shadow-lg py-2 px-4">
-        <h4 className="text-center text-lg mt-2">댓글창</h4>
-        <CommentBar data={comments} />
+        <CommentBar />
       </div>
     </div>
   );
