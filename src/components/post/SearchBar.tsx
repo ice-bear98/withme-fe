@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function SearchBar() {
-<<<<<<< HEAD
-  const [_, setCategory] = useState<string | null>('');
-=======
   const [category, setCategory] = useState<string>('전체');
   const [search, setSearch] = useState({
     range: 'all',
@@ -21,7 +18,6 @@ export default function SearchBar() {
     }));
     console.log(search);
   };
->>>>>>> 9a22540424af17ec32eb6fa8632220cfe80409f4
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
