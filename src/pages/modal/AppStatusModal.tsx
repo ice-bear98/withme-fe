@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import img from '../../assets/default_profile.jpg';
 
 interface IParticipant {

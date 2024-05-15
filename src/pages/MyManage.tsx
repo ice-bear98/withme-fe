@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FaMapMarkerAlt, FaHeart } from 'react-icons/fa';
 import { MdManageAccounts } from 'react-icons/md';
 import AppStatusModal from './modal/AppStatusModal';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FaMapMarkerAlt, FaHeart, FaCalendarDay } from 'react-icons/fa';
@@ -10,7 +10,7 @@ import defaultImg from '../../assets/default_profile.jpg';
 
 export default function PostCard({ data }: any) {
   const {
-    id,
+    // id,
     title,
     gatheringType,
     likeCount,
@@ -21,7 +21,7 @@ export default function PostCard({ data }: any) {
     category,
     maximumParticipant,
     address,
-    memberId,
+    // memberId,
     gatheringId,
     profileImg,
     nickName,
@@ -32,7 +32,7 @@ export default function PostCard({ data }: any) {
     day,
   } = data;
 
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+  // const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isKind, setIsKind] = useState<string>('');
   const navigate = useNavigate();
 

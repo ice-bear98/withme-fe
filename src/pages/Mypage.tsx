@@ -20,7 +20,6 @@ export default function Mypage() {
     formState: { errors },
     reset,
     setError,
-    clearErrors,
     watch,
   } = useForm({
     defaultValues: {
@@ -84,6 +83,7 @@ export default function Mypage() {
     const imageUrl = URL.createObjectURL(file);
     setImage(imageUrl);
   };
+
   useEffect(() => {
     setImage(user?.profileImg || defaultImg);
     reset({
