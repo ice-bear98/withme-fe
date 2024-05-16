@@ -10,18 +10,22 @@ import KakaoMap from '../components/post/KakaoMap';
 import Loader from '../components/common/Loader';
 import CommentBar from '../components/detail/CommentBar';
 import useParticipation from '../Hooks/useParticipation';
+import useUserStore from '../store/store';
+import useWrite from '../Hooks/useWrite';
 
 export default function PostDetail() {
   const [data, setData] = useState<any>();
   const [status, setStatus] = useState<string>('');
   const [location, setLocation] = useState<any>({ lat: '', lng: '' });
 
+  const userId = useUserStore((state) => state.user?.memberId);
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const { id }: any = useParams();
 
   const { formatDate, formatTime } = useFormat();
   const { addParticipation } = useParticipation();
+  const { RemovePost, goEdit } = useWrite();
 
   const getData = async () => {
     try {
@@ -47,6 +51,14 @@ export default function PostDetail() {
       </div>
     );
   }
+
+  const handleRemove = (id: number) => {
+    if (confirm('정말로 삭제하시겠습니까?')) {
+      RemovePost(id);
+    } else {
+      return;
+    }
+  };
 
   const getLimited = (participantsType: string) => {
     switch (participantsType) {
@@ -80,7 +92,25 @@ export default function PostDetail() {
           />
           <p className="ml-3 text2xl">{data.nickName}</p>
         </div>
-        <p>{formatDate(data.createdDttm)} 등록</p>
+        <div className="flex space-x-3 items-center">
+          <p>{formatDate(data.createdDttm)} 등록</p>
+          {data.memberId === userId && (
+            <div className="space-x-3">
+              <button
+                onClick={() => goEdit(data.gatheringId)}
+                className="bg-brand_4 py-1 px-3 border-2 hover:bg-brand_3"
+              >
+                수정
+              </button>
+              <button
+                onClick={() => handleRemove(data.gatheringId)}
+                className="bg-brand_4 py-1 px-3 border-2 hover:bg-red-200"
+              >
+                삭제
+              </button>
+            </div>
+          )}
+        </div>
       </h2>
       <h1 className="bg-brand_3 text-lg text-center flex justify-around py-3">
         <span className="flex items-center text-gray-500">
@@ -91,8 +121,8 @@ export default function PostDetail() {
           {data.gatheringType === 'MEETING' ? '모임' : '이벤트'}
         </span>
       </h1>
-      <div className="flex mt-5 gap-5">
-        <img className="bg-red-400 w-3/5" src={data.mainImg} alt="썸네일 이미지" />
+      <div className="flex mt-5 gap-5 h-[450px]">
+        <img className="bg-slate-200 w-4/5 object-cover" src={data.mainImg} alt="썸네일 이미지" />
         <ul className="w-2/5 text-center space-y-3 py-5 px-3">
           <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">
             모집기간 : {data.recruitmentStartDt} ~ {data.recruitmentEndDt} 까지
@@ -121,7 +151,7 @@ export default function PostDetail() {
         <img className="bg-green-300 w-1/3 h-96" src="" alt="" />
       </div>
       <div className="mt-5">
-        <p className="w-full border-2 p-2">{data.content}</p>
+        <p className="w-full border-2 p-4 whitespace-pre-wrap">{data.content}</p>
       </div>
       <div className="mt-5">
         <KakaoMap coords={location} />

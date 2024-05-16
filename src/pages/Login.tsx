@@ -64,7 +64,7 @@ export default function Login() {
   return (
     <div className="py-10 flex justify-center font-['TAEBAEKmilkyway']">
       <div className="max-w-lg w-full p-10 border border-gray-200 rounded-xl shadow-md dark:bg-brand_4">
-        <h1 className="flex  items-center justify-center text-center mb-6 text-3xl text-blue-500 font-['BagelFatOne-Regular']">
+        <h1 className="flex  items-center justify-center text-center mb-6 text-3xl text-brand_1 font-['BagelFatOne-Regular']">
           로그인
         </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

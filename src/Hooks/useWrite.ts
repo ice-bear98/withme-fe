@@ -1,10 +1,13 @@
 import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const useWrite = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
   const URL = import.meta.env.VITE_SERVER_URL;
+  const [targetId, setTargetId] = useState<string>('');
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const addPost = async (data: any) => {
     try {
@@ -27,7 +30,7 @@ const useWrite = () => {
             day: data.day,
             time: data.time,
             participantsType: data.participantsType,
-            fee: 0,
+            fee: data.fee,
             participantSelectionMethod: data.participantSelectionMethod,
             likeCount: 0,
           },
@@ -43,11 +46,33 @@ const useWrite = () => {
           navigate('/post?type=all');
         });
     } catch (error) {
-      console.error('Error : ', error);
+      console.error(error);
+      console.log('에러');
     }
   };
 
-  return { addPost };
+  const RemovePost = async (id: number) => {
+    try {
+      await axios
+        .delete(`${URL}/api/gathering/${id}`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => console.log('삭제 확인 : ', res));
+      navigate('/post?type=all');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const goEdit = (id: any) => {
+    setTargetId(id);
+    setIsEdit(true);
+    navigate('/write');
+  };
+
+  return { addPost, RemovePost, goEdit, targetId, isEdit };
 };
 
 export default useWrite;
