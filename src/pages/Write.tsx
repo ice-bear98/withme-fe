@@ -61,8 +61,6 @@ export default function Write() {
     },
   });
 
-  //  체크
-
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: any; lng: any } | null>(null);
   const [images, setImages] = useState<any[]>([]);
@@ -132,15 +130,18 @@ export default function Write() {
 
   /** Submit 핸들러 */
   const onSubmit = (data: IForm) => {
-    data.lat = coords?.lat;
-    data.lng = coords?.lng;
-    data.mainImg = images[0];
-    data.subImg = images.slice(1, 4);
-    console.log(data);
-    console.log(typeof data.lat);
-    console.log(typeof data.lng);
-
-    addPost(data);
+    if (data.recruitmentEndDt < data.recruitmentStartDt) {
+      alert('마감일이 시작일보다 빠를 순 없습니다.');
+    } else if (data.recruitmentEndDt >= data.day) {
+      alert('모임 및 이벤트 당일이 마감일 보다 빠를 순 없습니다.');
+    } else {
+      data.lat = coords?.lat;
+      data.lng = coords?.lng;
+      data.mainImg = images[0];
+      data.subImg = images.slice(1, 4);
+      console.log(data);
+      addPost(data);
+    }
   };
 
   return (
@@ -151,9 +152,17 @@ export default function Write() {
           이벤트 및 모임 주최하기
         </div>
       </h1>
+
+      <h3 className="flex mb-5 items-center space-x-2 dark:text-white">
+        <CiCircleInfo />
+        <span>제목과 카테고리 분류를 입력해주세요.</span>
+        {errors.title && <span className="text-red-500">{errors.title.message}</span>}
+        {errors.category && <span className="text-red-500">{errors.category.message}</span>}
+      </h3>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 최상단바 (제목, 카테고리 분류) */}
-        <div className="flex justify-around border border-brand_1 mb-5 dark:bg-brand_2">
+        <div className="flex justify-around border-2 mb-5 dark:bg-brand_2">
           <label className="py-3 font-['LINESeedKR-Bd']" htmlFor="title">
             제목
           </label>
@@ -162,8 +171,8 @@ export default function Write() {
             type="text"
             {...register('title', {
               required: true,
-              minLength: { value: 10, message: '제목은 최소 10글자 이상 작성해주세요.' },
-              maxLength: { value: 40, message: '40글자 이내로 작성해주세요.' },
+              minLength: { value: 5, message: '제목은 최소 5글자 이상 작성해주세요.' },
+              maxLength: { value: 24, message: '24글자 이내로 작성해주세요.' },
             })}
             placeholder="제목을 입력하세요"
             name="title"
@@ -199,16 +208,15 @@ export default function Write() {
           </div>
         </div>
 
-        {errors.title && <p className="text-red-500 mb-5">{errors.title.message}</p>}
-        {errors.category && <p className="text-red-500 mb-5">{errors.category.message}</p>}
-
         {/* 상단바 (썸네일, 설정작성) */}
-        <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
+        <h3 className="flex mt-8 items-center space-x-2 dark:text-white">
           <CiCircleInfo />
           <span>대표로 노출되는 썸네일 이미지와 설정을 입력해주세요.</span>
+          {errors.maximumParticipant && <p className="text-red-500 text-center">{errors.maximumParticipant.message}</p>}
+          {errors.fee && <p className="text-red-500 text-center">{errors.fee.message}</p>}
         </h3>
 
-        <div className="flex justify-between space-x-5 mt-5">
+        <div className="flex justify-between space-x-5 mt-8">
           <div className="flex justify-center items-center border-2 w-1/2 h-96 relative">
             <label htmlFor="title_img">
               <FaPlusCircle
@@ -321,9 +329,7 @@ export default function Write() {
               />
               <span className="ml-2">명</span>
             </div>
-            {errors.maximumParticipant && (
-              <p className="text-red-500 mb-5 text-center">{errors.maximumParticipant.message}</p>
-            )}
+
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="pay" className="font-['LINESeedKR-Bd'] mr-2">
                 참가 비용
@@ -340,7 +346,6 @@ export default function Write() {
               />
               <span className="ml-2">원</span>
             </div>
-            {errors.fee && <p className="text-red-500 mb-5 text-center">{errors.fee.message}</p>}
 
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
               <label htmlFor="target" className="font-['LINESeedKR-Bd'] mr-2">
@@ -408,9 +413,9 @@ export default function Write() {
           <span>주최하는 모임 및 이벤트 내용에 대해 설명해주세요.</span>
           {errors.content && <p className="text-red-500">{errors.content.message}</p>}
         </h3>
-        <div className="border-2 mt-5 p-3 dark:bg-white dark:border-none">
+        <div className="border-2 mt-5 p-4 dark:bg-white dark:border-none">
           <textarea
-            className="w-full outline-none min-h-40"
+            className="w-full outline-none min-h-40 whitespace-pre-wrap"
             id="content"
             placeholder="내용을 입력해주세요."
             {...register('content', {
@@ -438,6 +443,7 @@ export default function Write() {
               {...register('detailedAddress', {
                 required: true,
                 minLength: { value: 5, message: '5글자 이상 작성해주세요.' },
+                maxLength: { value: 30, message: '30글자 이내 작성해주세요.' },
               })}
             />
           </div>

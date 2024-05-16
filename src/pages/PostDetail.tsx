@@ -116,8 +116,8 @@ export default function PostDetail() {
           {data.gatheringType === 'MEETING' ? '모임' : '이벤트'}
         </span>
       </h1>
-      <div className="flex mt-5 gap-5">
-        <img className="bg-red-400 w-3/5" src={data.mainImg} alt="썸네일 이미지" />
+      <div className="flex mt-5 gap-5 h-[450px]">
+        <img className="bg-slate-200 w-4/5 object-cover" src={data.mainImg} alt="썸네일 이미지" />
         <ul className="w-2/5 text-center space-y-3 py-5 px-3">
           <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">
             모집기간 : {data.recruitmentStartDt} ~ {data.recruitmentEndDt} 까지
@@ -146,7 +146,7 @@ export default function PostDetail() {
         <img className="bg-green-300 w-1/3 h-96" src="" alt="" />
       </div>
       <div className="mt-5">
-        <p className="w-full border-2 p-2">{data.content}</p>
+        <p className="w-full border-2 p-4 whitespace-pre-wrap">{data.content}</p>
       </div>
       <div className="mt-5">
         <KakaoMap coords={location} />

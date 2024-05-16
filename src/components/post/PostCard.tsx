@@ -70,6 +70,13 @@ export default function PostCard({ data }: any) {
     }
   };
 
+  const TruncatedTitle = (title: string, length: number) => {
+    // title 문자열의 길이가 maxLength를 초과하면 축약된 문자열을 생성
+    const truncatedTitle = title.length > length ? `${title.slice(0, length)}···` : title;
+
+    return <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd'] dark:text-gray-100">{truncatedTitle}</h2>;
+  };
+
   useEffect(() => {
     kindOf(gatheringType);
   }, []);
@@ -100,7 +107,7 @@ export default function PostCard({ data }: any) {
           </p>
           <FaHeart className="mr-2 cursor-pointer" /> {likeCount}
         </span>
-        <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd'] dark:text-gray-100">{title}</h2>
+        {TruncatedTitle(title, 14)}
       </div>
       <div className="flex justify-center gap-4 mt-6">
         <img className="w-48 h-48 mx-3 object-cover rounded-2xl" src={title_img} alt="" />

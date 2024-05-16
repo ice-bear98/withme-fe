@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const useWrite = () => {
@@ -27,7 +27,7 @@ const useWrite = () => {
             day: data.day,
             time: data.time,
             participantsType: data.participantsType,
-            fee: 0,
+            fee: data.fee,
             participantSelectionMethod: data.participantSelectionMethod,
             likeCount: 0,
           },
@@ -43,7 +43,8 @@ const useWrite = () => {
           navigate('/post?type=all');
         });
     } catch (error) {
-      console.error('Error : ', error);
+      console.error(error);
+      console.log('에러');
     }
   };
 
