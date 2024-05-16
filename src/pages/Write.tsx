@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { FiMapPin } from 'react-icons/fi';
@@ -7,6 +7,7 @@ import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
 
 import KakaoMap from '../components/post/KakaoMap';
 import useWrite from '../Hooks/useWrite';
+import axios from 'axios';
 interface IForm {
   title: string;
   content: string;
@@ -30,7 +31,9 @@ interface IForm {
 }
 
 export default function Write() {
-  const { addPost } = useWrite();
+  const { addPost, targetId, isEdit } = useWrite();
+
+  console.log('타겟 : ', targetId, '수정 여부 : ', isEdit);
 
   const {
     register,
@@ -128,12 +131,44 @@ export default function Write() {
     }
   };
 
+  /** 날짜 유효성 검사 ( 현재보다 과거를 진행날짜로 X ) */
+  const checkDate = (date: string) => {
+    const today = new Date();
+    const todayMillis = today.getTime();
+
+    const isoDate = `${date}T00:00:00`;
+
+    const selectedDate = new Date(isoDate);
+    const selectedDateMillis = selectedDate.getTime();
+
+    if (selectedDateMillis < todayMillis) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   /** Submit 핸들러 */
   const onSubmit = (data: IForm) => {
     if (data.recruitmentEndDt < data.recruitmentStartDt) {
       alert('마감일이 시작일보다 빠를 순 없습니다.');
+      scrollToTop();
     } else if (data.recruitmentEndDt >= data.day) {
       alert('모임 및 이벤트 당일이 마감일 보다 빠를 순 없습니다.');
+      scrollToTop();
+    } else if (checkDate(data.recruitmentEndDt) || checkDate(data.recruitmentStartDt) === true) {
+      alert('과거 날짜와 현재를 모집기간으로 설정할 수 없습니다.');
+      scrollToTop();
+    } else if (checkDate(data.day) === true) {
+      alert('모임 및 이벤트 당일이 현재보다 과거로 설정되어있습니다.');
+      scrollToTop();
     } else {
       data.lat = coords?.lat;
       data.lng = coords?.lng;
@@ -143,6 +178,23 @@ export default function Write() {
       addPost(data);
     }
   };
+
+  const getTargetData = async () => {
+    try {
+      const res = await axios.get(`${URL}/api/gathering/${targetId}`);
+      console.log('게시글 수정 정보:', res);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (isEdit) {
+      getTargetData();
+    }
+  }, [isEdit, targetId]);
+
+  console.log('targetId : ', targetId);
 
   return (
     <main className="py-5 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">

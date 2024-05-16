@@ -1,10 +1,13 @@
 import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const useWrite = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('accessToken');
   const URL = import.meta.env.VITE_SERVER_URL;
+  const [targetId, setTargetId] = useState<string>('');
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const addPost = async (data: any) => {
     try {
@@ -63,7 +66,13 @@ const useWrite = () => {
     }
   };
 
-  return { addPost, RemovePost };
+  const goEdit = (id: any) => {
+    setTargetId(id);
+    setIsEdit(true);
+    navigate('/write');
+  };
+
+  return { addPost, RemovePost, goEdit, targetId, isEdit };
 };
 
 export default useWrite;

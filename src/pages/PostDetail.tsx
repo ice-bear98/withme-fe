@@ -25,7 +25,7 @@ export default function PostDetail() {
 
   const { formatDate, formatTime } = useFormat();
   const { addParticipation } = useParticipation();
-  const { RemovePost } = useWrite();
+  const { RemovePost, goEdit } = useWrite();
 
   const getData = async () => {
     try {
@@ -96,7 +96,12 @@ export default function PostDetail() {
           <p>{formatDate(data.createdDttm)} 등록</p>
           {data.memberId === userId && (
             <div className="space-x-3">
-              <button className="bg-brand_4 py-1 px-3 border-2 hover:bg-brand_3">수정</button>
+              <button
+                onClick={() => goEdit(data.gatheringId)}
+                className="bg-brand_4 py-1 px-3 border-2 hover:bg-brand_3"
+              >
+                수정
+              </button>
               <button
                 onClick={() => handleRemove(data.gatheringId)}
                 className="bg-brand_4 py-1 px-3 border-2 hover:bg-red-200"
