@@ -1,11 +1,8 @@
 import { PiGenderMaleBold } from 'react-icons/pi';
 import PostCard from '../components/post/PostCard';
-import { useParams } from 'react-router-dom';
 
 export default function UserPage() {
   const infoListStyle = 'flex items-center justify-center bg-white text-center rounded-xl text-xl py-1 px-5';
-
-  const { id }: any = useParams();
 
   return (
     <div className="w-full mt-5 shadow-2xl p-3 mb-10">
