@@ -15,6 +15,8 @@ import Write from '../pages/Write.tsx';
 import Post from '../pages/Post.tsx';
 import App from '../App.tsx';
 import ProtectedRoute from './protectedRoute.tsx';
+import ParsingToken from '../pages/ParsingToken.tsx';
+import RequiredInfo from '../pages/RequiredInfo.tsx';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,8 @@ const router = createBrowserRouter([
       { path: '/socialJoin', element: <SocialJoin /> },
       { path: '/post', element: <Post /> },
       { path: '/postdetail/:id', element: <PostDetail /> },
+      { path: '/auth/success', element: <ParsingToken /> },
+      { path: '/auth/requiredinfo', element: <RequiredInfo /> },
       {
         element: <ProtectedRoute />,
         children: [
