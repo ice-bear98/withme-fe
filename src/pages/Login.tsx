@@ -36,7 +36,7 @@ export default function Login() {
   }
 
   function handleKakaoLogin() {
-    const kakaoLoginUrl = `http://localhost:8080/oauth2/authorization/kakao?redirect_uri=${encodeURIComponent('http://localhost:3000/login/oauth2/code/kakao')}`;
+    const kakaoLoginUrl = `${URL}/oauth2/authorization/kakao`;
     window.location.href = kakaoLoginUrl;
   }
 
