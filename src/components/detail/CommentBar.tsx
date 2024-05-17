@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import useComment from '../../Hooks/useComment';
 import useFormat from '../../Hooks/useFormat';
 import axios from 'axios';
-import useUserStore from '../../store/store';
+import useUserStore from '../../store/userStore';
 
 export default function CommentBar() {
   const [comments, setComments] = useState<any[]>([]);
@@ -33,7 +33,7 @@ export default function CommentBar() {
   const fetchComments = async (page: number) => {
     try {
       const data = await axios.get(`${URL}/api/comment/list/${id}?page=${page}&size=10&sort=id,desc`);
-      console.log(data);
+      console.log('댓글 정보:', data);
       setComments(data.data.content);
       setTotalPage(data.data.totalPages);
     } catch (error) {

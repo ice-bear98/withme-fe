@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom'; //
-import useUserStore from '../store/store';
+import useUserStore from '../store/userStore';
 import Modal from '../pages/modal/Modal';
 import { useState } from 'react';
 
