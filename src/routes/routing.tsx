@@ -38,6 +38,7 @@ const router = createBrowserRouter([
           { path: '/mymanage/:id', element: <MyManage /> },
           { path: '/myfollow/:id', element: <MyFollow /> },
           { path: '/write', element: <Write /> },
+          { path: '/write/:id', element: <Write /> },
         ],
       },
     ],
