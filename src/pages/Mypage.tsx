@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import useUserStore from '../store/store';
+import useUserStore from '../store/userStore';
 import defaultImg from '../assets/default_profile.jpg';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -97,7 +97,7 @@ export default function Mypage() {
 
   return (
     <div className="p-4 max-w-4xl m-auto">
-      <h1 className="text-center text-2xl font-bold mb-4">{nickName}님의 마이페이지</h1>
+      <h1 className="text-center text-2xl font-bold mb-4 bg-brand_2 py-2 text-white">{nickName}님의 마이페이지</h1>
 
       <div className="flex justify-center items-start gap-4">
         <div className="w-72 h-96 flex flex-col justify-center items-center bg-brand_4 p-4 rounded-lg text-center">

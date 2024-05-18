@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 import { FaHeart } from 'react-icons/fa';
 
 import defaultImg from '../assets/default_profile.jpg';
@@ -10,7 +9,7 @@ import KakaoMap from '../components/post/KakaoMap';
 import Loader from '../components/common/Loader';
 import CommentBar from '../components/detail/CommentBar';
 import useParticipation from '../Hooks/useParticipation';
-import useUserStore from '../store/store';
+import useUserStore from '../store/userStore';
 import useWrite from '../Hooks/useWrite';
 
 export default function PostDetail() {
@@ -25,7 +24,7 @@ export default function PostDetail() {
 
   const { formatDate, formatTime } = useFormat();
   const { addParticipation } = useParticipation();
-  const { RemovePost, goEdit } = useWrite();
+  const { removePost, goEdit } = useWrite();
 
   const getData = async () => {
     try {
@@ -33,7 +32,6 @@ export default function PostDetail() {
       setData(gatheringResponse.data);
       setStatus(gatheringResponse.data.status);
       setLocation({ lat: gatheringResponse.data.lat, lng: gatheringResponse.data.lng });
-
       console.log('게시글 정보:', gatheringResponse);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -54,7 +52,7 @@ export default function PostDetail() {
 
   const handleRemove = (id: number) => {
     if (confirm('정말로 삭제하시겠습니까?')) {
-      RemovePost(id);
+      removePost(id);
     } else {
       return;
     }
@@ -97,7 +95,7 @@ export default function PostDetail() {
           {data.memberId === userId && (
             <div className="space-x-3">
               <button
-                onClick={() => goEdit(data.gatheringId)}
+                onClick={() => goEdit(data.gatheringId, data)}
                 className="bg-brand_4 py-1 px-3 border-2 hover:bg-brand_3"
               >
                 수정

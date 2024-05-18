@@ -4,10 +4,12 @@ import { useForm } from 'react-hook-form';
 import { FiMapPin } from 'react-icons/fi';
 import { FaMagic, FaPlusCircle } from 'react-icons/fa';
 import { CiPen, CiImageOn, CiCircleInfo } from 'react-icons/ci';
+import { useParams } from 'react-router-dom';
 
 import KakaoMap from '../components/post/KakaoMap';
 import useWrite from '../Hooks/useWrite';
-import axios from 'axios';
+import usePostStore from '../store/postStore';
+
 interface IForm {
   title: string;
   content: string;
@@ -20,25 +22,28 @@ interface IForm {
   detailedAddress: string;
   lat: any;
   lng: any;
-  mainImg: any;
+  mainImg: any | null;
   day: string;
   time: string;
   like: number;
   participantsType: string;
   fee: number;
   participantSelectionMethod: string;
-  subImg: any[];
+  subImg1: any | null;
+  subImg2: any | null;
+  subImg3: any | null;
 }
 
 export default function Write() {
-  const { addPost, targetId, isEdit } = useWrite();
-
-  console.log('타겟 : ', targetId, '수정 여부 : ', isEdit);
+  const { addPost, editPost } = useWrite();
+  const { id }: any = useParams();
+  const editData = usePostStore((state) => state.post);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<IForm>({
     mode: 'onChange',
     defaultValues: {
@@ -58,15 +63,18 @@ export default function Write() {
       fee: 0,
       participantSelectionMethod: 'FIRST_COME',
       participantsType: 'NO_RESTRICTIONS',
-      mainImg: '',
-      subImg: [],
+      mainImg: null,
+      subImg1: null,
+      subImg2: null,
+      subImg3: null,
       content: '',
     },
   });
 
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: any; lng: any } | null>(null);
-  const [images, setImages] = useState<any[]>([]);
+  const [images, setImages] = useState<Array<string | null>>([null, null, null, null]);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   /** 다음 주소찾기 API */
   const onClickAddr = () => {
@@ -118,19 +126,6 @@ export default function Write() {
     });
   };
 
-  /** 이미지 추가 핸들러 */
-  const handleImageAdd = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImages((prevImages) => {
-        const updatedImages = [...prevImages];
-        updatedImages[index] = imageUrl;
-        return updatedImages;
-      });
-    }
-  };
-
   /** 날짜 유효성 검사 ( 현재보다 과거를 진행날짜로 X ) */
   const checkDate = (date: string) => {
     const today = new Date();
@@ -155,6 +150,30 @@ export default function Write() {
     });
   };
 
+  /** 이미지 추가 핸들러 */
+  const handleImageChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImages((prevImages) => {
+        const updatedImages = [...prevImages];
+        updatedImages[index] = imageUrl;
+        return updatedImages;
+      });
+    }
+  };
+
+  /** 이미지 변환 기능 */
+  function getFileNameFromBlobURL(blobUrl: string) {
+    // Blob URL에서 파일 이름을 추출
+    const startIndex = blobUrl.lastIndexOf('/') + 1;
+    const filename = blobUrl.substr(startIndex);
+
+    // 확장자를 .jpg로 변경하여 반환
+    return filename + '.jpg';
+  }
+
   /** Submit 핸들러 */
   const onSubmit = (data: IForm) => {
     if (data.recruitmentEndDt < data.recruitmentStartDt) {
@@ -172,29 +191,55 @@ export default function Write() {
     } else {
       data.lat = coords?.lat;
       data.lng = coords?.lng;
-      data.mainImg = images[0];
-      data.subImg = images.slice(1, 4);
+      data.mainImg = images[0] ? getFileNameFromBlobURL(images[0]) : null;
+      data.subImg1 = images[1] ? getFileNameFromBlobURL(images[1]) : null;
+      data.subImg2 = images[2] ? getFileNameFromBlobURL(images[2]) : null;
+      data.subImg3 = images[3] ? getFileNameFromBlobURL(images[3]) : null;
       console.log(data);
-      addPost(data);
-    }
-  };
-
-  const getTargetData = async () => {
-    try {
-      const res = await axios.get(`${URL}/api/gathering/${targetId}`);
-      console.log('게시글 수정 정보:', res);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+      if (isEdit) {
+        editPost(data, id);
+      } else {
+        addPost(data);
+      }
     }
   };
 
   useEffect(() => {
-    if (isEdit) {
-      getTargetData();
+    if (id) {
+      setIsEdit(true);
+      if (editData) {
+        reset({
+          title: editData.title,
+          category: editData.category,
+          gatheringType: editData.gatheringType,
+          like: editData.likeCount,
+          recruitmentStartDt: editData.recruitmentStartDt,
+          recruitmentEndDt: editData.recruitmentEndDt,
+          day: editData.day,
+          time: editData.time,
+          maximumParticipant: editData.maximumParticipant,
+          address: editData.address,
+          detailedAddress: editData.detailedAddress,
+          lat: editData.lat,
+          lng: editData.lng,
+          fee: editData.fee,
+          participantSelectionMethod: editData.participantSelectionMethod,
+          participantsType: editData.participantsType,
+          mainImg: editData.mainImg,
+          subImg1: editData.subImg1,
+          subImg2: editData.subImg2,
+          subImg3: editData.subImg3,
+          content: editData.content,
+        });
+        setCoords({ lat: editData.lat, lng: editData.lng });
+        setImages([editData.mainImg, editData.subImg1, editData.subImg2, editData.subImg3]);
+      }
+    } else {
+      console.log('id없음');
     }
-  }, [isEdit, targetId]);
+  }, [id]);
 
-  console.log('targetId : ', targetId);
+  console.log(isEdit);
 
   return (
     <main className="py-5 font-['TAEBAEKmilkyway'] shadow-xl p-5 mb-5 mt-5 rounded-2xl dark:bg-gray-600">
@@ -278,16 +323,7 @@ export default function Write() {
               />
             </label>
 
-            <input
-              type="file"
-              id="title_img"
-              className="hidden"
-              {...(register('mainImg'),
-              {
-                required: true,
-              })}
-              onChange={handleImageAdd(0)}
-            />
+            <input type="file" accept="image/*" id="title_img" className="hidden" onChange={handleImageChange(0)} />
             {images[0] && <img src={images[0]} className="w-full h-full object-cover" />}
           </div>
 
@@ -451,10 +487,14 @@ export default function Write() {
                 type="file"
                 id={`sub_img${index}`}
                 className="hidden"
-                {...register(`subImg`)}
-                onChange={handleImageAdd(index)}
+                {...register(`subImg${index}` as keyof IForm)}
+                onChange={handleImageChange(index)}
               />
-              {images[index] && <img src={images[index]} className="w-full h-full object-cover" />}
+              {images[index] ? (
+                <img src={images[index] as string} className="w-full h-full object-cover" />
+              ) : (
+                <div></div>
+              )}
             </div>
           ))}
         </div>
@@ -503,11 +543,9 @@ export default function Write() {
         </div>
 
         {/* 최하단바 (등록버튼) */}
-        <button
-          onClick={handleSubmit(onSubmit)}
-          className="w-full mt-10 rounded-full text-center p-3 bg-brand_2 font-['LINESeedKR-Bd'] text-white text-xl hover:bg-brand_1"
-        >
-          게시하기
+
+        <button className="w-full mt-10 rounded-full text-center p-3 bg-brand_2 font-['LINESeedKR-Bd'] text-white text-xl hover:bg-brand_1">
+          {isEdit ? '수정하기' : '게시하기'}
         </button>
       </form>
     </main>

@@ -5,7 +5,7 @@ import { IoPersonCircle } from 'react-icons/io5';
 import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt } from 'react-icons/fa';
 import { AiFillAppstore } from 'react-icons/ai';
 
-import useUserStore from '../../store/store';
+import useUserStore from '../../store/userStore';
 import ScrollTopBtn from './ScrollUpBtn';
 import ThemeButton from './ThemeBtn';
 
