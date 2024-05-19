@@ -32,13 +32,13 @@ const router = createBrowserRouter([
       { path: '/postdetail/:id', element: <PostDetail /> },
       { path: '/auth/success', element: <ParsingToken /> },
       { path: '/auth/requiredinfo', element: <RequiredInfo /> },
+      { path: '/userpage', element: <UserPage /> },
       {
         element: <ProtectedRoute />,
         children: [
           { path: '/mypage/:id', element: <Mypage /> },
           { path: '/payment', element: <Payment /> },
           { path: '/chat/:id', element: <Chat /> },
-          { path: '/userpage/:id', element: <UserPage /> },
           { path: '/mymanage/:id', element: <MyManage /> },
           { path: '/myfollow/:id', element: <MyFollow /> },
           { path: '/write', element: <Write /> },

@@ -233,6 +233,7 @@ export default function Write() {
         });
         setCoords({ lat: editData.lat, lng: editData.lng });
         setImages([editData.mainImg, editData.subImg1, editData.subImg2, editData.subImg3]);
+        setDaumAddress(editData.address);
       }
     } else {
       console.log('id없음');
