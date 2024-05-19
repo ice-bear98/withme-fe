@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import useUserStore from '../store/store';
+import useUserStore from '../store/userStore';
 import { useEffect } from 'react';
 import axios from 'axios';
 
