@@ -5,10 +5,12 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import Modal from './modal/Modal';
 import PhoneCertificationModal from './modal/PhoneCertificationModal';
+import { useNavigate } from 'react-router-dom';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
 export default function Mypage() {
+  const navigate = useNavigate();
   const { user, logout, setUser } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(user?.profileImg || defaultImg);
@@ -27,6 +29,33 @@ export default function Mypage() {
     },
   });
 
+  const handleLogout = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const res = await axios.post(
+        `${URL}/api/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        },
+      );
+
+      console.log(`로그아웃 : ${res}`);
+      if (res.status === 200) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        logout();
+        navigate('/');
+      } else {
+        console.error('로그인 실패', res.statusText);
+      }
+    } catch (error) {
+      console.error('에러', error);
+    }
+  };
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -168,7 +197,7 @@ export default function Mypage() {
             <Modal title="휴대폰 인증" isOpen={isOpen} onClose={toggleModal}>
               <PhoneCertificationModal />
             </Modal>
-            <button onClick={logout} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">
+            <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">
               로그아웃
             </button>
           </div>
