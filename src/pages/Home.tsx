@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import Banner from '../components/home/Banner';
 import Carousel from '../components/home/Carousel';
 import InfoCarousel from '../components/home/InfoCarousel';
+import axios from 'axios';
 
 export interface EventItem {
   id: number;
@@ -16,6 +18,9 @@ export interface InfoItem {
 }
 
 export default function Home() {
+  const [festival, setFestival] = useState<any>([]);
+  const URL = import.meta.env.VITE_SERVER_URL;
+
   const dummyItem: EventItem[] = [
     {
       id: 1,
@@ -118,6 +123,18 @@ export default function Home() {
     },
   ];
 
+  const getFestival = async () => {
+    try {
+      await axios.get(`${URL}/api/festival`).then((res) => setFestival(res.data.content));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getFestival();
+  }, []);
+
   return (
     <main className="dark:bg-gray-800 dark:text-white">
       <section className="xs:hidden">
@@ -128,7 +145,7 @@ export default function Home() {
         <Carousel title={'가장 인기있는 이벤트'} data={dummyItem2} />
         <Carousel title={'가장 인기있는 모임'} data={dummyItem} />
       </section>
-      <InfoCarousel data={dummyItem3} />
+      <InfoCarousel data={festival} />
     </main>
   );
 }

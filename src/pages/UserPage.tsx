@@ -1,5 +1,4 @@
 import { PiGenderMaleBold } from 'react-icons/pi';
-import PostCard from '../components/post/PostCard';
 
 export default function UserPage() {
   const infoListStyle = 'flex items-center justify-center bg-white text-center rounded-xl text-xl py-1 px-5';
@@ -38,11 +37,7 @@ export default function UserPage() {
       <div>
         <h3 className="mt-7 rounded-2xl text-center bg-brand_1 p-3 text-white text-xl">진행중인 이벤트 및 모임 (3)</h3>
         <div className="flex justify-center mb-7">
-          <div className="mt-7 grid gap-7 grid-cols-2 md:grid-cols-1">
-            <PostCard />
-            <PostCard />
-            <PostCard />
-          </div>
+          <div className="mt-7 grid gap-7 grid-cols-2 md:grid-cols-1"></div>
         </div>
       </div>
 
@@ -51,11 +46,7 @@ export default function UserPage() {
           진행한 이벤트 및 모임 기록 (3)
         </h3>
         <div className="flex justify-center mb-7">
-          <div className="mt-7 grid gap-7 grid-cols-2 md:grid-cols-1">
-            <PostCard />
-            <PostCard />
-            <PostCard />
-          </div>
+          <div className="mt-7 grid gap-7 grid-cols-2 md:grid-cols-1"></div>
         </div>
       </div>
     </div>

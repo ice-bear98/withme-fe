@@ -10,7 +10,7 @@ import KakaoMap from '../components/post/KakaoMap';
 import useWrite from '../Hooks/useWrite';
 import usePostStore from '../store/postStore';
 
-interface IForm {
+export interface IForm {
   title: string;
   content: string;
   gatheringType: string;
@@ -22,13 +22,13 @@ interface IForm {
   detailedAddress: string;
   lat: any;
   lng: any;
-  mainImg: any | null;
   day: string;
   time: string;
-  like: number;
+  likeCount: number;
   participantsType: string;
   fee: number;
   participantSelectionMethod: string;
+  mainImg: any | null;
   subImg1: any | null;
   subImg2: any | null;
   subImg3: any | null;
@@ -50,7 +50,7 @@ export default function Write() {
       title: '',
       category: '',
       gatheringType: 'MEETING',
-      like: 0,
+      likeCount: 0,
       recruitmentStartDt: '',
       recruitmentEndDt: '',
       day: '',
@@ -74,6 +74,7 @@ export default function Write() {
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: any; lng: any } | null>(null);
   const [images, setImages] = useState<Array<string | null>>([null, null, null, null]);
+  const [imageFiles, setImageFiles] = useState<(File | null)[]>([null, null, null, null]);
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   /** 다음 주소찾기 API */
@@ -149,32 +150,27 @@ export default function Write() {
       behavior: 'smooth',
     });
   };
-
   /** 이미지 추가 핸들러 */
   const handleImageChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImages((prevImages) => {
-        const updatedImages = [...prevImages];
-        updatedImages[index] = imageUrl;
-        return updatedImages;
+      const imageUrl = window.URL.createObjectURL(file);
+      setImages((prevImageUrls) => {
+        const updatedImageUrls = [...prevImageUrls];
+        updatedImageUrls[index] = imageUrl;
+        return updatedImageUrls;
+      });
+
+      setImageFiles((prevImageFiles) => {
+        const updatedImageFiles = [...prevImageFiles];
+        updatedImageFiles[index] = file;
+        return updatedImageFiles;
       });
     }
   };
 
-  /** 이미지 변환 기능 */
-  function getFileNameFromBlobURL(blobUrl: string) {
-    // Blob URL에서 파일 이름을 추출
-    const startIndex = blobUrl.lastIndexOf('/') + 1;
-    const filename = blobUrl.substr(startIndex);
-
-    // 확장자를 .jpg로 변경하여 반환
-    return filename + '.jpg';
-  }
-
-  /** Submit 핸들러 */
+  /** 게시글 등록 */
   const onSubmit = (data: IForm) => {
     if (data.recruitmentEndDt < data.recruitmentStartDt) {
       alert('마감일이 시작일보다 빠를 순 없습니다.');
@@ -182,24 +178,55 @@ export default function Write() {
     } else if (data.recruitmentEndDt >= data.day) {
       alert('모임 및 이벤트 당일이 마감일 보다 빠를 순 없습니다.');
       scrollToTop();
-    } else if (checkDate(data.recruitmentEndDt) || checkDate(data.recruitmentStartDt) === true) {
+    } else if (checkDate(data.recruitmentEndDt) || checkDate(data.recruitmentStartDt)) {
       alert('과거 날짜와 현재를 모집기간으로 설정할 수 없습니다.');
       scrollToTop();
-    } else if (checkDate(data.day) === true) {
+    } else if (checkDate(data.day)) {
       alert('모임 및 이벤트 당일이 현재보다 과거로 설정되어있습니다.');
       scrollToTop();
     } else {
-      data.lat = coords?.lat;
-      data.lng = coords?.lng;
-      data.mainImg = images[0] ? getFileNameFromBlobURL(images[0]) : null;
-      data.subImg1 = images[1] ? getFileNameFromBlobURL(images[1]) : null;
-      data.subImg2 = images[2] ? getFileNameFromBlobURL(images[2]) : null;
-      data.subImg3 = images[3] ? getFileNameFromBlobURL(images[3]) : null;
-      console.log(data);
+      data.lat = coords?.lat || 0;
+      data.lng = coords?.lng || 0;
+
+      const jsonData: any = {
+        title: data.title,
+        content: data.content,
+        gatheringType: data.gatheringType,
+        maximumParticipant: parseInt(String(data.maximumParticipant)),
+        recruitmentStartDt: data.recruitmentStartDt,
+        recruitmentEndDt: data.recruitmentEndDt,
+        category: data.category,
+        address: data.address,
+        detailedAddress: data.detailedAddress,
+        lat: String(data.lat),
+        lng: String(data.lng),
+        day: data.day,
+        time: data.time,
+        participantsType: data.participantsType,
+        fee: parseInt(String(data.fee)),
+        participantSelectionMethod: data.participantSelectionMethod,
+        likeCount: parseInt(String(data.likeCount)),
+      };
+
+      const formData = new FormData();
+      formData.append('addGatheringRequest', JSON.stringify(jsonData));
+
+      if (imageFiles[0]) formData.append('mainImg', imageFiles[0] as File);
+      if (imageFiles[1]) formData.append('subImg1', imageFiles[1] as File);
+      if (imageFiles[2]) formData.append('subImg2', imageFiles[2] as File);
+      if (imageFiles[3]) formData.append('subImg3', imageFiles[3] as File);
+
+      // 데이터 확인
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+        console.log('키:', key, '타입:', typeof value);
+      }
+
+      addPost(formData);
+      console.log('최종:', formData);
+
       if (isEdit) {
-        editPost(data, id);
-      } else {
-        addPost(data);
+        editPost(formData, id);
       }
     }
   };
@@ -212,7 +239,7 @@ export default function Write() {
           title: editData.title,
           category: editData.category,
           gatheringType: editData.gatheringType,
-          like: editData.likeCount,
+          likeCount: editData.likeCount,
           recruitmentStartDt: editData.recruitmentStartDt,
           recruitmentEndDt: editData.recruitmentEndDt,
           day: editData.day,
@@ -233,6 +260,7 @@ export default function Write() {
         });
         setCoords({ lat: editData.lat, lng: editData.lng });
         setImages([editData.mainImg, editData.subImg1, editData.subImg2, editData.subImg3]);
+        setDaumAddress(editData.address);
       }
     } else {
       console.log('id없음');

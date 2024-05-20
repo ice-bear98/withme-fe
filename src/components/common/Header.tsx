@@ -8,16 +8,41 @@ import { AiFillAppstore } from 'react-icons/ai';
 import useUserStore from '../../store/userStore';
 import ScrollTopBtn from './ScrollUpBtn';
 import ThemeButton from './ThemeBtn';
+import axios from 'axios';
+
+const URL = import.meta.env.VITE_SERVER_URL;
 
 export default function Header() {
   const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useUserStore();
   const navbarStyle = "cursor-pointer font-['LINESeedKR-Bd']";
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    logout();
-    navigate('/');
+  const handleLogout = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const res = await axios.post(
+        `${URL}/api/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        },
+      );
+
+      console.log(`로그아웃 : ${res}`);
+      if (res.status === 200) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        logout();
+        navigate('/');
+      } else {
+        console.error('로그인 실패', res.statusText);
+      }
+    } catch (error) {
+      console.error('에러', error);
+    }
   };
 
   const navBtnStyle =

@@ -19,7 +19,15 @@ declare global {
   }
 }
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retryOnMount: true,
+      refetchOnMount: true,
+    },
+  },
+});
 
 enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
