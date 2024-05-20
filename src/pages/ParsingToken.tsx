@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-export default function RequiredInfo() {
+export default function ParsingToken() {
   const [searchParams, _] = useSearchParams();
   const navigate = useNavigate();
   const { setUser } = useUserStore();
