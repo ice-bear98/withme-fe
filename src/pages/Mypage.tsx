@@ -7,6 +7,9 @@ import Modal from './modal/Modal';
 import PhoneCertificationModal from './modal/PhoneCertificationModal';
 import { useNavigate } from 'react-router-dom';
 
+import { IoMdMale, IoMdFemale } from 'react-icons/io';
+import useFormat from '../Hooks/useFormat';
+
 const URL = import.meta.env.VITE_SERVER_URL;
 
 export default function Mypage() {
@@ -28,6 +31,8 @@ export default function Mypage() {
       nickName: user?.nickName,
     },
   });
+
+  const { formatDate } = useFormat();
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -164,88 +169,106 @@ export default function Mypage() {
     });
   }, [user, reset, user?.profileImg]);
 
-  const genderText = user?.gender === 'MALE' ? '남자' : '여자';
+  const genderText =
+    user?.gender === 'MALE' ? (
+      <span className="flex items-center ml-1">
+        남성
+        <IoMdMale className="p-1 bg-blue-300 text-xl rounded-full text-white ml-1" />
+      </span>
+    ) : (
+      <span className="flex items-center ml-1">
+        여성
+        <IoMdFemale className="p-1 bg-pink-300 text-xl rounded-full text-white ml-1" />
+      </span>
+    );
   const nickName = user?.nickName;
   const date = user?.signupDttm ? user.signupDttm.slice(0, 10) : 'Not available';
 
   return (
-    <div className="p-4 max-w-4xl m-auto">
-      <h1 className="text-center text-2xl font-bold mb-4 bg-brand_2 py-2 text-white">
+    <div className="p-4 max-w-4xl m-auto font-['LINESeedKR-Bd']">
+      <h1 className="text-center text-2xl font-bold mb-4 bg-brand_1 py-2 text-white rounded-lg font-['seolleimcool-SemiBold']">
         {nickName ? `${nickName}님의 마이페이지` : 'Loading...'}
       </h1>
       {user ? (
         <div className="flex justify-center items-start gap-4">
-          <div className="w-72 h-96 flex flex-col justify-center items-center bg-brand_4 p-4 rounded-lg text-center">
+          <div className="w-1/2 h-96 flex flex-col justify-center items-center bg-brand_4 p-4 rounded-lg text-center">
             <div className="">
-              <img src={image} alt="Profile" className="rounded-full object-cover h-64 w-72 mb-4" />
+              <img src={image} alt="Profile" className="rounded-full object-cover h-72 w-72 mb-4" />
             </div>
             <label
               htmlFor="image-upload"
-              className="text-white hover:bg-brand_2 cursor-pointer bg-brand_3 p-2 rounded-lg"
+              className="text-white hover:bg-brand_1 cursor-pointer bg-brand_2 p-2 rounded-lg"
             >
-              프로필 이미지 변경
+              프로필 이미지 변경하기
             </label>
             <input id="image-upload" type="file" onChange={handleImageChange} className="hidden" />
           </div>
-          <div className="relative font-['LINESeedKR-Bd'] w-72 h-96 flex flex-col justify-between p-4 bg-gray-100 rounded-lg">
+          <div className="relative font-['LINESeedKR-Bd'] w-1/2 h-96 flex flex-col justify-between p-4 bg-brand_3 rounded-lg">
             {editMode ? (
-              <form onSubmit={handleSubmit(handleNicknameChange)}>
+              <form
+                onSubmit={handleSubmit(handleNicknameChange)}
+                className="w-full gap-1 bg-white p-1 flex justify-center"
+              >
                 <input
+                  className="border-2 border-brand_2 text-center"
                   {...register('nickName', {
                     required: '닉네임을 입력해주세요.',
                     minLength: { value: 1, message: '닉네임은 최소 1자 이상이어야 합니다.' },
                   })}
                 />
-                <button type="button" onClick={() => checkNickname(watch('nickName') ?? '')}>
+                <button
+                  type="button"
+                  className="px-2 bg-brand_3 hover:bg-brand_2"
+                  onClick={() => checkNickname(watch('nickName') ?? '')}
+                >
                   중복 확인
                 </button>
-                {errors.nickName && <p>{errors.nickName.message}</p>}
-                {nicknameAvailable === false && <p>이미 사용 중인 닉네임입니다.</p>}
-                <button type="submit">수정 완료</button>
-                <button type="button" onClick={() => setEditMode(false)}>
+                <button type="submit" className="px-2 bg-sky-200 hover:bg-sky-300">
+                  수정
+                </button>
+                <button type="button" className="px-2 bg-red-200 hover:bg-red-300" onClick={() => setEditMode(false)}>
                   취소
                 </button>
               </form>
             ) : (
-              <div className="flex rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-                <p>닉네임: {user.nickName}</p>
-                <button onClick={() => setEditMode(true)}>닉네임 수정</button>
+              <div className="flex gap-3 justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
+                <p>이름 : {user.nickName}</p>
+                <button
+                  onClick={() => setEditMode(true)}
+                  className="px-2 bg-sky-100 rounded-xl text-sm hover:bg-sky-200"
+                >
+                  이름 변경
+                </button>
               </div>
             )}
-            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-              이메일: {user.email}
-            </p>
-            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-              생년월일: {user.birthDate}
-            </p>
-            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-              성별: {genderText}
-            </p>
-            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-              Phone Number: {user.phoneNumber || 'Not provided'}
-            </p>
-            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-              멤버 등급: {user.membership}
-            </p>
-            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-              가입 경로: {user.signupPath}
-            </p>
-            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-              가입 일: {date}
-            </p>
-            <div className="absolute top-96 right-0 flex justify-center items-start space-x-3">
-              <button
-                onClick={() => setIsOpen(true)}
-                className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
-              >
+            <p className="flex justify-center gap-6 bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
+              휴대폰 : {user.phoneNumber || '미등록 (미인증)'}
+              <button onClick={() => setIsOpen(true)} className="px-2 bg-sky-100 rounded-xl text-sm hover:bg-sky-200">
                 핸드폰 인증
               </button>
+            </p>
+            <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
+              이메일 : {user.email}
+            </p>
+            <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
+              가입일 : {formatDate(date)}
+            </p>
+            <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
+              생년월일 : {user.birthDate}
+            </p>
+            <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
+              멤버 등급 : <span className="ml-1 bg-brand_3 px-2 rounded-lg">{user.membership}</span>
+            </p>
+            <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
+              가입 경로 :<span className="ml-1 bg-brand_3 px-2 rounded-lg">{user.signupPath}</span>
+            </p>
+            <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
+              성별 : {genderText}
+            </p>
+            <div className="absolute top-96 right-0 flex justify-center items-start space-x-3">
               <Modal title="휴대폰 인증" isOpen={isOpen} onClose={toggleModal}>
                 <PhoneCertificationModal />
               </Modal>
-              <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">
-                로그아웃
-              </button>
             </div>
           </div>
         </div>
@@ -253,28 +276,28 @@ export default function Mypage() {
         <p>Loading...</p>
       )}
 
-      <div className="text-center my-12 py-4 bg-brand_4">내가 구독한 유저의 모임 목록</div>
+      <div className="text-center text-white text-xl my-5 py-4 bg-brand_2">내가 구독한 유저의 모임 목록</div>
       <div className="flex space-x-3 overflow-x-auto">
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
       </div>
-      <div className="text-center my-8 py-4 bg-brand_4">내가 신청한 모임 목록</div>
+      <div className="text-center text-white text-xl my-5 py-4 bg-brand_2">내가 신청한 모임 목록</div>
       <div className="flex space-x-3 overflow-x-auto">
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
       </div>
-      <div className="text-center my-8 py-4 bg-brand_4">내가 관심 등록한 모임 목록</div>
+      <div className="text-center text-white text-xl my-5 py-4 bg-brand_2">내가 관심 등록한 모임 목록</div>
       <div className="flex space-x-3 overflow-x-auto">
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
       </div>
-      <div className="text-center my-8 py-4 bg-brand_4">내가 참여중인 채팅방 목록</div>
+      <div className="text-center text-white text-xl my-5 py-4 bg-brand_2">내가 참여중인 채팅방 목록</div>
       <div className="flex space-x-3 custom-scrollbar overflow-x-auto">
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>

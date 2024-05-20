@@ -120,7 +120,10 @@ export default function CommentBar() {
       {comments.map((comment: any) => (
         <div key={comment.id}>
           <div className="bg-gray-200 py-2 px-5 flex justify-between rounded-tl-lg rounded-tr-lg">
-            <b>{comment.nickName} </b>
+            <span className="flex items-center space-x-2">
+              <img src={comment.profileImg} alt="유저 프로필" className="w-9 h-9 rounded-full object-cover" />
+              <b>{comment.nickName} </b>
+            </span>
             <div>
               {formatDate(comment.updatedDttm)} {formatTime(comment.updatedDttm)} 작성
             </div>

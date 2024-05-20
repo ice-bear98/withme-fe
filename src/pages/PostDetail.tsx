@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaHeart } from 'react-icons/fa';
+import { CiCircleInfo } from 'react-icons/ci';
 
 import defaultImg from '../assets/default_profile.jpg';
 import useFormat from '../Hooks/useFormat';
@@ -86,7 +87,7 @@ export default function PostDetail() {
       <h2 className="flex items-center justify-between mb-5">
         <div className="flex items-center">
           <img
-            className="w-14 h-14 bg-brand_1 rounded-full"
+            className="w-14 h-14 bg-brand_1 rounded-full object-cover"
             src={data.profileImg === null ? defaultImg : data.profileImg}
             alt="작성자 프로필 이미지"
           />
@@ -122,7 +123,11 @@ export default function PostDetail() {
         </span>
       </h1>
       <div className="flex mt-5 gap-5 h-[450px]">
-        <img className="bg-slate-200 w-4/5 object-cover" src={data.mainImg} alt="썸네일 이미지" />
+        <img
+          className="bg-slate-200 w-4/5 object-cover"
+          src={data.mainImg.length <= 0 ? noImg : data.mainImg}
+          alt="썸네일 이미지"
+        />
         <ul className="w-2/5 text-center space-y-3 py-5 px-3">
           <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">
             모집기간 : {data.recruitmentStartDt} ~ {data.recruitmentEndDt} 까지
@@ -176,6 +181,10 @@ export default function PostDetail() {
             참여하기
           </button>
         </div>
+        <p className="pt-5 text-center flex items-center justify-center text-brand_2">
+          <CiCircleInfo className="mr-2" />
+          모든 모임 빛 이벤트 마감시간은 오후 9시 입니다
+        </p>
       </div>
       <div className="mt-5 border border-brand_4 rounded-2xl shadow-lg py-2 px-4">
         <CommentBar />
