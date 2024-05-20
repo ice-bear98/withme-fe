@@ -6,8 +6,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "types": ["node", "kakao.maps.d.ts"],
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
