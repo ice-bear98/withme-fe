@@ -24,7 +24,7 @@ const ProtectedRoute = () => {
     return (
       <>
         <Modal isOpen={isModalOpen} onClose={handleClose} title="알림">
-          <p className="h-3/4 flex py-3">로그인이 필요한 페이지입니다.</p>
+          <p className="h-3/4 w-[330px] flex py-3 text-center">로그인이 필요한 페이지입니다.</p>
           <div className="flex justify-end space-x-4 mt-4">
             <button
               onClick={handleLoginRedirect}
