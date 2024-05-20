@@ -20,6 +20,7 @@ const useWrite = () => {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
+          responseType: 'json',
         })
         .then((res) => {
           console.log('결과 데이터 : ', res.data, '통신 결과 : ', res);
@@ -28,7 +29,6 @@ const useWrite = () => {
         });
     } catch (error) {
       console.error(error);
-      console.log('에러');
     }
   };
 

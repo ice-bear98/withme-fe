@@ -144,9 +144,9 @@ export default function PostDetail() {
         </ul>
       </div>
       <div className="flex gap-3 mt-5">
-        <img className="bg-green-300 w-1/3 h-96" src="" alt="" />
-        <img className="bg-green-300 w-1/3 h-96" src="" alt="" />
-        <img className="bg-green-300 w-1/3 h-96" src="" alt="" />
+        <img className="bg-green-300 w-1/3 h-96 object-cover" src={data.subImg1} alt="" />
+        <img className="bg-green-300 w-1/3 h-96 object-cover" src={data.subImg2} alt="" />
+        <img className="bg-green-300 w-1/3 h-96 object-cover" src={data.subImg3} alt="" />
       </div>
       <div className="mt-5">
         <p className="w-full border-2 p-4 whitespace-pre-wrap">{data.content}</p>

@@ -11,6 +11,7 @@ import defaultImg from '../../assets/default_profile.jpg';
 export default function PostCard({ data }: any) {
   const {
     // id,
+    // memberId,
     title,
     gatheringType,
     likeCount,
@@ -21,14 +22,13 @@ export default function PostCard({ data }: any) {
     category,
     maximumParticipant,
     address,
-    // memberId,
     gatheringId,
     profileImg,
     nickName,
     fee,
     participantSelectionMethod,
     participantsType,
-    title_img,
+    mainImg,
     day,
   } = data;
 
@@ -110,7 +110,7 @@ export default function PostCard({ data }: any) {
         {TruncatedTitle(title, 14)}
       </div>
       <div className="flex justify-center gap-4 mt-6">
-        <img className="w-48 h-48 mx-3 object-cover rounded-2xl" src={title_img} alt="" />
+        <img className="w-48 h-48 mx-3 object-cover rounded-2xl" src={mainImg} alt="" />
         <div className="ml-2">
           <div className="text-sm mt-5 s:text-xs">
             <span className="bg-green-300 py-1 px-2 rounded-lg mr-2">{isAge(participantsType)}</span>
