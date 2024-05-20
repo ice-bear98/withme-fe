@@ -22,13 +22,13 @@ interface IForm {
   detailedAddress: string;
   lat: any;
   lng: any;
-  mainImg: any | null;
   day: string;
   time: string;
   like: number;
   participantsType: string;
   fee: number;
   participantSelectionMethod: string;
+  mainImg: any | null;
   subImg1: any | null;
   subImg2: any | null;
   subImg3: any | null;
@@ -74,6 +74,7 @@ export default function Write() {
   const [daumAddress, setDaumAddress] = useState<string>('');
   const [coords, setCoords] = useState<{ lat: any; lng: any } | null>(null);
   const [images, setImages] = useState<Array<string | null>>([null, null, null, null]);
+  const [imageFiles, setImageFiles] = useState<(File | null)[]>([null, null, null, null]);
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   /** 다음 주소찾기 API */
@@ -149,30 +150,25 @@ export default function Write() {
       behavior: 'smooth',
     });
   };
-
   /** 이미지 추가 핸들러 */
   const handleImageChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImages((prevImages) => {
-        const updatedImages = [...prevImages];
-        updatedImages[index] = imageUrl;
-        return updatedImages;
+      const imageUrl = window.URL.createObjectURL(file);
+      setImages((prevImageUrls) => {
+        const updatedImageUrls = [...prevImageUrls];
+        updatedImageUrls[index] = imageUrl;
+        return updatedImageUrls;
+      });
+
+      setImageFiles((prevImageFiles) => {
+        const updatedImageFiles = [...prevImageFiles];
+        updatedImageFiles[index] = file;
+        return updatedImageFiles;
       });
     }
   };
-
-  /** 이미지 변환 기능 */
-  function getFileNameFromBlobURL(blobUrl: string) {
-    // Blob URL에서 파일 이름을 추출
-    const startIndex = blobUrl.lastIndexOf('/') + 1;
-    const filename = blobUrl.substr(startIndex);
-
-    // 확장자를 .jpg로 변경하여 반환
-    return filename + '.jpg';
-  }
 
   /** Submit 핸들러 */
   const onSubmit = (data: IForm) => {
@@ -182,24 +178,45 @@ export default function Write() {
     } else if (data.recruitmentEndDt >= data.day) {
       alert('모임 및 이벤트 당일이 마감일 보다 빠를 순 없습니다.');
       scrollToTop();
-    } else if (checkDate(data.recruitmentEndDt) || checkDate(data.recruitmentStartDt) === true) {
+    } else if (checkDate(data.recruitmentEndDt) || checkDate(data.recruitmentStartDt)) {
       alert('과거 날짜와 현재를 모집기간으로 설정할 수 없습니다.');
       scrollToTop();
-    } else if (checkDate(data.day) === true) {
+    } else if (checkDate(data.day)) {
       alert('모임 및 이벤트 당일이 현재보다 과거로 설정되어있습니다.');
       scrollToTop();
     } else {
-      data.lat = coords?.lat;
-      data.lng = coords?.lng;
-      data.mainImg = images[0] ? getFileNameFromBlobURL(images[0]) : null;
-      data.subImg1 = images[1] ? getFileNameFromBlobURL(images[1]) : null;
-      data.subImg2 = images[2] ? getFileNameFromBlobURL(images[2]) : null;
-      data.subImg3 = images[3] ? getFileNameFromBlobURL(images[3]) : null;
-      console.log(data);
+      data.lat = coords?.lat || 0;
+      data.lng = coords?.lng || 0;
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('content', data.content);
+      formData.append('gatheringType', data.gatheringType);
+      formData.append('maximumParticipant', String(data.maximumParticipant));
+      formData.append('recruitmentStartDt', data.recruitmentStartDt);
+      formData.append('recruitmentEndDt', data.recruitmentEndDt);
+      formData.append('category', data.category);
+      formData.append('address', data.address);
+      formData.append('detailedAddress', data.detailedAddress);
+      formData.append('lat', String(data.lat));
+      formData.append('lng', String(data.lng));
+      formData.append('mainImg', imageFiles[0] as File);
+      formData.append('subImg1', imageFiles[1] as File);
+      formData.append('subImg2', imageFiles[2] as File);
+      formData.append('subImg3', imageFiles[3] as File);
+      formData.append('day', data.day);
+      formData.append('time', data.time);
+      formData.append('participantsType', data.participantsType);
+      formData.append('fee', String(data.fee));
+      formData.append('participantSelectionMethod', data.participantSelectionMethod);
+      formData.append('likeCount', String(data.like));
+
+      console.log(formData);
+      addPost(formData);
+
       if (isEdit) {
-        editPost(data, id);
+        editPost(formData, id);
       } else {
-        addPost(data);
+        addPost(formData);
       }
     }
   };
