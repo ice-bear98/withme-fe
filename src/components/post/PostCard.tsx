@@ -7,6 +7,7 @@ import { IoIosTime } from 'react-icons/io';
 
 import useFormat from '../../Hooks/useFormat';
 import defaultImg from '../../assets/default_profile.jpg';
+import noImg from '../../assets/default_img.jpg';
 
 export default function PostCard({ data }: any) {
   const {
@@ -110,7 +111,7 @@ export default function PostCard({ data }: any) {
         {TruncatedTitle(title, 14)}
       </div>
       <div className="flex justify-center gap-4 mt-6">
-        <img className="w-48 h-48 mx-3 object-cover rounded-2xl" src={mainImg} alt="" />
+        <img className="w-48 h-48 mx-3 object-cover rounded-2xl" src={mainImg.length <= 0 ? noImg : mainImg} alt="" />
         <div className="ml-2">
           <div className="text-sm mt-5 s:text-xs">
             <span className="bg-green-300 py-1 px-2 rounded-lg mr-2">{isAge(participantsType)}</span>
