@@ -111,18 +111,6 @@ export default function Home() {
     },
   ];
 
-  const dummyItem3: InfoItem[] = [
-    { id: 1, img: 'https://blog.kakaocdn.net/dn/q87fN/btqMPhm4b2H/6MAonAY8fnhFdrPNKhuaI1/img.jpg' },
-    { id: 2, img: 'https://www.contestkorea.com/admincenter/files/meet/202208111034482446084.jpeg' },
-    { id: 3, img: 'https://cdn.emetro.co.kr/data2/content/image/2021/10/15/.cache/512/20211015500073.jpg' },
-    { id: 4, img: 'https://blog.kakaocdn.net/dn/bD8H9X/btrA1BKlzsS/iwa8pNCIQf98dHKp5OqEDk/img.webp' },
-    { id: 5, img: 'https://blog.kakaocdn.net/dn/cOQK9p/btrQgLEx2YJ/r7GVmCaDVeCcWnqtZWObek/img.jpg' },
-    {
-      id: 6,
-      img: 'https://mblogthumb-phinf.pstatic.net/MjAyMjA5MjZfMjc0/MDAxNjY0MTYzNjEzODkw.4HkttF9LCDnEbfG14RfdOCcNCQqQOLYw_5yNYvzMm1Ug.f6Bko1PTQB1c8w0_ekOOYQNvP6c-w6pemw3TNbfb3SEg.JPEG.aprildotory/02.jpg?type=w800',
-    },
-  ];
-
   const getFestival = async () => {
     try {
       await axios.get(`${URL}/api/festival`).then((res) => setFestival(res.data.content));
