@@ -10,7 +10,7 @@ import KakaoMap from '../components/post/KakaoMap';
 import useWrite from '../Hooks/useWrite';
 import usePostStore from '../store/postStore';
 
-interface IForm {
+export interface IForm {
   title: string;
   content: string;
   gatheringType: string;
@@ -24,7 +24,7 @@ interface IForm {
   lng: any;
   day: string;
   time: string;
-  like: number;
+  likeCount: number;
   participantsType: string;
   fee: number;
   participantSelectionMethod: string;
@@ -50,7 +50,7 @@ export default function Write() {
       title: '',
       category: '',
       gatheringType: 'MEETING',
-      like: 0,
+      likeCount: 0,
       recruitmentStartDt: '',
       recruitmentEndDt: '',
       day: '',
@@ -170,7 +170,7 @@ export default function Write() {
     }
   };
 
-  /** Submit 핸들러 */
+  /** 게시글 등록 */
   const onSubmit = (data: IForm) => {
     if (data.recruitmentEndDt < data.recruitmentStartDt) {
       alert('마감일이 시작일보다 빠를 순 없습니다.');
@@ -187,36 +187,48 @@ export default function Write() {
     } else {
       data.lat = coords?.lat || 0;
       data.lng = coords?.lng || 0;
-      const formData = new FormData();
-      formData.append('title', data.title);
-      formData.append('content', data.content);
-      formData.append('gatheringType', data.gatheringType);
-      formData.append('maximumParticipant', String(data.maximumParticipant));
-      formData.append('recruitmentStartDt', data.recruitmentStartDt);
-      formData.append('recruitmentEndDt', data.recruitmentEndDt);
-      formData.append('category', data.category);
-      formData.append('address', data.address);
-      formData.append('detailedAddress', data.detailedAddress);
-      formData.append('lat', String(data.lat));
-      formData.append('lng', String(data.lng));
-      formData.append('mainImg', imageFiles[0] as File);
-      formData.append('subImg1', imageFiles[1] as File);
-      formData.append('subImg2', imageFiles[2] as File);
-      formData.append('subImg3', imageFiles[3] as File);
-      formData.append('day', data.day);
-      formData.append('time', data.time);
-      formData.append('participantsType', data.participantsType);
-      formData.append('fee', String(data.fee));
-      formData.append('participantSelectionMethod', data.participantSelectionMethod);
-      formData.append('likeCount', String(data.like));
 
-      console.log(formData);
+      const jsonData: any = {
+        title: data.title,
+        content: data.content,
+        gatheringType: data.gatheringType,
+        maximumParticipant: parseInt(String(data.maximumParticipant)),
+        recruitmentStartDt: data.recruitmentStartDt,
+        recruitmentEndDt: data.recruitmentEndDt,
+        category: data.category,
+        address: data.address,
+        detailedAddress: data.detailedAddress,
+        lat: String(data.lat),
+        lng: String(data.lng),
+        day: data.day,
+        time: data.time,
+        participantsType: data.participantsType,
+        fee: parseInt(String(data.fee)),
+        participantSelectionMethod: data.participantSelectionMethod,
+        likeCount: parseInt(String(data.likeCount)),
+      };
+
+      const formData = new FormData();
+      for (const key in jsonData) {
+        formData.append(key, jsonData[key]);
+      }
+
+      if (imageFiles[0]) formData.append('mainImg', imageFiles[0] as File);
+      if (imageFiles[1]) formData.append('subImg1', imageFiles[1] as File);
+      if (imageFiles[2]) formData.append('subImg2', imageFiles[2] as File);
+      if (imageFiles[3]) formData.append('subImg3', imageFiles[3] as File);
+
+      // 데이터 확인
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+        console.log('키:', key, '타입:', typeof value);
+      }
+
       addPost(formData);
+      console.log('최종:', formData);
 
       if (isEdit) {
         editPost(formData, id);
-      } else {
-        addPost(formData);
       }
     }
   };
@@ -229,7 +241,7 @@ export default function Write() {
           title: editData.title,
           category: editData.category,
           gatheringType: editData.gatheringType,
-          like: editData.likeCount,
+          likeCount: editData.likeCount,
           recruitmentStartDt: editData.recruitmentStartDt,
           recruitmentEndDt: editData.recruitmentEndDt,
           day: editData.day,
