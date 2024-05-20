@@ -5,10 +5,12 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import Modal from './modal/Modal';
 import PhoneCertificationModal from './modal/PhoneCertificationModal';
+import { useNavigate } from 'react-router-dom';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
 export default function Mypage() {
+  const navigate = useNavigate();
   const { user, logout, setUser } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(user?.profileImg || defaultImg);
@@ -27,6 +29,33 @@ export default function Mypage() {
     },
   });
 
+  const handleLogout = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const res = await axios.post(
+        `${URL}/api/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        },
+      );
+
+      console.log(`로그아웃 : ${res}`);
+      if (res.status === 200) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        logout();
+        navigate('/');
+      } else {
+        console.error('로그인 실패', res.statusText);
+      }
+    } catch (error) {
+      console.error('에러', error);
+    }
+  };
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -78,10 +107,54 @@ export default function Mypage() {
     }
   };
 
-  const handleImageChange = (event: any) => {
-    const file = event.target.files[0];
-    const imageUrl = URL.createObjectURL(file);
-    setImage(imageUrl);
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('profileImg', file);
+
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await axios.put(`${URL}/api/member/profile_img`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        fetchUserData();
+        alert('프로필 이미지가 변경되었습니다.');
+      } else {
+        console.error('프로필 이미지 변경 실패:', res.statusText);
+      }
+    } catch (error) {
+      console.error('프로필 이미지 변경 실패:', error);
+    }
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await axios.get(`${URL}/api/member/detail`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        const updatedUser = res.data;
+        setUser(updatedUser);
+        setImage(updatedUser.profileImg || defaultImg);
+      } else {
+        console.error('유저 정보 가져오기 실패:', res.statusText);
+      }
+    } catch (error) {
+      console.error('유저 정보 가져오기 실패:', error);
+    }
   };
 
   useEffect(() => {
@@ -89,91 +162,96 @@ export default function Mypage() {
     reset({
       nickName: user?.nickName,
     });
-  }, [user, reset]);
+  }, [user, reset, user?.profileImg]);
 
   const genderText = user?.gender === 'MALE' ? '남자' : '여자';
-  const nickName = user?.nickName.slice(0, 8);
-  const date = user?.signupDttm.slice(0, 10);
+  const nickName = user?.nickName;
+  const date = user?.signupDttm ? user.signupDttm.slice(0, 10) : 'Not available';
 
   return (
     <div className="p-4 max-w-4xl m-auto">
-      <h1 className="text-center text-2xl font-bold mb-4 bg-brand_2 py-2 text-white">{nickName}님의 마이페이지</h1>
-
-      <div className="flex justify-center items-start gap-4">
-        <div className="w-72 h-96 flex flex-col justify-center items-center bg-brand_4 p-4 rounded-lg text-center">
-          <div className="">
-            <img src={image} alt="Profile" className="rounded-full object-cover h-64 w-72 mb-4" />
-          </div>
-          <label
-            htmlFor="image-upload"
-            className=" text-white hover:bg-brand_2 cursor-pointer bg-brand_3 p-2 rounded-lg"
-          >
-            프로필 이미지 변경
-          </label>
-          <input id="image-upload" type="file" onChange={handleImageChange} className="hidden" />
-        </div>
-        <div className="relative font-['LINESeedKR-Bd'] w-72 h-96 flex flex-col justify-between p-4 bg-gray-100 rounded-lg">
-          {editMode ? (
-            <form onSubmit={handleSubmit(handleNicknameChange)}>
-              <input
-                {...register('nickName', {
-                  required: '닉네임을 입력해주세요.',
-                  minLength: { value: 1, message: '닉네임은 최소 1자 이상이어야 합니다.' },
-                })}
-              />
-              <button type="button" onClick={() => checkNickname(watch('nickName') ?? '')}>
-                중복 확인
-              </button>
-              {errors.nickName && <p>{errors.nickName.message}</p>}
-              {nicknameAvailable === false && <p>이미 사용 중인 닉네임입니다.</p>}
-              <button type="submit">수정 완료</button>
-              <button type="button" onClick={() => setEditMode(false)}>
-                취소
-              </button>
-            </form>
-          ) : (
-            <div className="flex rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans ">
-              <p>닉네임: {user?.nickName}</p>
-              <button onClick={() => setEditMode(true)}>닉네임 수정</button>
+      <h1 className="text-center text-2xl font-bold mb-4 bg-brand_2 py-2 text-white">
+        {nickName ? `${nickName}님의 마이페이지` : 'Loading...'}
+      </h1>
+      {user ? (
+        <div className="flex justify-center items-start gap-4">
+          <div className="w-72 h-96 flex flex-col justify-center items-center bg-brand_4 p-4 rounded-lg text-center">
+            <div className="">
+              <img src={image} alt="Profile" className="rounded-full object-cover h-64 w-72 mb-4" />
             </div>
-          )}
-          <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            이메일: {user?.email}
-          </p>
-          <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            생년월일: {user?.birthDate}
-          </p>
-          <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            성별: {genderText}
-          </p>
-          <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            Phone Number: {user?.phoneNumber || 'Not provided'}
-          </p>
-          <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            멤버 등급: {user?.membership}
-          </p>
-          <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            가입 경로: {user?.signupPath}
-          </p>
-          <p className="rounded-md  border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
-            가입 일: {date}
-          </p>
-          <div className="absolute top-96 right-0  flex  justify-center items-start space-x-3">
-            <button
-              onClick={() => setIsOpen(true)}
-              className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+            <label
+              htmlFor="image-upload"
+              className="text-white hover:bg-brand_2 cursor-pointer bg-brand_3 p-2 rounded-lg"
             >
-              핸드폰 인증
-            </button>
-            <Modal title="휴대폰 인증" isOpen={isOpen} onClose={toggleModal}>
-              <PhoneCertificationModal />
-            </Modal>
-            <button onClick={logout} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">
-              로그아웃
-            </button>
+              프로필 이미지 변경
+            </label>
+            <input id="image-upload" type="file" onChange={handleImageChange} className="hidden" />
+          </div>
+          <div className="relative font-['LINESeedKR-Bd'] w-72 h-96 flex flex-col justify-between p-4 bg-gray-100 rounded-lg">
+            {editMode ? (
+              <form onSubmit={handleSubmit(handleNicknameChange)}>
+                <input
+                  {...register('nickName', {
+                    required: '닉네임을 입력해주세요.',
+                    minLength: { value: 1, message: '닉네임은 최소 1자 이상이어야 합니다.' },
+                  })}
+                />
+                <button type="button" onClick={() => checkNickname(watch('nickName') ?? '')}>
+                  중복 확인
+                </button>
+                {errors.nickName && <p>{errors.nickName.message}</p>}
+                {nicknameAvailable === false && <p>이미 사용 중인 닉네임입니다.</p>}
+                <button type="submit">수정 완료</button>
+                <button type="button" onClick={() => setEditMode(false)}>
+                  취소
+                </button>
+              </form>
+            ) : (
+              <div className="flex rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
+                <p>닉네임: {user.nickName}</p>
+                <button onClick={() => setEditMode(true)}>닉네임 수정</button>
+              </div>
+            )}
+            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
+              이메일: {user.email}
+            </p>
+            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
+              생년월일: {user.birthDate}
+            </p>
+            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
+              성별: {genderText}
+            </p>
+            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
+              Phone Number: {user.phoneNumber || 'Not provided'}
+            </p>
+            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
+              멤버 등급: {user.membership}
+            </p>
+            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
+              가입 경로: {user.signupPath}
+            </p>
+            <p className="rounded-md border-2 text-black p-1 placeholder-brand_2 placeholder:text-center font-sans">
+              가입 일: {date}
+            </p>
+            <div className="absolute top-96 right-0 flex justify-center items-start space-x-3">
+              <button
+                onClick={() => setIsOpen(true)}
+                className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+              >
+                핸드폰 인증
+              </button>
+              <Modal title="휴대폰 인증" isOpen={isOpen} onClose={toggleModal}>
+                <PhoneCertificationModal />
+              </Modal>
+              <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">
+                로그아웃
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <p>Loading...</p>
+      )}
 
       <div className="text-center my-12 py-4 bg-brand_4">내가 구독한 유저의 모임 목록</div>
       <div className="flex space-x-3 overflow-x-auto">

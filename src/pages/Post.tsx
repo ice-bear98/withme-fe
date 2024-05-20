@@ -1,49 +1,36 @@
-import axios from 'axios';
-import PostCard from '../components/post/PostCard';
-import SearchBar from '../components/post/SearchBar';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import PostCard from '../components/post/PostCard';
+import SearchBar from '../components/post/SearchBar';
+import useGetPost from '../Hooks/useGetPost';
+import Loader from '../components/common/Loader';
 
 export default function Post() {
   const [posts, setPosts] = useState<any>([]);
-
-  const token = localStorage.getItem('accessToken');
-  const URL = import.meta.env.VITE_SERVER_URL;
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const postType = searchParams.get('type');
   console.log(postType);
 
-  const getPost = async () => {
-    try {
-      await axios
-        .get(`${URL}/api/gathering/list`, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          console.log('통신 상태 : ', res);
-          console.log('통신 데이터', res.data);
+  const { data, error, isLoading } = useGetPost();
 
-          if (postType !== 'all') {
-            const filteredPosts = res.data.filter((post: any) => {
-              const isMatch = post.gatheringType === postType?.toUpperCase();
-              return isMatch;
-            });
-            setPosts(filteredPosts);
-          } else {
-            setPosts(res.data);
-          }
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  if (isLoading) return <Loader />;
+  if (error) return <div>데이터 에러 : {error.message}</div>;
 
+  console.log('쿼리 데이터 : ', data);
+
+  /** 전체 / 이벤트 / 모임 분류 필터 */
   useEffect(() => {
-    getPost();
-  }, [postType]);
+    if (postType !== 'all') {
+      const filteredPosts = data.filter((post: any) => {
+        const isMatch = post.gatheringType === postType?.toUpperCase();
+        return isMatch;
+      });
+      setPosts(filteredPosts);
+    } else {
+      setPosts(data);
+    }
+  }, [postType, data]);
 
   return (
     <div className="mb-10">

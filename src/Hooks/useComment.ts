@@ -4,6 +4,7 @@ const useComment = () => {
   const token = localStorage.getItem('accessToken');
   const URL = import.meta.env.VITE_SERVER_URL;
 
+  /** 댓글 등록 */
   const addComment = async (commentContent: string, gatheringid: string) => {
     const queryParams = {
       gatheringid: gatheringid,
@@ -25,6 +26,7 @@ const useComment = () => {
       .then((res) => console.log(res));
   };
 
+  /** 댓글 삭제 */
   const removeComment = async (commentId: any) => {
     await axios
       .delete(`${URL}/api/comment/${commentId}`, {
@@ -35,6 +37,7 @@ const useComment = () => {
       .then((res) => console.log(res));
   };
 
+  /** 댓글 수정 */
   const editComment = async (commentId: any, commentContent: string) => {
     try {
       await axios
