@@ -209,9 +209,7 @@ export default function Write() {
       };
 
       const formData = new FormData();
-      for (const key in jsonData) {
-        formData.append(key, jsonData[key]);
-      }
+      formData.append('addGatheringRequest', JSON.stringify(jsonData));
 
       if (imageFiles[0]) formData.append('mainImg', imageFiles[0] as File);
       if (imageFiles[1]) formData.append('subImg1', imageFiles[1] as File);
