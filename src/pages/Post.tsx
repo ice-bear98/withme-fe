@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PostCard from '../components/post/PostCard';
 import SearchBar from '../components/post/SearchBar';
