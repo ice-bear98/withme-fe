@@ -173,13 +173,13 @@ export default function PostDetail() {
           {data.gatheringType === 'MEETING' ? '모임' : '이벤트'}
         </span>
       </h1>
-      <div className="flex mt-5 gap-5 h-[450px]">
+      <div className="flex justify-between mt-5 h-[450px]">
         <img
-          className="bg-slate-200 max-w-[830px] object-cover"
+          className="bg-slate-200 min-w-[830px] max-w-[850px]  object-cover"
           src={data.mainImg.length <= 0 ? noImg : data.mainImg}
           alt="썸네일 이미지"
         />
-        <ul className="w-2/4 text-center space-y-3 py-5 px-3">
+        <ul className="max-w-2/4 text-center space-y-3 my-auto">
           <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">
             모집기간 : {data.recruitmentStartDt} ~ {data.recruitmentEndDt} 까지
           </li>
