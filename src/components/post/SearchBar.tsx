@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function SearchBar() {
   const [category, setCategory] = useState<string>('전체');
   const [search, setSearch] = useState({
-    range: 'all',
     title: '',
-    option1: 'lastest',
-    option2: 'all',
+    range: 'all',
+    option: 'all',
+    sort: 'created_dttm,desc',
   });
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -16,9 +16,9 @@ export default function SearchBar() {
       ...prevSearch,
       [name]: value,
     }));
-    console.log(search);
   };
 
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const postType = searchParams.get('type');
@@ -34,14 +34,20 @@ export default function SearchBar() {
   }, [postType]);
 
   const isCategory = (type: string | null): string => {
-    if (type === 'all') {
-      return '전체';
-    } else if (type === 'event') {
-      return '이벤트';
-    } else if (type === 'meeting') {
-      return '모임';
-    }
+    if (type === 'all') return '전체';
+    if (type === 'event') return '이벤트';
+    if (type === 'meeting') return '모임';
     return '전체';
+  };
+
+  const handleSearchSubmit = () => {
+    const params = new URLSearchParams({
+      type: search.range,
+      title: search.title,
+      option1: search.option,
+      option2: search.sort,
+    });
+    navigate(`?${params.toString()}`);
   };
 
   return (
@@ -56,20 +62,20 @@ export default function SearchBar() {
         placeholder="검색할 제목을 입력해주세요"
       />
       <select
-        name="option1"
+        name="option"
         id="filter"
-        value={search.option1}
+        value={search.option}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
-        <option value="lastest">최신 순</option>
-        <option value="oldest">예전 순</option>
-        <option value="hot">인기 순</option>
+        <option value="created_dttm,desc">최신 순</option>
+        <option value="created_dttm,asc">예전 순</option>
+        <option value="like_count,desc">인기 순</option>
       </select>
       <select
-        name="option2"
+        name="sort"
         id="filter2"
-        value={search.option2}
+        value={search.sort}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
@@ -82,7 +88,12 @@ export default function SearchBar() {
         <option value="pay_free">무료</option>
         <option value="pay_has">유료</option>
       </select>
-      <button className="bg-brand_2 px-4 text-white rounded-xl py-1 dark:bg-gray-200 dark:text-black">검색</button>
+      <button
+        onClick={handleSearchSubmit}
+        className="bg-brand_2 px-4 text-white rounded-xl py-1 dark:bg-gray-200 dark:text-black"
+      >
+        검색
+      </button>
     </div>
   );
 }
