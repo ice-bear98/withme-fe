@@ -10,7 +10,6 @@ async function enableMocking() {
   const { worker } = await import('./mocks/browser');
   return worker.start();
 }
-// const KAKAO_KEY: string | undefined = import.meta.env.VITE_REACT_APP_KAKAO_API;
 
 declare global {
   interface Window {
