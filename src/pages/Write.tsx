@@ -39,6 +39,14 @@ export default function Write() {
   const { id }: any = useParams();
   const editData = usePostStore((state) => state.post);
 
+  const getCurrentDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   const {
     register,
     handleSubmit,
@@ -51,7 +59,7 @@ export default function Write() {
       category: '',
       gatheringType: 'MEETING',
       likeCount: 0,
-      recruitmentStartDt: '',
+      recruitmentStartDt: getCurrentDate(),
       recruitmentEndDt: '',
       day: '',
       time: '',
@@ -176,9 +184,9 @@ export default function Write() {
       alert('마감일이 시작일보다 빠를 순 없습니다.');
       scrollToTop();
     } else if (data.recruitmentEndDt >= data.day) {
-      alert('모임 및 이벤트 당일이 마감일 보다 빠를 순 없습니다.');
+      alert('모임 및 이벤트 당일이 마감일 보다 빠르거나 같을 수 없습니다.');
       scrollToTop();
-    } else if (checkDate(data.recruitmentEndDt) || checkDate(data.recruitmentStartDt)) {
+    } else if (data.recruitmentStartDt > data.recruitmentEndDt) {
       alert('과거 날짜와 현재를 모집기간으로 설정할 수 없습니다.');
       scrollToTop();
     } else if (checkDate(data.day)) {
@@ -209,7 +217,8 @@ export default function Write() {
       };
 
       const formData = new FormData();
-      formData.append('addGatheringRequest', JSON.stringify(jsonData));
+      const requestBlob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
+      formData.append('addGatheringRequest', requestBlob);
 
       if (imageFiles[0]) formData.append('mainImg', imageFiles[0] as File);
       if (imageFiles[1]) formData.append('subImg1', imageFiles[1] as File);

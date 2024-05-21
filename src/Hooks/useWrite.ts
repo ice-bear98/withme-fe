@@ -17,7 +17,7 @@ const useWrite = () => {
       await axios
         .post(`${URL}/api/gathering`, formData, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
             'Content-Type': 'multipart/form-data',
           },
           responseType: 'json',
