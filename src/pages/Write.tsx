@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import KakaoMap from '../components/post/KakaoMap';
 import useWrite from '../Hooks/useWrite';
 import usePostStore from '../store/postStore';
+import useUserStore from '../store/userStore';
 
 export interface IForm {
   title: string;
@@ -38,6 +39,7 @@ export default function Write() {
   const { addPost, editPost } = useWrite();
   const { id }: any = useParams();
   const editData = usePostStore((state) => state.post);
+  const writer = useUserStore((state) => state.user?.memberId);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -217,22 +219,22 @@ export default function Write() {
       };
 
       const formData = new FormData();
-      const requestBlob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
-      formData.append('addGatheringRequest', requestBlob);
+
+      // formData.append('addGatheringRequest', requestBlob);
 
       if (imageFiles[0]) formData.append('mainImg', imageFiles[0] as File);
       if (imageFiles[1]) formData.append('subImg1', imageFiles[1] as File);
       if (imageFiles[2]) formData.append('subImg2', imageFiles[2] as File);
       if (imageFiles[3]) formData.append('subImg3', imageFiles[3] as File);
 
-      // 데이터 확인
-      for (const [key, value] of formData.entries()) {
-        console.log(key, value);
-        console.log('키:', key, '타입:', typeof value);
-      }
+      // // 데이터 확인
+      // for (const [key, value] of formData.entries()) {
+      //   console.log(key, value);
+      //   console.log('키:', key, '타입:', typeof value);
+      // }
 
-      addPost(formData);
-      console.log('최종:', formData);
+      addPost(jsonData, formData, writer);
+      console.log('최종:', jsonData, formData);
 
       if (isEdit) {
         editPost(formData, id);

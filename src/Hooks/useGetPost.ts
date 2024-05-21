@@ -12,7 +12,7 @@ const useGetPost = () => {
       },
     });
     console.log('게시글 통신 :', response);
-    return response.data;
+    return response.data.content;
   };
 
   const queryOption: UseQueryOptions<any, Error> = {
