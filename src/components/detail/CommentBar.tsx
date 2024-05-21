@@ -106,20 +106,104 @@ export default function CommentBar() {
     fetchComments(currentPage);
   };
 
+  /** 페이지 번호 생성 함수 */
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const maxPagesToShow = 5;
+
+    if (totalPage <= maxPagesToShow) {
+      for (let i = 0; i < totalPage; i++) {
+        pageNumbers.push(
+          <button
+            key={i}
+            onClick={() => changePage(i)}
+            className={`px-2 py-1 border rounded-full ${i === currentPage ? 'bg-blue-300 text-white' : 'bg-gray-200'}`}
+          >
+            {i + 1}
+          </button>,
+        );
+      }
+    } else {
+      const startPage = Math.max(0, Math.min(currentPage - Math.floor(maxPagesToShow / 2), totalPage - maxPagesToShow));
+      const endPage = startPage + maxPagesToShow;
+
+      if (startPage > 0) {
+        pageNumbers.push(
+          <button
+            key="start"
+            onClick={() => changePage(0)}
+            className={`px-2 py-1 border rounded-full  ${currentPage === 0 ? 'bg-blue-300 text-white' : 'bg-gray-200'}`}
+          >
+            1
+          </button>,
+        );
+        if (startPage > 1) {
+          pageNumbers.push(
+            <span key="start-ellipsis" className="px-2 py-1 bg-gray-200 rounded-full ">
+              ···
+            </span>,
+          );
+        }
+      }
+
+      for (let i = startPage; i < endPage; i++) {
+        pageNumbers.push(
+          <button
+            key={i}
+            onClick={() => changePage(i)}
+            className={`px-2 py-1 border rounded-full  ${i === currentPage ? 'bg-blue-300 text-white' : 'bg-gray-200'}`}
+          >
+            {i + 1}
+          </button>,
+        );
+      }
+
+      if (endPage < totalPage) {
+        if (endPage < totalPage - 1) {
+          pageNumbers.push(
+            <span key="end-ellipsis" className="px-2 py-1 bg-gray-200 rounded-full ">
+              ···
+            </span>,
+          );
+        }
+        pageNumbers.push(
+          <button
+            key="end"
+            onClick={() => changePage(totalPage - 1)}
+            className={`px-2 py-1 border rounded-full  ${currentPage === totalPage - 1 ? 'bg-blue-300 text-white' : 'bg-gray-200'}`}
+          >
+            {totalPage}
+          </button>,
+        );
+      }
+    }
+
+    return pageNumbers;
+  };
+
   return (
     <div className="space-y-7 mt-3">
       <div className="flex justify-between px-5">
-        <button onClick={() => changePage(currentPage - 1)} className="border-2 shadow-sm py-1 px-3 rounded-2xl">
+        <button
+          onClick={() => changePage(currentPage - 1)}
+          className="border-2 shadow-sm py-1 px-3 rounded-2xl dark:bg-brand_1 dark:border-none"
+          disabled={currentPage === 0}
+        >
           이전
         </button>
         <h4 className="text-lg">댓글</h4>
-        <button onClick={() => changePage(currentPage + 1)} className="border-2 shadow-sm py-1 px-3 rounded-2xl">
+        <button
+          onClick={() => changePage(currentPage + 1)}
+          className="border-2 shadow-sm py-1 px-3 rounded-2xl dark:bg-brand_1 dark:border-none"
+          disabled={currentPage === totalPage - 1}
+        >
           다음
         </button>
       </div>
+      <div className="flex justify-center space-x-2">{renderPageNumbers()}</div>
       {comments.map((comment: any) => (
         <div key={comment.id}>
-          <div className="bg-gray-200 py-2 px-5 flex justify-between rounded-tl-lg rounded-tr-lg">
+          <div className="bg-gray-200 py-2 px-5 flex items-center justify-between rounded-tl-lg rounded-tr-lg dark:bg-slate-400">
             <span className="flex items-center space-x-2">
               <img src={comment.profileImg} alt="유저 프로필" className="w-9 h-9 rounded-full object-cover" />
               <b>{comment.nickName} </b>
@@ -129,9 +213,14 @@ export default function CommentBar() {
             </div>
           </div>
 
-          <div className="flex justify-between bg-gray-100 py-2 px-5 rounded-bl-lg rounded-br-lg">
+          <div className="flex justify-between bg-gray-100 py-2 px-5 rounded-bl-lg rounded-br-lg dark:bg-slate-500 dark:text-white">
             {editStates[comment.id] ? (
-              <input className="w-4/5" type="text" value={editContent} onChange={handleEditChange} />
+              <input
+                className="w-4/5 border-2 border-brand_1 dark:text-black dark:bg-gray-200"
+                type="text"
+                value={editContent}
+                onChange={handleEditChange}
+              />
             ) : (
               <p>{comment.commentContent} </p>
             )}
@@ -139,16 +228,19 @@ export default function CommentBar() {
             {comment.nickName === userName && (
               <div className="space-x-5">
                 {editStates[comment.id] ? (
-                  <button className="px-2 rounded-lg bg-brand_3" onClick={() => handleEdit(comment.id)}>
+                  <button className="px-2 rounded-lg bg-brand_3 dark:text-black" onClick={() => handleEdit(comment.id)}>
                     저장
                   </button>
                 ) : (
-                  <button className="px-2 rounded-lg bg-brand_3" onClick={() => handleEditToggle(comment.id)}>
+                  <button
+                    className="px-2 rounded-lg bg-brand_3 dark:text-black"
+                    onClick={() => handleEditToggle(comment.id)}
+                  >
                     수정
                   </button>
                 )}
 
-                <button className="px-2 rounded-lg bg-red-200" onClick={() => handleRemove(comment.id)}>
+                <button className="px-2 rounded-lg bg-red-200 dark:text-black" onClick={() => handleRemove(comment.id)}>
                   삭제
                 </button>
               </div>
@@ -158,7 +250,7 @@ export default function CommentBar() {
       ))}
       <div>
         <input
-          className="w-4/5 h-full placeholder:text-center p-2 border-gray-400"
+          className="w-4/5 h-full placeholder:text-center p-2 border-gray-400 dark:bg-gray-100 dark:placeholder:text-black"
           type="text"
           value={comment}
           onChange={handleCommentChange}

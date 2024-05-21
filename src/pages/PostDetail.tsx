@@ -84,7 +84,7 @@ export default function PostDetail() {
 
   return (
     <div className="mx-auto mt-5 mb-10">
-      <h2 className="flex items-center justify-between mb-5">
+      <h2 className="flex items-center justify-between mb-5 dark:text-gray-100">
         <div className="flex items-center">
           <img
             className="w-14 h-14 bg-brand_1 rounded-full object-cover"
@@ -99,13 +99,13 @@ export default function PostDetail() {
             <div className="space-x-3">
               <button
                 onClick={() => goEdit(data.gatheringId, data)}
-                className="bg-brand_4 py-1 px-3 border-2 hover:bg-brand_3"
+                className="bg-brand_4 py-1 px-3 border-2 hover:bg-brand_3 dark:text-black dark:bg-brand_2 dark:border-none dark:hover:bg-brand_1"
               >
                 수정
               </button>
               <button
                 onClick={() => handleRemove(data.gatheringId)}
-                className="bg-brand_4 py-1 px-3 border-2 hover:bg-red-200"
+                className="bg-brand_4 py-1 px-3 border-2 hover:bg-red-200 dark:text-black dark:bg-brand_2 dark:border-none dark:hover:bg-brand_1"
               >
                 삭제
               </button>
@@ -118,7 +118,7 @@ export default function PostDetail() {
           <FaHeart className="mr-2" /> {data.likeCount}
         </span>
         <span className="text-xl">{data.title}</span>
-        <span className="bg-white px-3 rounded-xl text-brand_1 text-xl font-sans">
+        <span className="bg-white px-3 rounded-xl text-brand_1 text-xl font-sans dark:bg-gray-700">
           {data.gatheringType === 'MEETING' ? '모임' : '이벤트'}
         </span>
       </h1>
@@ -150,29 +150,29 @@ export default function PostDetail() {
           </li>
         </ul>
       </div>
-      <div className="flex gap-3 mt-5">
+      <div className="flex mt-5 justify-between">
         <img
-          className="bg-green-300 w-1/3 h-96 object-cover"
+          className="bg-green-300 w-[380px] h-96 object-cover"
           src={data.subImg1.length <= 0 ? noImg : data.subImg1}
           alt=""
         />
         <img
-          className="bg-green-300 w-1/3 h-96 object-cover"
+          className="bg-green-300 w-[380px] h-96 object-cover"
           src={data.subImg2.length <= 0 ? noImg : data.subImg2}
           alt=""
         />
         <img
-          className="bg-green-300 w-1/3 h-96 object-cover"
+          className="bg-green-300 w-[380px] h-96 object-cover"
           src={data.subImg3.length <= 0 ? noImg : data.subImg3}
           alt=""
         />
       </div>
       <div className="mt-5">
-        <p className="w-full border-2 p-4 whitespace-pre-wrap">{data.content}</p>
+        <p className="w-full border-2 p-4 whitespace-pre-wrap dark:bg-brand_3">{data.content}</p>
       </div>
       <div className="mt-5">
         <KakaoMap coords={location} />
-        <p className="mt-5 text-center border-2 p-2">상세주소 : {data.detailedAddress}</p>
+        <p className="mt-5 text-center border-2 p-2 dark:bg-brand_3">상세주소 : {data.detailedAddress}</p>
         <div className="flex">
           <button
             onClick={() => addParticipation(id)}
@@ -186,7 +186,7 @@ export default function PostDetail() {
           모든 모임 빛 이벤트 마감시간은 오후 9시 입니다
         </p>
       </div>
-      <div className="mt-5 border border-brand_4 rounded-2xl shadow-lg py-2 px-4">
+      <div className="mt-5 border border-brand_4 rounded-2xl shadow-lg py-2 px-4 dark:bg-brand_3">
         <CommentBar />
       </div>
     </div>

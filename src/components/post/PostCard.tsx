@@ -99,7 +99,7 @@ export default function PostCard({ data }: any) {
       </h3>
       <div className="flex justify-around px-3 mb-2">
         <span className="flex items-center text-gray-400">
-          <p className="bg-red-400 px-2 mr-2 rounded-lg text-white dark:text-black">HOT</p>
+          {/* <p className="bg-red-400 px-2 mr-2 rounded-lg text-white dark:text-black">HOT</p> */}
           <p className="bg-brand_1 px-2 mr-2 rounded-lg text-white dark:text-black">{category}</p>
           <p
             className={`bg-brand_2 px-2 mr-2 rounded-lg text-white dark:text-black ${isKind === '모임' ? 'bg-orange-300' : 'bg-brand_2'}`}
