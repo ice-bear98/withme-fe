@@ -14,9 +14,6 @@ export default function Post() {
   const { data, error, isLoading } = useGetPost();
 
   useEffect(() => {
-    console.log('데이터:', data);
-    console.log('postType:', postType);
-
     if (data && data.length > 0) {
       const filteredPosts =
         postType !== 'all'

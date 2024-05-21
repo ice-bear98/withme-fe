@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 export default function SearchBar() {
   const [category, setCategory] = useState<string>('전체');
   const [search, setSearch] = useState({
-    title: '', // 여기에 title 속성을 추가합니다.
+    title: '',
     range: 'all',
     option: 'all',
     sort: 'created_dttm,desc',
@@ -43,7 +43,7 @@ export default function SearchBar() {
   const handleSearchSubmit = () => {
     const params = new URLSearchParams({
       type: search.range,
-      title: search.title, // 여기서 title 속성을 사용합니다.
+      title: search.title,
       option1: search.option,
       option2: search.sort,
     });
