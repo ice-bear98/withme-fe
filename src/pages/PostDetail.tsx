@@ -17,7 +17,7 @@ import noImg from '../assets/default_img.jpg';
 import useLike from '../Hooks/useLikes';
 
 export default function PostDetail() {
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>(null);
   const [status, setStatus] = useState<string>('');
   const [location, setLocation] = useState<any>({ lat: '', lng: '' });
   const [ing, setIng] = useState<number>(0);
@@ -34,21 +34,14 @@ export default function PostDetail() {
   const { removePost, goEdit } = useWrite();
   const { changeLike, checkLike } = useLike();
 
-  const getData = async () => {
+  // why no PR
+
+  const fetchData = async () => {
     try {
       const gatheringResponse = await axios.get(`${URL}/api/gathering/${id}`);
       setData(gatheringResponse.data);
       setStatus(gatheringResponse.data.status);
       setLocation({ lat: gatheringResponse.data.lat, lng: gatheringResponse.data.lng });
-      console.log('게시글 정보:', gatheringResponse);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await getData();
 
       const count = await getCount(id);
       setIng(count);
@@ -58,15 +51,16 @@ export default function PostDetail() {
 
       const like = await checkLike(id);
       setIsLike(like);
-    };
 
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+      scrollToTop();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, [id, isLike, inn]);
+  }, [id]);
 
   if (!data) {
     return (
@@ -76,11 +70,9 @@ export default function PostDetail() {
     );
   }
 
-  const handleRemove = (id: number) => {
+  const handleRemove = async (id: number) => {
     if (confirm('정말로 삭제하시겠습니까?')) {
-      removePost(id);
-    } else {
-      return;
+      await removePost(id);
     }
   };
 
@@ -97,31 +89,26 @@ export default function PostDetail() {
     }
   };
 
-  const isMax = (count: number) => {
-    if (count === data.maximumParticipant) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  const isMax = (count: number) => count === data.maximumParticipant;
 
   const handleLike = async (id: any) => {
-    setIsLike(!isLike);
     try {
       await changeLike(id);
-      getData();
+      fetchData();
     } catch (error) {
       console.error('Error updating like status:', error);
     }
   };
 
   const handleInn = async (id: any) => {
-    setInn(!inn);
+    if (userId === undefined) {
+      return;
+    }
     try {
-      await isCheck(id);
-      getData();
+      const isInn = await isCheck(id);
+      setInn(isInn);
     } catch (error) {
-      console.error('Error updating like status:', error);
+      console.error('Error checking participation status:', error);
     }
   };
 
@@ -129,10 +116,17 @@ export default function PostDetail() {
     try {
       const count = await getCount(id);
       setIng(count);
-      getData();
+      fetchData();
     } catch (error) {
-      console.error('Error updating like status:', error);
+      console.error('Error updating participation count:', error);
     }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -181,7 +175,7 @@ export default function PostDetail() {
       </h1>
       <div className="flex mt-5 gap-5 h-[450px]">
         <img
-          className="bg-slate-200 w-4/5 object-cover"
+          className="bg-slate-200 w-3/4 object-cover"
           src={data.mainImg.length <= 0 ? noImg : data.mainImg}
           alt="썸네일 이미지"
         />
@@ -233,11 +227,18 @@ export default function PostDetail() {
         <div className="flex">
           {inn ? (
             <button
+              disabled={userId === undefined}
               onClick={() => confirm('정말 참여를 취소하겠습니까?')}
-              className="mt-5 w-full bg-brand_1 p-2 rounded-2xl text-xl text-white hover:bg-red-300"
+              className={`${userId === undefined ? 'bg-red-300' : 'bg-brand_1'} mt-5 w-full  p-2 rounded-2xl text-xl text-white hover:bg-red-300`}
             >
-              이미 참여중인 모임입니다
-              <p className="text-base">취소하려면 클릭하세요</p>
+              {userId !== undefined ? (
+                <div>
+                  이미 참여중인 모임입니다
+                  <p className="text-base">취소하려면 클릭하세요</p>
+                </div>
+              ) : (
+                <p>로그인 후 신청가능합니다</p>
+              )}
             </button>
           ) : isMax(ing) ? (
             <button
