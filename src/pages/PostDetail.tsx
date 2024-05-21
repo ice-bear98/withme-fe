@@ -175,11 +175,11 @@ export default function PostDetail() {
       </h1>
       <div className="flex mt-5 gap-5 h-[450px]">
         <img
-          className="bg-slate-200 w-3/4 object-cover"
+          className="bg-slate-200 max-w-[830px] object-cover"
           src={data.mainImg.length <= 0 ? noImg : data.mainImg}
           alt="썸네일 이미지"
         />
-        <ul className="w-2/5 text-center space-y-3 py-5 px-3">
+        <ul className="w-2/4 text-center space-y-3 py-5 px-3">
           <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">
             모집기간 : {data.recruitmentStartDt} ~ {data.recruitmentEndDt} 까지
           </li>
