@@ -35,6 +35,7 @@ export default function PostDetail() {
   const { changeLike, checkLike } = useLike();
 
   // why no PR
+  // why
 
   const fetchData = async () => {
     try {
