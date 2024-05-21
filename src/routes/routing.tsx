@@ -1,3 +1,4 @@
+import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import NotFound from '../pages/NotFound.tsx';
 import Home from '../pages/Home.tsx';

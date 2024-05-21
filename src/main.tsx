@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,7 +11,6 @@ async function enableMocking() {
   const { worker } = await import('./mocks/browser');
   return worker.start();
 }
-// const KAKAO_KEY: string | undefined = import.meta.env.VITE_REACT_APP_KAKAO_API;
 
 declare global {
   interface Window {
@@ -22,7 +22,7 @@ declare global {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
       retryOnMount: true,
       refetchOnMount: true,
     },
