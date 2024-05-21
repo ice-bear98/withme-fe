@@ -22,7 +22,7 @@ declare global {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
       retryOnMount: true,
       refetchOnMount: true,
     },

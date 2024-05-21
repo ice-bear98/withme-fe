@@ -12,21 +12,53 @@ const useWrite = () => {
   const post = usePostStore((state) => state.post);
   const queryClient = useQueryClient();
 
-  const addPost = async (formData: FormData) => {
+  const addPost = async (data: any, img: any, writer: any) => {
+    console.log(data);
+    try {
+      const res = await axios.post(
+        `${URL}/api/gathering`,
+        {
+          title: data.title,
+          content: data.content,
+          gatheringType: data.gatheringType,
+          maximumParticipant: data.maximumParticipant,
+          recruitmentStartDt: data.recruitmentStartDt,
+          recruitmentEndDt: data.recruitmentEndDt,
+          category: data.category,
+          detailedAddress: data.detailedAddress,
+          address: data.address,
+          lat: data.lat,
+          lng: data.lng,
+          day: data.day,
+          time: data.time,
+          participantsType: data.participantsType,
+          fee: data.fee,
+          participantSelectionMethod: data.participantSelectionMethod,
+        },
+        {
+          headers: {
+            Authorization: token,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      const target = res.data.gatheringId;
+      uploadImg(img, target);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const uploadImg = async (images: any, target: any) => {
     try {
       await axios
-        .post(`${URL}/api/gathering`, formData, {
+        .post(`${URL}/api/gathering/image/${target}`, images, {
           headers: {
             Authorization: token,
             'Content-Type': 'multipart/form-data',
           },
-          responseType: 'json',
         })
-        .then((res) => {
-          console.log('결과 데이터 : ', res.data, '통신 결과 : ', res);
-          navigate('/post?type=all');
-          queryClient.invalidateQueries({ queryKey: ['posts'] });
-        });
+        .then((res) => console.log(res));
     } catch (error) {
       console.error(error);
     }
