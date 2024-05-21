@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react';
-import useUserStore from '../store/userStore';
-import defaultImg from '../assets/default_profile.jpg';
 import { useForm } from 'react-hook-form';
+import { IoMdMale, IoMdFemale } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
+
+import useUserStore from '../store/userStore';
 import axios from 'axios';
 import Modal from './modal/Modal';
 import PhoneCertificationModal from './modal/PhoneCertificationModal';
-import { useNavigate } from 'react-router-dom';
-
-import { IoMdMale, IoMdFemale } from 'react-icons/io';
+import ListCard from '../components/mypage/ListCard';
 import useFormat from '../Hooks/useFormat';
+import useParticipation from '../Hooks/useParticipation';
+import defaultImg from '../assets/default_profile.jpg';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
 export default function Mypage() {
   const navigate = useNavigate();
-  const { user, logout, setUser } = useUserStore();
+  const { user, setUser } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(user?.profileImg || defaultImg);
   const [editMode, setEditMode] = useState(false);
   const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null);
+  const [myAppList, setMyAppList] = useState<any>();
+
   const {
     register,
     handleSubmit,
@@ -33,34 +37,8 @@ export default function Mypage() {
   });
 
   const { formatDate } = useFormat();
+  const { getList } = useParticipation();
 
-  const handleLogout = async () => {
-    const accessToken = localStorage.getItem('accessToken');
-
-    try {
-      const res = await axios.post(
-        `${URL}/api/auth/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `${accessToken}`,
-          },
-        },
-      );
-
-      console.log(`로그아웃 : ${res}`);
-      if (res.status === 200) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        logout();
-        navigate('/');
-      } else {
-        console.error('로그인 실패', res.statusText);
-      }
-    } catch (error) {
-      console.error('에러', error);
-    }
-  };
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -169,6 +147,16 @@ export default function Mypage() {
     });
   }, [user, reset, user?.profileImg]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const appList = await getList();
+      setMyAppList(appList);
+    };
+    fetchData();
+  }, []);
+
+  console.log(myAppList);
+
   const genderText =
     user?.gender === 'MALE' ? (
       <span className="flex items-center ml-1">
@@ -243,9 +231,13 @@ export default function Mypage() {
             )}
             <p className="flex justify-center gap-6 bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
               휴대폰 : {user.phoneNumber || '미등록 (미인증)'}
-              <button onClick={() => setIsOpen(true)} className="px-2 bg-sky-100 rounded-xl text-sm hover:bg-sky-200">
-                핸드폰 인증
-              </button>
+              {user.isCertification ? (
+                <span className="flex px-2 items-center  bg-yellow-200 rounded-xl text-sm">인증완료</span>
+              ) : (
+                <button onClick={() => setIsOpen(true)} className="px-2 bg-sky-100 rounded-xl text-sm hover:bg-sky-200">
+                  핸드폰 인증
+                </button>
+              )}
             </p>
             <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
               이메일 : {user.email}
@@ -276,28 +268,21 @@ export default function Mypage() {
         <p>Loading...</p>
       )}
 
-      <div className="text-center text-white text-xl my-5 py-4 bg-brand_2">내가 구독한 유저의 모임 목록</div>
+      <div className="text-center text-white text-lg my-5 py-2 bg-brand_2">내가 신청한 모임 목록</div>
+      <div className="flex space-x-3 overflow-y-hidden overflow-x-auto h-72 ">
+        {myAppList?.length === 0 && (
+          <div className="flex justify-center items-center w-full h-full bg-brand_4">아직 신청한 모임이 없습니다</div>
+        )}
+        {myAppList?.map((it: any, idx: any) => <ListCard key={idx} list={it} />)}
+      </div>
+      <div className="text-center text-white text-lg my-5 py-2 bg-brand_2">내가 관심 등록한 모임 목록</div>
       <div className="flex space-x-3 overflow-x-auto">
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
       </div>
-      <div className="text-center text-white text-xl my-5 py-4 bg-brand_2">내가 신청한 모임 목록</div>
-      <div className="flex space-x-3 overflow-x-auto">
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-      </div>
-      <div className="text-center text-white text-xl my-5 py-4 bg-brand_2">내가 관심 등록한 모임 목록</div>
-      <div className="flex space-x-3 overflow-x-auto">
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-      </div>
-      <div className="text-center text-white text-xl my-5 py-4 bg-brand_2">내가 참여중인 채팅방 목록</div>
+      <div className="text-center text-white text-lg my-5 py-2 bg-brand_2">내가 참여중인 채팅방 목록</div>
       <div className="flex space-x-3 custom-scrollbar overflow-x-auto">
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>

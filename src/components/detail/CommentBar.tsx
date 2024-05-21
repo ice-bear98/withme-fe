@@ -4,6 +4,7 @@ import useComment from '../../Hooks/useComment';
 import useFormat from '../../Hooks/useFormat';
 import axios from 'axios';
 import useUserStore from '../../store/userStore';
+import defaultImg from '../../assets/default_profile.jpg';
 
 export default function CommentBar() {
   const [comments, setComments] = useState<any[]>([]);
@@ -205,7 +206,11 @@ export default function CommentBar() {
         <div key={comment.id}>
           <div className="bg-gray-200 py-2 px-5 flex items-center justify-between rounded-tl-lg rounded-tr-lg dark:bg-slate-400">
             <span className="flex items-center space-x-2">
-              <img src={comment.profileImg} alt="유저 프로필" className="w-9 h-9 rounded-full object-cover" />
+              <img
+                src={comment?.profileImg === null ? defaultImg : comment?.profileImg}
+                alt="유저 프로필"
+                className="w-9 h-9 rounded-full object-cover"
+              />
               <b>{comment.nickName} </b>
             </span>
             <div>

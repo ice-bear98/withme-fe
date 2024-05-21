@@ -12,6 +12,7 @@ interface User {
   signupPath: string;
   signupDttm: string;
   membership: string;
+  isCertification: boolean;
 }
 
 interface UserState {
@@ -27,8 +28,9 @@ const useUserStore = create(
       user: null,
       isLoggedIn: false,
       setUser: (user: User) => {
+        const updatedUser = { ...user, isCertification: user.phoneNumber === null ? false : true };
         console.log('유저 데이터:', user);
-        set({ user, isLoggedIn: true });
+        set({ user: updatedUser, isLoggedIn: true });
       },
       logout: () => {
         localStorage.removeItem('userStorage');

@@ -5,7 +5,6 @@ import Home from '../pages/Home.tsx';
 import Login from '../pages/Login.tsx';
 import Join from '../pages/Join.tsx';
 import SocialJoin from '../pages/SocialJoin.tsx';
-import Mypage from '../pages/Mypage.tsx';
 import PostDetail from '../pages/PostDetail.tsx';
 import Chat from '../pages/Chat.tsx';
 import Payment from '../pages/Payment.tsx';
@@ -18,6 +17,7 @@ import App from '../App.tsx';
 import ProtectedRoute from './protectedRoute.tsx';
 import ParsingToken from '../pages/ParsingToken.tsx';
 import RequiredInfo from '../pages/RequiredInfo.tsx';
+import MyPage from '../pages/Mypage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute />,
         children: [
-          { path: '/mypage/:id', element: <Mypage /> },
+          { path: '/mypage/:id', element: <MyPage /> },
           { path: '/payment', element: <Payment /> },
           { path: '/chat/:id', element: <Chat /> },
           { path: '/mymanage/:id', element: <MyManage /> },

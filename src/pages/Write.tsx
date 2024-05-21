@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import KakaoMap from '../components/post/KakaoMap';
 import useWrite from '../Hooks/useWrite';
 import usePostStore from '../store/postStore';
+import useFormat from '../Hooks/useFormat';
 import useUserStore from '../store/userStore';
 
 export interface IForm {
@@ -37,9 +38,11 @@ export interface IForm {
 
 export default function Write() {
   const { addPost, editPost } = useWrite();
+  const { calculateAge } = useFormat();
   const { id }: any = useParams();
+
   const editData = usePostStore((state) => state.post);
-  const writer = useUserStore((state) => state.user?.memberId);
+  const userAge = useUserStore((state) => state.user?.birthDate);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -194,6 +197,12 @@ export default function Write() {
     } else if (checkDate(data.day)) {
       alert('모임 및 이벤트 당일이 현재보다 과거로 설정되어있습니다.');
       scrollToTop();
+    } else if (data.participantsType === 'ADULT' && calculateAge(userAge) < 19) {
+      alert('미성년자가 성인 모임을 개최할 순 없습니다.');
+      scrollToTop();
+    } else if (data.participantsType === 'MINOR' && calculateAge(userAge) >= 19) {
+      alert('성인이 미성년자 모임을 개최할 순 없습니다.');
+      scrollToTop();
     } else {
       data.lat = coords?.lat || 0;
       data.lng = coords?.lng || 0;
@@ -220,24 +229,19 @@ export default function Write() {
 
       const formData = new FormData();
 
-      // formData.append('addGatheringRequest', requestBlob);
-
       if (imageFiles[0]) formData.append('mainImg', imageFiles[0] as File);
       if (imageFiles[1]) formData.append('subImg1', imageFiles[1] as File);
       if (imageFiles[2]) formData.append('subImg2', imageFiles[2] as File);
       if (imageFiles[3]) formData.append('subImg3', imageFiles[3] as File);
 
-      // // 데이터 확인
-      // for (const [key, value] of formData.entries()) {
-      //   console.log(key, value);
-      //   console.log('키:', key, '타입:', typeof value);
-      // }
-
-      addPost(jsonData, formData, writer);
-      console.log('최종:', jsonData, formData);
-
-      if (isEdit) {
-        editPost(formData, id);
+      if (!isEdit) {
+        addPost(jsonData, formData);
+        console.log('게시글 작성');
+        console.log(isEdit);
+      } else {
+        editPost(jsonData, formData, id);
+        console.log('게시글 수정');
+        console.log(isEdit);
       }
     }
   };

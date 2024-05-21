@@ -14,11 +14,15 @@ import useUserStore from '../store/userStore';
 import useWrite from '../Hooks/useWrite';
 
 import noImg from '../assets/default_img.jpg';
+import useLike from '../Hooks/useLikes';
 
 export default function PostDetail() {
   const [data, setData] = useState<any>();
   const [status, setStatus] = useState<string>('');
   const [location, setLocation] = useState<any>({ lat: '', lng: '' });
+  const [ing, setIng] = useState<number>(0);
+  const [inn, setInn] = useState<boolean>(false);
+  const [isLike, setIsLike] = useState<any>(false);
 
   const userId = useUserStore((state) => state.user?.memberId);
   const URL = import.meta.env.VITE_SERVER_URL;
@@ -26,8 +30,9 @@ export default function PostDetail() {
   const { id }: any = useParams();
 
   const { formatDate, formatTime } = useFormat();
-  const { addParticipation } = useParticipation();
+  const { addParticipation, getCount, isCheck } = useParticipation();
   const { removePost, goEdit } = useWrite();
+  const { changeLike, checkLike } = useLike();
 
   const getData = async () => {
     try {
@@ -42,8 +47,26 @@ export default function PostDetail() {
   };
 
   useEffect(() => {
-    getData();
-  }, [id]);
+    const fetchData = async () => {
+      await getData();
+
+      const count = await getCount(id);
+      setIng(count);
+
+      const isInn = await isCheck(id);
+      setInn(isInn);
+
+      const like = await checkLike(id);
+      setIsLike(like);
+    };
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+
+    fetchData();
+  }, [id, isLike, inn]);
 
   if (!data) {
     return (
@@ -74,11 +97,41 @@ export default function PostDetail() {
     }
   };
 
-  const getStatus = (status: string) => {
-    if (status === 'PROGRESS') {
-      return '참여 가능';
+  const isMax = (count: number) => {
+    if (count === data.maximumParticipant) {
+      return true;
     } else {
-      return '모집 마감';
+      return false;
+    }
+  };
+
+  const handleLike = async (id: any) => {
+    setIsLike(!isLike);
+    try {
+      await changeLike(id);
+      getData();
+    } catch (error) {
+      console.error('Error updating like status:', error);
+    }
+  };
+
+  const handleInn = async (id: any) => {
+    setInn(!inn);
+    try {
+      await isCheck(id);
+      getData();
+    } catch (error) {
+      console.error('Error updating like status:', error);
+    }
+  };
+
+  const handleCount = async (id: any) => {
+    try {
+      const count = await getCount(id);
+      setIng(count);
+      getData();
+    } catch (error) {
+      console.error('Error updating like status:', error);
     }
   };
 
@@ -115,7 +168,11 @@ export default function PostDetail() {
       </h2>
       <h1 className="bg-brand_3 text-lg text-center flex justify-around py-3">
         <span className="flex items-center text-gray-500">
-          <FaHeart className="mr-2" /> {data.likeCount}
+          <FaHeart
+            onClick={() => handleLike(id)}
+            className={`${isLike ? 'text-red-400' : 'text-gray-500'} mr-2 cursor-pointer`}
+          />
+          {data.likeCount}
         </span>
         <span className="text-xl">{data.title}</span>
         <span className="bg-white px-3 rounded-xl text-brand_1 text-xl font-sans dark:bg-gray-700">
@@ -144,9 +201,9 @@ export default function PostDetail() {
             나이제한 : {getLimited(data.participantsType)}
           </li>
           <li
-            className={`${status === 'PROGRESS' ? 'bg-brand_3' : 'bg-red-300'} p-1 border-2 border-brand_1 rounded-xl`}
+            className={`${isMax(ing) ? 'bg-red-300 border-slate-200 text-white' : 'bg-brand_3'} p-1 border-2 border-brand_1 rounded-xl`}
           >
-            {getStatus(data.status)}
+            {isMax(ing) ? '신청 인원 마감' : `신청 가능 ( ${ing} / ${data.maximumParticipant} )`}
           </li>
         </ul>
       </div>
@@ -174,12 +231,31 @@ export default function PostDetail() {
         <KakaoMap coords={location} />
         <p className="mt-5 text-center border-2 p-2 dark:bg-brand_3">상세주소 : {data.detailedAddress}</p>
         <div className="flex">
-          <button
-            onClick={() => addParticipation(id)}
-            className="mt-5 w-full bg-brand_2 p-2 rounded-2xl hover:bg-brand_1 text-xl text-white"
-          >
-            참여하기
-          </button>
+          {inn ? (
+            <button
+              onClick={() => confirm('정말 참여를 취소하겠습니까?')}
+              className="mt-5 w-full bg-brand_1 p-2 rounded-2xl text-xl text-white hover:bg-red-300"
+            >
+              이미 참여중인 모임입니다
+              <p className="text-base">취소하려면 클릭하세요</p>
+            </button>
+          ) : isMax(ing) ? (
+            <button
+              onClick={() => alert('참여인원이 가득차서 신청할 수 없어요.')}
+              className="mt-5 w-full bg-red-300 p-2 rounded-2xl text-xl text-white"
+            >
+              참여인원이 가득찼습니다
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                addParticipation(id, data.memberId, data.participantsType), handleInn(id), handleCount(id);
+              }}
+              className="mt-5 w-full bg-brand_2 p-2 rounded-2xl hover:bg-brand_1 text-xl text-white"
+            >
+              참여 신청하기
+            </button>
+          )}
         </div>
         <p className="pt-5 text-center flex items-center justify-center text-brand_2">
           <CiCircleInfo className="mr-2" />
