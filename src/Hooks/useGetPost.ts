@@ -1,18 +1,24 @@
-import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import axios from 'axios';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 const useGetPost = () => {
   const token = localStorage.getItem('accessToken');
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const fetchPosts = async () => {
-    const response = await axios.get(`${URL}/api/gathering/list`, {
-      headers: {
-        Authorization: token,
-      },
-    });
-    console.log('게시글 통신 :', response);
-    return response.data.content;
+    try {
+      const response = await axios.get(`${URL}/api/gathering/list`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log('게시글 통신 :', response.data.content);
+      return response.data.content;
+    } catch (error) {
+      console.error('게시글 로드 실패:', error);
+      throw error;
+    }
   };
 
   const queryOption: UseQueryOptions<any, Error> = {
@@ -24,7 +30,13 @@ const useGetPost = () => {
 
   const { data, error, isLoading } = useQuery(queryOption);
 
-  return { data, error, isLoading, useGetPost };
+  useEffect(() => {
+    if (error) {
+      console.error('데이터 에러 :', error.message);
+    }
+  }, [error]);
+
+  return { data, error, isLoading };
 };
 
 export default useGetPost;
