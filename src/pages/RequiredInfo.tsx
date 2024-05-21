@@ -26,6 +26,7 @@ export default function RequiredInfo() {
 
       if (response.status === 200) {
         setUser(response.data);
+        console.log(response);
         navigate('/');
       } else {
         console.error('회원 정보 저장 실패');

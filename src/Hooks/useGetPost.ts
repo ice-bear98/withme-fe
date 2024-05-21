@@ -36,7 +36,7 @@ const useGetPost = () => {
     }
   }, [error]);
 
-  return { data, error, isLoading };
+  return { data, error, isLoading, fetchPosts };
 };
 
 export default useGetPost;

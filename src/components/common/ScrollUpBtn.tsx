@@ -26,6 +26,7 @@ export default function ScrollTopBtn() {
       behavior: 'smooth',
     });
   };
+
   return (
     <button
       className={`${

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FaMapMarkerAlt, FaHeart, FaCalendarDay } from 'react-icons/fa';
@@ -8,6 +8,8 @@ import { IoIosTime } from 'react-icons/io';
 import useFormat from '../../Hooks/useFormat';
 import defaultImg from '../../assets/default_profile.jpg';
 import noImg from '../../assets/default_img.jpg';
+import useLike from '../../Hooks/useLikes';
+import useGetPost from '../../Hooks/useGetPost';
 
 interface PostCardProps {
   data: {
@@ -55,13 +57,24 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
   } = data;
 
   const [isKind, setIsKind] = useState<string>('');
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const { formatDate, formatTime } = useFormat();
+  const { checkLike, changeLike } = useLike();
 
   useEffect(() => {
     setIsKind(gatheringType === 'MEETING' ? '모임' : '이벤트');
   }, [gatheringType]);
+
+  useEffect(() => {
+    const fetchLikeStatus = async () => {
+      const liked = await checkLike(gatheringId);
+      setIsLiked(liked);
+    };
+
+    fetchLikeStatus();
+  }, [checkLike]);
 
   const isPay = (pay: number) => (pay > 0 ? '비용있음' : '무료참여');
 
@@ -100,7 +113,11 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
           >
             {isKind}
           </p>
-          <FaHeart className="mr-2 cursor-pointer" /> {likeCount}
+          <FaHeart
+            onClick={() => changeLike(gatheringId)}
+            className={`mr-2 cursor-pointer ${isLiked ? 'text-red-400' : 'text-gray-400'}`}
+          />
+          {likeCount}
         </span>
         <TruncatedTitle title={title} length={14} />
       </div>
