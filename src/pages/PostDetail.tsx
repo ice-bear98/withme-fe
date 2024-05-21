@@ -34,6 +34,8 @@ export default function PostDetail() {
   const { removePost, goEdit } = useWrite();
   const { changeLike, checkLike } = useLike();
 
+  // why no PR
+
   const fetchData = async () => {
     try {
       const gatheringResponse = await axios.get(`${URL}/api/gathering/${id}`);
