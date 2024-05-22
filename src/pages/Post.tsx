@@ -11,13 +11,14 @@ export default function Post() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const postType = searchParams.get('range');
+  const postType = searchParams.get('range') || '';
 
   const { data: initialData, error: initialError, isLoading: isInitialLoading } = useGetPost();
   const { data: searchData, error: searchError, isLoading: isSearchLoading } = useSearchPost(searchQuery);
 
   useEffect(() => {
     if (!searchQuery) {
+      console.log('초기값', initialData);
       if (initialData && initialData.length > 0) {
         const filteredPosts =
           postType !== 'all'
@@ -39,12 +40,17 @@ export default function Post() {
     }
   }, [initialData, searchData, postType, searchQuery]);
 
-  if (isInitialLoading || isSearchLoading) return <Loader />;
-  if (initialError || searchError) return <div>데이터 에러 : {initialError?.message || searchError?.message}</div>;
+  useEffect(() => {
+    const search = searchParams.get('title') || '';
+    setSearchQuery(search);
+  }, [location.search]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
+
+  if (isInitialLoading || isSearchLoading) return <Loader />;
+  if (initialError || searchError) return <div>데이터 에러 : {initialError?.message || searchError?.message}</div>;
 
   return (
     <div className="mb-10">

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 const useGetPost = () => {
-  const token = localStorage.getItem('accessToken');
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const fetchPosts = async () => {

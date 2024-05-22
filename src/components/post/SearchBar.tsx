@@ -6,8 +6,8 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   const [search, setSearch] = useState({
     title: '',
     range: 'all',
-    option: 'created_dttm,desc',
-    sort: 'all',
+    option: 'all',
+    sort: 'createdDttm',
   });
 
   const navigate = useNavigate();
@@ -25,6 +25,9 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
     }
   }, [postType]);
 
+  // const 상수 만들어서 변환하면 더 좋았을 것 같음. 로직이 길어져서 가독성 떨어짐
+  // isCategory도 이름으로 보면 validation 용으로 사용될 것 같은데, 그렇지도 않ㅇ므
+  // 차라리 convertCategory 등으로 변환한다는 의미를 가져가는게 더 좋지 않았을까?
   const isCategory = (type: string | null): string => {
     switch (type) {
       case 'all':
@@ -47,12 +50,7 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   };
 
   const handleSearchSubmit = () => {
-    const params = new URLSearchParams({
-      range: search.range,
-      title: search.title,
-      sort: search.option,
-      option: search.sort,
-    });
+    const params = new URLSearchParams(search);
     navigate({ search: params.toString() });
     onSearch(params.toString());
   };
@@ -69,8 +67,8 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
         placeholder="검색할 제목을 입력해주세요"
       />
       <select
-        name="option"
-        value={search.option}
+        name="sort"
+        value={search.sort}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
@@ -79,8 +77,8 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
         <option value="likeCount,desc">인기 순</option>
       </select>
       <select
-        name="sort"
-        value={search.sort}
+        name="option"
+        value={search.option}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
