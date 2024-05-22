@@ -34,8 +34,6 @@ export default function PostDetail() {
   const { removePost, goEdit } = useWrite();
   const { changeLike, checkLike } = useLike();
 
-  // why no PR
-
   const fetchData = async () => {
     try {
       const gatheringResponse = await axios.get(`${URL}/api/gathering/${id}`);
@@ -51,10 +49,8 @@ export default function PostDetail() {
 
       const like = await checkLike(id);
       setIsLike(like);
-
-      scrollToTop();
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error(error);
     }
   };
 
@@ -110,6 +106,7 @@ export default function PostDetail() {
     } catch (error) {
       console.error('Error checking participation status:', error);
     }
+    scrollToTop();
   };
 
   const handleCount = async (id: any) => {

@@ -9,7 +9,6 @@ import useFormat from '../../Hooks/useFormat';
 import defaultImg from '../../assets/default_profile.jpg';
 import noImg from '../../assets/default_img.jpg';
 import useLike from '../../Hooks/useLikes';
-import useGetPost from '../../Hooks/useGetPost';
 
 interface PostCardProps {
   data: {
