@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-export default function SearchBar() {
+export default function SearchBar({ onSearch }: { onSearch: (query: string) => void }) {
   const [category, setCategory] = useState<string>('전체');
   const [search, setSearch] = useState({
     title: '',
     range: 'all',
-    option: 'all',
-    sort: 'created_dttm,desc',
+    option: 'created_dttm,desc',
+    sort: 'all',
   });
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -18,10 +18,9 @@ export default function SearchBar() {
     }));
   };
 
-  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const postType = searchParams.get('type');
+  const postType = searchParams.get('range');
 
   useEffect(() => {
     if (postType) {
@@ -34,20 +33,26 @@ export default function SearchBar() {
   }, [postType]);
 
   const isCategory = (type: string | null): string => {
-    if (type === 'all') return '전체';
-    if (type === 'event') return '이벤트';
-    if (type === 'meeting') return '모임';
-    return '전체';
+    switch (type) {
+      case 'all':
+        return '전체';
+      case 'event':
+        return '이벤트';
+      case 'meeting':
+        return '모임';
+      default:
+        return '전체';
+    }
   };
 
   const handleSearchSubmit = () => {
     const params = new URLSearchParams({
-      type: search.range,
+      range: search.range,
       title: search.title,
-      option1: search.option,
-      option2: search.sort,
+      sort: search.option,
+      option: search.sort,
     });
-    navigate(`?${params.toString()}`);
+    onSearch(params.toString());
   };
 
   return (
@@ -63,18 +68,16 @@ export default function SearchBar() {
       />
       <select
         name="option"
-        id="filter"
         value={search.option}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
-        <option value="created_dttm,desc">최신 순</option>
-        <option value="created_dttm,asc">예전 순</option>
-        <option value="like_count,desc">인기 순</option>
+        <option value="createdDttm,desc">최신 순</option>
+        <option value="createdDttm,asc">예전 순</option>
+        <option value="likeCount,desc">인기 순</option>
       </select>
       <select
         name="sort"
-        id="filter2"
         value={search.sort}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
