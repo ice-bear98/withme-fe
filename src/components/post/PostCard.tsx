@@ -9,7 +9,6 @@ import useFormat from '../../Hooks/useFormat';
 import defaultImg from '../../assets/default_profile.jpg';
 import noImg from '../../assets/default_img.jpg';
 import useLike from '../../Hooks/useLikes';
-import useGetPost from '../../Hooks/useGetPost';
 
 interface PostCardProps {
   data: {
@@ -74,7 +73,7 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
     };
 
     fetchLikeStatus();
-  }, [checkLike]);
+  }, [data]);
 
   const isPay = (pay: number) => (pay > 0 ? '비용있음' : '무료참여');
 
@@ -89,6 +88,13 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
   const TruncatedTitle = ({ title, length }: { title: string; length: number }) => {
     const truncatedTitle = title.length > length ? `${title.slice(0, length)}···` : title;
     return <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd'] dark:text-gray-100">{truncatedTitle}</h2>;
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -149,7 +155,9 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
         </div>
       </div>
       <p
-        onClick={() => navigate(`/postdetail/${gatheringId}`)}
+        onClick={() => {
+          navigate(`/postdetail/${gatheringId}`), scrollToTop();
+        }}
         className="bg-brand_2 text-base mt-5 text-center p-2 text-white hover:bg-brand_1 md:rounded-2xl md:mb-3 dark:bg-slate-600 cursor-pointer"
       >
         상세보기
