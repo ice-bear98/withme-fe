@@ -22,8 +22,10 @@ const useLike = () => {
         },
       );
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      return response.data;
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
@@ -43,6 +45,7 @@ const useLike = () => {
       return res.data;
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
