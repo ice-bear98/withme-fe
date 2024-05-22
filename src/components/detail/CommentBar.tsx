@@ -13,6 +13,7 @@ export default function CommentBar() {
   const [editStates, setEditStates] = useState<{ [key: string]: boolean }>({});
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
+  const isLogin = useUserStore((state) => state.isLoggedIn);
 
   const userName = useUserStore((state) => state.user?.nickName);
 
@@ -85,8 +86,11 @@ export default function CommentBar() {
   };
 
   /** 댓글 등록 */
-  const handleSubmit = async () => {
-    if (comment.trim() === '') {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!isLogin) {
+      alert('로그인 후 등록가능합니다.');
+    } else if (comment.trim() === '') {
       return;
     }
     await addComment(comment, id);
@@ -253,7 +257,7 @@ export default function CommentBar() {
           </div>
         </div>
       ))}
-      <div>
+      <form onSubmit={handleSubmit}>
         <input
           className="w-4/5 h-full placeholder:text-center p-2 border-gray-400 dark:bg-gray-100 dark:placeholder:text-black"
           type="text"
@@ -262,10 +266,13 @@ export default function CommentBar() {
           ref={commentRef}
           placeholder="댓글을 입력하세요"
         />
-        <button className="w-1/5 h-full bg-brand_2 p-2 font-bold text-white hover:bg-brand_1" onClick={handleSubmit}>
+        <button
+          className="w-1/5 h-full bg-brand_2 p-2 font-bold text-white hover:bg-brand_1"
+          onClick={() => handleSubmit}
+        >
           작성하기
         </button>
-      </div>
+      </form>
     </div>
   );
 }

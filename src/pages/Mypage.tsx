@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IoMdMale, IoMdFemale } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
+import { IoPersonCircle } from 'react-icons/io5';
+import { FaHeart } from 'react-icons/fa';
+import { RiMapPinAddFill, RiMessage3Fill } from 'react-icons/ri';
 
 import useUserStore from '../store/userStore';
 import axios from 'axios';
@@ -11,17 +13,18 @@ import ListCard from '../components/mypage/ListCard';
 import useFormat from '../Hooks/useFormat';
 import useParticipation from '../Hooks/useParticipation';
 import defaultImg from '../assets/default_profile.jpg';
+import useLike from '../Hooks/useLikes';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
 export default function Mypage() {
-  const navigate = useNavigate();
   const { user, setUser } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(user?.profileImg || defaultImg);
   const [editMode, setEditMode] = useState(false);
   const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null);
   const [myAppList, setMyAppList] = useState<any>();
+  const [myLikeList, setMyLikeList] = useState<any>();
 
   const {
     register,
@@ -38,6 +41,7 @@ export default function Mypage() {
 
   const { formatDate } = useFormat();
   const { getList } = useParticipation();
+  const { getLikes } = useLike();
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -151,11 +155,15 @@ export default function Mypage() {
     const fetchData = async () => {
       const appList = await getList();
       setMyAppList(appList);
+
+      const likeList = await getLikes();
+      setMyLikeList(likeList);
     };
     fetchData();
   }, []);
 
   console.log(myAppList);
+  console.log(myLikeList);
 
   const genderText =
     user?.gender === 'MALE' ? (
@@ -174,7 +182,8 @@ export default function Mypage() {
 
   return (
     <div className="p-4 max-w-4xl m-auto font-['LINESeedKR-Bd']">
-      <h1 className="text-center text-2xl font-bold mb-4 bg-brand_1 py-2 text-white rounded-lg font-['seolleimcool-SemiBold']">
+      <h1 className="flex items-center justify-center text-2xl font-bold mb-4 bg-brand_1 py-2 text-white rounded-lg font-['seolleimcool-SemiBold']">
+        <IoPersonCircle className="mr-1 text-3xl" />
         {nickName ? `${nickName}님의 마이페이지` : 'Loading...'}
       </h1>
       {user ? (
@@ -268,21 +277,30 @@ export default function Mypage() {
         <p>Loading...</p>
       )}
 
-      <div className="text-center text-white text-lg my-5 py-2 bg-brand_2">내가 신청한 모임 목록</div>
+      <div className="flex items-center justify-center text-white text-lg my-5 py-2 bg-brand_2">
+        <RiMapPinAddFill className="mr-2 text-2xl" />
+        내가 신청한 모임 목록
+      </div>
       <div className="flex space-x-3 overflow-y-hidden overflow-x-auto h-72 ">
         {myAppList?.length === 0 && (
           <div className="flex justify-center items-center w-full h-full bg-brand_4">아직 신청한 모임이 없습니다</div>
         )}
-        {myAppList?.map((it: any, idx: any) => <ListCard key={idx} list={it} />)}
+        {myAppList?.map((it: any, idx: any) => <ListCard key={idx} list={it} kind={'App'} />)}
       </div>
-      <div className="text-center text-white text-lg my-5 py-2 bg-brand_2">내가 관심 등록한 모임 목록</div>
-      <div className="flex space-x-3 overflow-x-auto">
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
+      <div className="flex items-center justify-center text-white text-lg my-5 py-2 bg-brand_2">
+        <FaHeart className="mr-2" />
+        내가 관심 등록한 모임 목록
       </div>
-      <div className="text-center text-white text-lg my-5 py-2 bg-brand_2">내가 참여중인 채팅방 목록</div>
+      <div className="flex space-x-3 overflow-y-hidden overflow-x-auto h-72 ">
+        {myLikeList?.length === 0 && (
+          <div className="flex justify-center items-center w-full h-full bg-brand_4">아직 좋아요한 모임이 없습니다</div>
+        )}
+        {myLikeList?.map((it: any, idx: any) => <ListCard key={idx} list={it} kind={'Like'} />)}
+      </div>
+      <div className="flex justify-center items-center text-white text-lg my-5 py-2 bg-brand_2">
+        <RiMessage3Fill className="mr-2 text-2xl" />
+        내가 참여중인 채팅방 목록
+      </div>
       <div className="flex space-x-3 custom-scrollbar overflow-x-auto">
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
