@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { HiOutlineBellAlert } from 'react-icons/hi2';
@@ -59,20 +58,20 @@ export default function Header() {
           </h1>
         </Link>
         <ul className="flex justify-center items-center font-sans text-slate-800 ml:text-sm s:absolute s:bottom-1">
-          <Link to={'/post?type=all'}>
+          <Link to={'/post?range=all'}>
             <li className={`${navBtnStyle}`}>
               <AiFillAppstore />
               <span className="ml-1 sm:hidden">이벤트 모임 모아보기</span>
               <span className="ml-1 hidden sm:block">전체보기</span>
             </li>
           </Link>
-          <Link to={'/post?type=event'}>
+          <Link to={'/post?range=event'}>
             <li className={`${navBtnStyle}`}>
               <FaSketch />
               <span className="ml-1">이벤트</span>
             </li>
           </Link>
-          <Link to={'/post?type=meeting'}>
+          <Link to={'/post?range=meeting'}>
             <li className={`${navBtnStyle}`}>
               <FaUserFriends />
               <span className="ml-1">모임</span>
