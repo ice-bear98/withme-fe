@@ -46,7 +46,20 @@ const useLike = () => {
     }
   };
 
-  return { changeLike, checkLike };
+  const getLikes = async () => {
+    const queryParams = {
+      sort: 'createdDttm,desc',
+    };
+    const res = await axios.get(`${URL}/api/gathering/like/list`, {
+      params: queryParams,
+      headers: {
+        Authorization: token,
+      },
+    });
+    return res.data.content;
+  };
+
+  return { changeLike, checkLike, getLikes };
 };
 
 export default useLike;
