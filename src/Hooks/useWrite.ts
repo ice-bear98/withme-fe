@@ -52,9 +52,9 @@ const useWrite = () => {
       );
       const target = res.data.gatheringId;
       uploadImg(img, target);
-      navigate('/post?type=all');
+      navigate('/post?range=all');
       scrollToTop();
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      await queryClient.invalidateQueries({ queryKey: ['posts'] });
     } catch (error) {
       console.error(error);
     }

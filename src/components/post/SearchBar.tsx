@@ -10,14 +10,7 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
     sort: 'all',
   });
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setSearch((prevSearch) => ({
-      ...prevSearch,
-      [name]: value,
-    }));
-  };
-
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const postType = searchParams.get('range');
@@ -45,6 +38,14 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
     }
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setSearch((prevSearch) => ({
+      ...prevSearch,
+      [name]: value,
+    }));
+  };
+
   const handleSearchSubmit = () => {
     const params = new URLSearchParams({
       range: search.range,
@@ -52,6 +53,7 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
       sort: search.option,
       option: search.sort,
     });
+    navigate({ search: params.toString() });
     onSearch(params.toString());
   };
 
