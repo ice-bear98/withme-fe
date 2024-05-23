@@ -58,13 +58,13 @@ const Carousel: React.FC<CarouselProps> = ({ title, data }) => {
       <Slider {...settings}>
         {data.map((it) => (
           <div
-            key={it.id}
-            onClick={() => handleNavigate(it.id)}
+            key={it.gatheringId}
+            onClick={() => handleNavigate(it.gatheringId)}
             className="relative px-2 cursor-pointer hover:scale-105"
           >
             <div className="absolute top-5 left-5">
               <h2 className="bg-brand_4 dark:text-white dark:bg-slate-600 text-center py-1 px-2 rounded-md text-lg font-['LINESeedKR-Bd']">
-                {it.title}
+                {it.title.slice(0, 15)}···
               </h2>
             </div>
             {/* like가 높은 아이템에만 표시 */}

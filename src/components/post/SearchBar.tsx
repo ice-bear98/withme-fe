@@ -58,8 +58,8 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   };
 
   return (
-    <div className="flex justify-center items-center space-x-3 w-full bg-brand_3 p-2 mt-5 rounded-full dark:bg-slate-600 md:-p-1 md:text-sm shadow-sm">
-      <b className="text-white text-xl">{category}</b>
+    <div className="flex justify-center items-center space-x-3 w-full bg-brand_3 p-2 mt-5 rounded-full dark:bg-slate-600 md:-p-1 md:text-sm shadow-sm s:rounded-none">
+      <b className="text-white text-xl ss:text-sm">{category}</b>
       <input
         type="text"
         name="title"
@@ -95,7 +95,7 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
       </select>
       <button
         onClick={handleSearchSubmit}
-        className="bg-brand_2 px-4 text-white rounded-xl py-1 dark:bg-gray-200 dark:text-black"
+        className="bg-brand_2 px-4 text-white rounded-xl py-1 dark:bg-gray-200 dark:text-black ss:text-sm ss:px-1 ss:rounded-lg"
       >
         검색
       </button>

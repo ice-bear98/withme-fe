@@ -187,8 +187,8 @@ export default function Mypage() {
         {nickName ? `${nickName}님의 마이페이지` : 'Loading...'}
       </h1>
       {user ? (
-        <div className="flex justify-center items-start gap-4">
-          <div className="w-1/2 h-96 flex flex-col justify-center items-center bg-brand_4 p-4 rounded-lg text-center">
+        <div className="flex justify-center items-start gap-4 ssm:flex-col">
+          <div className="w-1/2 h-96 flex flex-col justify-center items-center bg-brand_4 p-4 rounded-lg text-center ssm:w-full">
             <div className="">
               <img src={image} alt="Profile" className="rounded-full object-cover h-72 w-72 mb-4" />
             </div>
@@ -200,7 +200,7 @@ export default function Mypage() {
             </label>
             <input id="image-upload" type="file" onChange={handleImageChange} className="hidden" />
           </div>
-          <div className="relative font-['LINESeedKR-Bd'] w-1/2 h-96 flex flex-col justify-between p-4 bg-brand_3 rounded-lg">
+          <div className="relative font-['LINESeedKR-Bd'] w-1/2 h-96 flex flex-col justify-between p-4 bg-brand_3 rounded-lg ssm:w-full">
             {editMode ? (
               <form
                 onSubmit={handleSubmit(handleNicknameChange)}
@@ -278,8 +278,7 @@ export default function Mypage() {
       )}
 
       <div className="flex items-center justify-center text-white text-lg my-5 py-2 bg-brand_2">
-        <RiMapPinAddFill className="mr-2 text-2xl" />
-        내가 신청한 모임 목록
+        <RiMapPinAddFill className="mr-2 text-2xl" />내 신청 목록
       </div>
       <div className="flex space-x-3 overflow-y-hidden overflow-x-auto h-72 ">
         {myAppList?.length === 0 && (
@@ -288,8 +287,7 @@ export default function Mypage() {
         {myAppList?.map((it: any, idx: any) => <ListCard key={idx} list={it} kind={'App'} />)}
       </div>
       <div className="flex items-center justify-center text-white text-lg my-5 py-2 bg-brand_2">
-        <FaHeart className="mr-2" />
-        내가 관심 등록한 모임 목록
+        <FaHeart className="mr-2" />내 관심 목록
       </div>
       <div className="flex space-x-3 overflow-y-hidden overflow-x-auto h-72 ">
         {myLikeList?.length === 0 && (
@@ -298,8 +296,7 @@ export default function Mypage() {
         {myLikeList?.map((it: any, idx: any) => <ListCard key={idx} list={it} kind={'Like'} />)}
       </div>
       <div className="flex justify-center items-center text-white text-lg my-5 py-2 bg-brand_2">
-        <RiMessage3Fill className="mr-2 text-2xl" />
-        내가 참여중인 채팅방 목록
+        <RiMessage3Fill className="mr-2 text-2xl" />내 참여 채팅방 목록
       </div>
       <div className="flex space-x-3 custom-scrollbar overflow-x-auto">
         <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>

@@ -7,8 +7,13 @@ const useGetPost = () => {
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const fetchPosts = async () => {
+    const queryParams = {
+      size: 10,
+    };
     try {
-      const response = await axios.get(`${URL}/api/gathering/list`);
+      const response = await axios.get(`${URL}/api/gathering/list`, {
+        params: queryParams,
+      });
       console.log('게시글 통신 :', response.data.content);
       return response.data.content;
     } catch (error) {
