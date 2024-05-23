@@ -1,4 +1,3 @@
-import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import NotFound from '../pages/NotFound.tsx';
 import Home from '../pages/Home.tsx';
@@ -44,6 +43,7 @@ const router = createBrowserRouter([
           { path: '/myfollow/:id', element: <MyFollow /> },
           { path: '/write', element: <Write /> },
           { path: '/write/:id', element: <Write /> },
+          { path: '/write/:id', element: <Chat /> },
         ],
       },
     ],

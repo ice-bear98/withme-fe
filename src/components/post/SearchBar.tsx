@@ -6,13 +6,14 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   const [search, setSearch] = useState({
     title: '',
     range: 'all',
-    option: 'created_dttm,desc',
-    sort: 'all',
+    option: 'all',
+    sort: 'createdDttm',
   });
 
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+
   const postType = searchParams.get('range');
 
   useEffect(() => {
@@ -47,30 +48,33 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   };
 
   const handleSearchSubmit = () => {
-    const params = new URLSearchParams({
-      range: search.range,
-      title: search.title,
-      sort: search.option,
-      option: search.sort,
-    });
+    const params = new URLSearchParams(search);
     navigate({ search: params.toString() });
+    console.log(params.toString());
     onSearch(params.toString());
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
+  };
+
   return (
-    <div className="flex justify-center items-center space-x-3 w-full bg-brand_3 p-2 mt-5 rounded-full dark:bg-slate-600 md:-p-1 md:text-sm shadow-sm">
-      <b className="text-white text-xl">{category}</b>
+    <div className="flex justify-center items-center space-x-3 w-full bg-brand_3 p-2 mt-5 rounded-full dark:bg-slate-600 md:-p-1 md:text-sm shadow-sm s:rounded-none">
+      <b className="text-white text-xl ss:text-sm">{category}</b>
       <input
         type="text"
         name="title"
         value={search.title}
         onChange={handleSearch}
+        onKeyDown={handleKeyDown}
         className="placeholder:text-center py-1 px-3 dark:bg-gray-800 dark:text-white outline-none"
         placeholder="검색할 제목을 입력해주세요"
       />
       <select
-        name="option"
-        value={search.option}
+        name="sort"
+        value={search.sort}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
@@ -79,8 +83,8 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
         <option value="likeCount,desc">인기 순</option>
       </select>
       <select
-        name="sort"
-        value={search.sort}
+        name="option"
+        value={search.option}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
@@ -95,7 +99,7 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
       </select>
       <button
         onClick={handleSearchSubmit}
-        className="bg-brand_2 px-4 text-white rounded-xl py-1 dark:bg-gray-200 dark:text-black"
+        className="bg-brand_2 px-4 text-white rounded-xl py-1 dark:bg-gray-200 dark:text-black ss:text-sm ss:px-1 ss:rounded-lg"
       >
         검색
       </button>

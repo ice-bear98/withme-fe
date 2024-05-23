@@ -9,6 +9,7 @@ import useFormat from '../../Hooks/useFormat';
 import defaultImg from '../../assets/default_profile.jpg';
 import noImg from '../../assets/default_img.jpg';
 import useLike from '../../Hooks/useLikes';
+import useUserStore from '../../store/userStore';
 
 interface PostCardProps {
   data: {
@@ -37,7 +38,7 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
   const {
     title,
     gatheringType,
-    likeCount,
+    likeCount: initialLikeCount,
     recruitmentStartDt,
     recruitmentEndDt,
     createdDttm,
@@ -57,8 +58,9 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
 
   const [isKind, setIsKind] = useState<string>('');
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(initialLikeCount);
   const navigate = useNavigate();
-
+  const { isLoggedIn } = useUserStore();
   const { formatDate, formatTime } = useFormat();
   const { checkLike, changeLike } = useLike();
 
@@ -67,13 +69,27 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
   }, [gatheringType]);
 
   useEffect(() => {
-    const fetchLikeStatus = async () => {
-      const liked = await checkLike(gatheringId);
-      setIsLiked(liked);
-    };
+    if (isLoggedIn) {
+      const fetchLikeStatus = async () => {
+        const liked = await checkLike(gatheringId);
+        setIsLiked(liked);
+      };
 
-    fetchLikeStatus();
-  }, [data]);
+      fetchLikeStatus();
+    }
+  }, [gatheringId, isLoggedIn, checkLike]);
+
+  const handleLikeClick = async () => {
+    if (isLoggedIn) {
+      const newLikeStatus = await changeLike(gatheringId);
+      if (newLikeStatus !== null) {
+        setIsLiked(newLikeStatus);
+        setLikeCount((prevCount) => (newLikeStatus ? prevCount + 1 : prevCount - 1));
+      }
+    } else {
+      alert('로그인이 필요합니다.');
+    }
+  };
 
   const isPay = (pay: number) => (pay > 0 ? '비용있음' : '무료참여');
 
@@ -86,7 +102,7 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
   const isMethod = (method: string) => (method === 'FIRST_COME' ? '선착순 참여' : '신청선별 참여');
 
   const TruncatedTitle = ({ title, length }: { title: string; length: number }) => {
-    const truncatedTitle = title.length > length ? `${title.slice(0, length)}···` : title;
+    const truncatedTitle = title.length > length ? `${title.slice(0, length + 5)}···` : title;
     return <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd'] dark:text-gray-100">{truncatedTitle}</h2>;
   };
 
@@ -112,7 +128,6 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
       </h3>
       <div className="flex justify-around px-3 mb-2">
         <span className="flex items-center text-gray-400">
-          {/* <p className="bg-red-400 px-2 mr-2 rounded-lg text-white dark:text-black">HOT</p> */}
           <p className="bg-brand_1 px-2 mr-2 rounded-lg text-white dark:text-black">{category}</p>
           <p
             className={`bg-brand_2 px-2 mr-2 rounded-lg text-white dark:text-black ${isKind === '모임' ? 'bg-orange-300' : 'bg-brand_2'}`}
@@ -120,7 +135,7 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
             {isKind}
           </p>
           <FaHeart
-            onClick={() => changeLike(gatheringId)}
+            onClick={handleLikeClick}
             className={`mr-2 cursor-pointer ${isLiked ? 'text-red-400' : 'text-gray-400'}`}
           />
           {likeCount}

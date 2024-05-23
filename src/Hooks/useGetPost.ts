@@ -3,13 +3,18 @@ import axios from 'axios';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 const useGetPost = () => {
-  const token = localStorage.getItem('accessToken');
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const fetchPosts = async () => {
+    const queryParams = {
+      size: 10,
+    };
     try {
-      const response = await axios.get(`${URL}/api/gathering/list`);
+      const response = await axios.get(`${URL}/api/gathering/list`, {
+        params: queryParams,
+      });
       console.log('게시글 통신 :', response.data.content);
+
       return response.data.content;
     } catch (error) {
       console.error('게시글 로드 실패:', error);

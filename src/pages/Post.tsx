@@ -6,46 +6,43 @@ import useGetPost from '../Hooks/useGetPost';
 import useSearchPost from '../Hooks/useSearchPost';
 import Loader from '../components/common/Loader';
 
+type QueryString = { [key: string]: string };
+
 export default function Post() {
   const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const postType = searchParams.get('range');
 
   const { data: initialData, error: initialError, isLoading: isInitialLoading } = useGetPost();
   const { data: searchData, error: searchError, isLoading: isSearchLoading } = useSearchPost(searchQuery);
 
   useEffect(() => {
-    if (!searchQuery) {
-      if (initialData && initialData.length > 0) {
-        const filteredPosts =
-          postType !== 'all'
-            ? initialData.filter(
-                (post: any) => post.gatheringType.trim().toLowerCase() === postType?.trim().toLowerCase(),
-              )
-            : initialData;
+    const searchParams = new URLSearchParams(location.search);
 
-        setPosts(filteredPosts);
-      } else {
-        setPosts([]);
-      }
-    } else {
-      if (searchData && searchData.length > 0) {
-        setPosts(searchData);
-      } else {
-        setPosts([]);
-      }
+    const queryString: QueryString = {};
+    for (const [key, value] of searchParams.entries()) {
+      queryString[key] = value;
     }
-  }, [initialData, searchData, postType, searchQuery]);
 
-  if (isInitialLoading || isSearchLoading) return <Loader />;
-  if (initialError || searchError) return <div>데이터 에러 : {initialError?.message || searchError?.message}</div>;
+    const { range, title, option, sort } = queryString;
+    if (!title && !option && !sort) {
+      const filterdData = initialData?.filter((post: any) => {
+        if (range === 'all') return true;
+        return post.gatheringType.toLowerCase() === range;
+      });
+      setPosts(filterdData || []);
+    } else {
+      setPosts(searchData || []);
+    }
+  }, [initialData, searchData, location.search]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
+  if (isInitialLoading || isSearchLoading) return <Loader />;
+  if (initialError || searchError) return <div>데이터 에러 : {initialError?.message || searchError?.message}</div>;
+  console.log();
   return (
     <div className="mb-10">
       <SearchBar onSearch={handleSearch} />
