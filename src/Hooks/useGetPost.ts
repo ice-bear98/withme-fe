@@ -8,7 +8,6 @@ const useGetPost = () => {
   const fetchPosts = async () => {
     try {
       const response = await axios.get(`${URL}/api/gathering/list`);
-      console.log('게시글 통신 :', response.data.content);
       return response.data.content;
     } catch (error) {
       console.error('게시글 로드 실패:', error);

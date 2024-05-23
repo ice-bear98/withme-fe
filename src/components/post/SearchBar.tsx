@@ -13,6 +13,7 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+
   const postType = searchParams.get('range');
 
   useEffect(() => {
@@ -25,9 +26,6 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
     }
   }, [postType]);
 
-  // const 상수 만들어서 변환하면 더 좋았을 것 같음. 로직이 길어져서 가독성 떨어짐
-  // isCategory도 이름으로 보면 validation 용으로 사용될 것 같은데, 그렇지도 않ㅇ므
-  // 차라리 convertCategory 등으로 변환한다는 의미를 가져가는게 더 좋지 않았을까?
   const isCategory = (type: string | null): string => {
     switch (type) {
       case 'all':
@@ -52,7 +50,14 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   const handleSearchSubmit = () => {
     const params = new URLSearchParams(search);
     navigate({ search: params.toString() });
+    console.log(params.toString());
     onSearch(params.toString());
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
   };
 
   return (
@@ -63,6 +68,7 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
         name="title"
         value={search.title}
         onChange={handleSearch}
+        onKeyDown={handleKeyDown}
         className="placeholder:text-center py-1 px-3 dark:bg-gray-800 dark:text-white outline-none"
         placeholder="검색할 제목을 입력해주세요"
       />

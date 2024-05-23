@@ -40,7 +40,6 @@ const useLike = () => {
           Authorization: token,
         },
       });
-      console.log(res);
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       return res.data;
     } catch (error) {
