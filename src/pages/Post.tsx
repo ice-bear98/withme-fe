@@ -26,10 +26,8 @@ export default function Post() {
 
     const { range, title, option, sort } = queryString;
     if (!title && !option && !sort) {
-      const filterdData = initialData?.filter((post: any) => {
-        if (range === 'all') return true;
-        return post.gatheringType.toLowerCase() === range;
-      });
+      const filterdData =
+        range === 'all' ? initialData : initialData?.filter((post: any) => post.gatheringType.toLowerCase() === range);
       setPosts(filterdData || []);
     } else {
       setPosts(searchData || []);
