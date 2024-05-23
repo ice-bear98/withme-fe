@@ -6,13 +6,14 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   const [search, setSearch] = useState({
     title: '',
     range: 'all',
-    option: 'created_dttm,desc',
-    sort: 'all',
+    option: 'all',
+    sort: 'createdDttm',
   });
 
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+
   const postType = searchParams.get('range');
 
   useEffect(() => {
@@ -47,14 +48,16 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
   };
 
   const handleSearchSubmit = () => {
-    const params = new URLSearchParams({
-      range: search.range,
-      title: search.title,
-      sort: search.option,
-      option: search.sort,
-    });
+    const params = new URLSearchParams(search);
     navigate({ search: params.toString() });
+    console.log(params.toString());
     onSearch(params.toString());
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
   };
 
   return (
@@ -65,12 +68,13 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
         name="title"
         value={search.title}
         onChange={handleSearch}
+        onKeyDown={handleKeyDown}
         className="placeholder:text-center py-1 px-3 dark:bg-gray-800 dark:text-white outline-none"
         placeholder="검색할 제목을 입력해주세요"
       />
       <select
-        name="option"
-        value={search.option}
+        name="sort"
+        value={search.sort}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
@@ -79,8 +83,8 @@ export default function SearchBar({ onSearch }: { onSearch: (query: string) => v
         <option value="likeCount,desc">인기 순</option>
       </select>
       <select
-        name="sort"
-        value={search.sort}
+        name="option"
+        value={search.option}
         onChange={handleSearch}
         className="text-center py-1 px-2 dark:bg-gray-800 dark:text-white outline-none"
       >
