@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FaHeart } from 'react-icons/fa';
 import { CiCircleInfo } from 'react-icons/ci';
 
@@ -23,6 +23,7 @@ export default function PostDetail() {
   const [ing, setIng] = useState<number>(0);
   const [inn, setInn] = useState<boolean>(false);
   const [isLike, setIsLike] = useState<any>(false);
+  const navigate = useNavigate();
 
   const userId = useUserStore((state) => state.user?.memberId);
   const URL = import.meta.env.VITE_SERVER_URL;
@@ -30,13 +31,14 @@ export default function PostDetail() {
   const { id }: any = useParams();
 
   const { formatDate, formatTime } = useFormat();
-  const { addParticipation, getCount, isCheck } = useParticipation();
+  const { addParticipation, getCount, isCheck, cancelParticipation } = useParticipation();
   const { removePost, goEdit } = useWrite();
   const { changeLike, checkLike } = useLike();
 
   const fetchData = async () => {
     try {
       const gatheringResponse = await axios.get(`${URL}/api/gathering/${id}`);
+      console.log('디테일 홛인 : ', gatheringResponse);
       setData(gatheringResponse.data);
       setStatus(gatheringResponse.data.status);
       setLocation({ lat: gatheringResponse.data.lat, lng: gatheringResponse.data.lng });
@@ -69,6 +71,7 @@ export default function PostDetail() {
   const handleRemove = async (id: number) => {
     if (confirm('정말로 삭제하시겠습니까?')) {
       await removePost(id);
+      navigate('/post?range=all');
     }
   };
 
@@ -126,6 +129,8 @@ export default function PostDetail() {
     });
   };
 
+  console.log('데이터 확인수정 : ', data);
+
   return (
     <div className="mx-auto mt-5 mb-10">
       <h2 className="flex items-center justify-between mb-5 dark:text-gray-100">
@@ -173,7 +178,7 @@ export default function PostDetail() {
       <div className="flex justify-between mt-5 h-[450px]">
         <img
           className="bg-slate-200 min-w-[830px] max-w-[850px]  object-cover"
-          src={data.mainImg.length <= 0 ? noImg : data.mainImg}
+          src={data.mainImg?.length <= 0 ? noImg : data.mainImg}
           alt="썸네일 이미지"
         />
         <ul className="max-w-2/4 text-center space-y-3 my-auto">
@@ -225,7 +230,7 @@ export default function PostDetail() {
           {inn ? (
             <button
               disabled={userId === undefined}
-              onClick={() => confirm('정말 참여를 취소하겠습니까?')}
+              onClick={() => cancelParticipation(id)}
               className={`${userId === undefined ? 'bg-red-300' : 'bg-brand_1'} mt-5 w-full  p-2 rounded-2xl text-xl text-white hover:bg-red-300`}
             >
               {userId !== undefined ? (

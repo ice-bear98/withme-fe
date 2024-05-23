@@ -9,6 +9,8 @@ import useUserStore from '../../store/userStore';
 import ScrollTopBtn from './ScrollUpBtn';
 import ThemeButton from './ThemeBtn';
 import axios from 'axios';
+import useParticipation from '../../Hooks/useParticipation';
+import { useEffect } from 'react';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
@@ -16,6 +18,12 @@ export default function Header() {
   const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useUserStore();
   const navbarStyle = "cursor-pointer font-['LINESeedKR-Bd']";
+
+  const { getList } = useParticipation();
+
+  useEffect(() => {
+    getList();
+  }, []);
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');

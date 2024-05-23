@@ -102,7 +102,7 @@ const PostCard: React.FC<PostCardProps> = ({ data }) => {
   const isMethod = (method: string) => (method === 'FIRST_COME' ? '선착순 참여' : '신청선별 참여');
 
   const TruncatedTitle = ({ title, length }: { title: string; length: number }) => {
-    const truncatedTitle = title.length > length ? `${title.slice(0, length)}···` : title;
+    const truncatedTitle = title.length > length ? `${title.slice(0, length + 5)}···` : title;
     return <h2 className="rounded-3xl mb-1 text-xl font-['LINESeedKR-Bd'] dark:text-gray-100">{truncatedTitle}</h2>;
   };
 

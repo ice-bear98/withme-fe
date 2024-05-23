@@ -86,7 +86,6 @@ const useWrite = () => {
           },
         })
         .then((res) => console.log('삭제 확인 : ', res));
-      navigate('/post?type=all');
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     } catch (error) {
       console.error(error);
@@ -112,6 +111,10 @@ const useWrite = () => {
           lng: data.lng,
           day: data.day,
           time: data.time,
+          mainImg: data.mainImg,
+          subImg1: data.subImg1,
+          subImg2: data.subImg2,
+          subImg3: data.subImg3,
           participantsType: data.participantsType,
           fee: data.fee,
           participantSelectionMethod: data.participantSelectionMethod,
@@ -125,8 +128,7 @@ const useWrite = () => {
         },
       );
       EditImg(img, id);
-      navigate(`/postdetail/${id}`);
-      window.location.reload();
+
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     } catch (error) {
       console.error(error);
@@ -135,6 +137,7 @@ const useWrite = () => {
 
   /** 게시글 이미지 수정 */
   const EditImg = async (images: any, target: any) => {
+    console.log('수정 이미지 확인 : ', images);
     try {
       await axios
         .put(`${URL}/api/gathering/image/${target}`, images, {
@@ -143,7 +146,10 @@ const useWrite = () => {
             'Content-Type': 'multipart/form-data',
           },
         })
-        .then(() => queryClient.invalidateQueries({ queryKey: ['posts'] }));
+        .then(() => {
+          navigate(`/postdetail/${target}`);
+          scrollToTop();
+        });
     } catch (error) {
       console.error(error);
     }

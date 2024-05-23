@@ -14,10 +14,10 @@ interface Post {
   recruitmentEndDt: string;
   day: string;
   time: string;
-  mainImg: any | null;
-  subImg1: any | null;
-  subImg2: any | null;
-  subImg3: any | null;
+  mainImg: string;
+  subImg1: string;
+  subImg2: string;
+  subImg3: string;
   content: string;
   fee: number;
   maximumParticipant: number;
@@ -50,10 +50,10 @@ const usePostStore = create<PostState>((set) => ({
     recruitmentEndDt: '',
     day: '',
     time: '',
-    mainImg: null,
-    subImg1: null,
-    subImg2: null,
-    subImg3: null,
+    mainImg: '',
+    subImg1: '',
+    subImg2: '',
+    subImg3: '',
     content: '',
     fee: 0,
     maximumParticipant: 0,
