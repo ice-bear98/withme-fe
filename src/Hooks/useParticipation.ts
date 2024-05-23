@@ -6,6 +6,8 @@ const useParticipation = () => {
   const token = localStorage.getItem('accessToken');
   const URL = import.meta.env.VITE_SERVER_URL;
   const user = useUserStore((state) => state);
+  const setPart = useUserStore((state) => state.setMyParticipation);
+  const myPart = useUserStore((state) => state.myParticipation);
 
   const { calculateAge } = useFormat();
 
@@ -38,9 +40,34 @@ const useParticipation = () => {
         return;
       }
 
+      console.log(response);
+
       alert('참여 신청이 완료되었습니다.');
     } catch (error) {
       console.error('모임 참여 통신 에러:', error);
+    }
+  };
+
+  const cancelParticipation = async (targetId: any) => {
+    const isConfirmed = confirm('정말 삭제하겠습니까?');
+    if (isConfirmed) {
+      const partId = myPart.find((it: any) => it.gatheringId == targetId);
+
+      try {
+        const response = await axios.put(
+          `${URL}/api/participation/cancel/${partId.id}`,
+          {},
+          {
+            headers: {
+              Authorization: token,
+            },
+          },
+        );
+        console.log(response);
+        alert('참여가 취소되었습니다.');
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -83,11 +110,11 @@ const useParticipation = () => {
         Authorization: token,
       },
     });
-    console.log('내 참가목록 확인 :', res.data.content);
+    setPart(res.data.content);
     return res.data.content;
   };
 
-  return { addParticipation, getCount, isCheck, getList };
+  return { addParticipation, getCount, isCheck, getList, cancelParticipation };
 };
 
 export default useParticipation;

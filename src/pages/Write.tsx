@@ -229,19 +229,35 @@ export default function Write() {
 
       const formData = new FormData();
 
-      if (imageFiles[0]) formData.append('mainImg', imageFiles[0] as File);
-      if (imageFiles[1]) formData.append('subImg1', imageFiles[1] as File);
-      if (imageFiles[2]) formData.append('subImg2', imageFiles[2] as File);
-      if (imageFiles[3]) formData.append('subImg3', imageFiles[3] as File);
+      if (imageFiles[0]) {
+        formData.append('mainImg', imageFiles[0] as File);
+      } else if (editData.mainImg) {
+        formData.append('mainImg', editData.mainImg);
+      }
+
+      if (imageFiles[1]) {
+        formData.append('subImg1', imageFiles[1] as File);
+      } else if (editData.subImg1) {
+        formData.append('subImg1', editData.subImg1);
+      }
+
+      if (imageFiles[2]) {
+        formData.append('subImg2', imageFiles[2] as File);
+      } else if (editData.subImg2) {
+        formData.append('subImg2', editData.subImg2);
+      }
+
+      if (imageFiles[3]) {
+        formData.append('subImg3', imageFiles[3] as File);
+      } else if (editData.subImg3) {
+        formData.append('subImg3', editData.subImg3);
+      }
 
       if (!isEdit) {
         addPost(jsonData, formData);
-        console.log('게시글 작성');
-        console.log(isEdit);
       } else {
         editPost(jsonData, formData, id);
-        console.log('게시글 수정');
-        console.log(isEdit);
+        console.log('수정된 데이터 : ', jsonData, '수정된 이미지 : ', formData);
       }
     }
   };
@@ -249,6 +265,7 @@ export default function Write() {
   useEffect(() => {
     if (id) {
       setIsEdit(true);
+      setImages([editData.mainImg, editData.subImg1, editData.subImg2, editData.subImg3]);
       if (editData) {
         reset({
           title: editData.title,
@@ -275,6 +292,7 @@ export default function Write() {
         });
         setCoords({ lat: editData.lat, lng: editData.lng });
         setImages([editData.mainImg, editData.subImg1, editData.subImg2, editData.subImg3]);
+        console.log(images);
         setDaumAddress(editData.address);
       }
     } else {

@@ -5,7 +5,7 @@ import InfoCarousel from '../components/home/InfoCarousel';
 import axios from 'axios';
 
 export interface EventItem {
-  id: number;
+  gatheringId: number;
   likeCount: number;
   title: string;
   mainImg: string;

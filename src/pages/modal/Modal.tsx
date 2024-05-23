@@ -26,9 +26,12 @@ const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
       onClick={handleBackdropClick}
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
     >
-      <div onClick={handleModalClick} className="bg-white p-5 rounded-2xl shadow-lg flex flex-col items-end h-3/5">
-        <div className="flex w-full justify-center mt-3 relative mb-7 pb-7 border-b-2">
-          <h1 className="text-2xl font-['LINESeedKR-Bd']">{title}</h1>
+      <div
+        onClick={handleModalClick}
+        className="bg-white p-5 rounded-2xl shadow-lg flex flex-col items-end h-3/5 dark:bg-slate-600"
+      >
+        <div className="flex w-full justify-center mt-3 relative mb-7 pb-7 border-b-2 dark:border-gray-400">
+          <h1 className="text-2xl font-['LINESeedKR-Bd'] dark:text-gray-200">{title}</h1>
           <button onClick={onClose} className="absolute right-0 focus:outline-none focus:shadow-outline mb-5">
             <FaWindowClose className="w-8 h-8 text-brand_1" />
           </button>
