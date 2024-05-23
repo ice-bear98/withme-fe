@@ -1,14 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
-
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoPersonCircle } from 'react-icons/io5';
 import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt } from 'react-icons/fa';
 import { AiFillAppstore } from 'react-icons/ai';
-
 import useUserStore from '../../store/userStore';
 import ScrollTopBtn from './ScrollUpBtn';
 import ThemeButton from './ThemeBtn';
 import axios from 'axios';
+import Modal from '../../pages/modal/Modal';
+import { useState } from 'react';
+import AlarmModal from '../../pages/modal/AlarmModal';
 import useParticipation from '../../Hooks/useParticipation';
 import { useEffect } from 'react';
 
@@ -17,6 +18,7 @@ const URL = import.meta.env.VITE_SERVER_URL;
 export default function Header() {
   const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useUserStore();
+  const [isOpen, setOpen] = useState(false);
   const navbarStyle = "cursor-pointer font-['LINESeedKR-Bd']";
 
   const { getList } = useParticipation();
@@ -123,11 +125,18 @@ export default function Header() {
               <IoPersonCircle />
             </li>
           </Link>
-          <li className="text-2xl cursor-pointer">
-            <HiOutlineBellAlert />
+          <li>
+            <div className="text-2xl cursor-pointer" onClick={() => setOpen(true)}>
+              <HiOutlineBellAlert />
+            </div>
           </li>
         </ul>
       </div>
+      {isOpen && (
+        <Modal title="알림" isOpen={isOpen} onClose={() => setOpen(false)}>
+          <AlarmModal />
+        </Modal>
+      )}
     </header>
   );
 }
