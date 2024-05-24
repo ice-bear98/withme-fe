@@ -58,7 +58,7 @@ export default function PostDetail() {
 
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [id, inn]);
 
   if (!data) {
     return (
@@ -95,7 +95,7 @@ export default function PostDetail() {
       await changeLike(id);
       fetchData();
     } catch (error) {
-      console.error('Error updating like status:', error);
+      console.error(error);
     }
   };
 
@@ -107,7 +107,7 @@ export default function PostDetail() {
       const isInn = await isCheck(id);
       setInn(isInn);
     } catch (error) {
-      console.error('Error checking participation status:', error);
+      console.error(error);
     }
     scrollToTop();
   };
@@ -118,7 +118,18 @@ export default function PostDetail() {
       setIng(count);
       fetchData();
     } catch (error) {
-      console.error('Error updating participation count:', error);
+      console.error(error);
+    }
+  };
+
+  const handleCancel = async (id: any) => {
+    try {
+      await cancelParticipation(id);
+      setInn(false);
+      fetchData();
+      scrollToTop();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -230,7 +241,7 @@ export default function PostDetail() {
           {inn ? (
             <button
               disabled={userId === undefined}
-              onClick={() => cancelParticipation(id)}
+              onClick={() => handleCancel(id)}
               className={`${userId === undefined ? 'bg-red-300' : 'bg-brand_1'} mt-5 w-full  p-2 rounded-2xl text-xl text-white hover:bg-red-300`}
             >
               {userId !== undefined ? (

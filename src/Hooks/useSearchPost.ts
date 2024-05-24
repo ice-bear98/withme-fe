@@ -1,11 +1,13 @@
-import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { UseQueryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
 const useSearchPost = (query: string) => {
   const URL = import.meta.env.VITE_SERVER_URL;
+  const queryClient = useQueryClient();
 
   const fetchPosts = async () => {
     const response = await axios.get(`${URL}/api/search/gathering/title?${query}`);
+    queryClient.invalidateQueries({ queryKey: [`searchPosts`] });
     return response.data.content;
   };
 
