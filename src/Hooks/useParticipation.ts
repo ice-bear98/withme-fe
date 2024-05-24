@@ -49,7 +49,7 @@ const useParticipation = () => {
   };
 
   const cancelParticipation = async (targetId: any) => {
-    const isConfirmed = confirm('정말 삭제하겠습니까?');
+    const isConfirmed = confirm('정말 취소하겠습니까?');
     if (isConfirmed) {
       const partId = myPart.find((it: any) => it.gatheringId == targetId);
 

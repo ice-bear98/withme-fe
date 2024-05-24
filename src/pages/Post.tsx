@@ -6,41 +6,49 @@ import useGetPost from '../Hooks/useGetPost';
 import useSearchPost from '../Hooks/useSearchPost';
 import Loader from '../components/common/Loader';
 
-type QueryString = { [key: string]: string };
-
 export default function Post() {
-  const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const postType = searchParams.get('range');
 
-  const { data: initialData, error: initialError, isLoading: isInitialLoading } = useGetPost();
+  const { data: allData, error: allError, isLoading: isAllLoading } = useGetPost('all');
+  const { data: eventData, error: eventError, isLoading: isEventLoading } = useGetPost('event');
+  const { data: meetingData, error: meetingError, isLoading: isMeetingLoading } = useGetPost('meeting');
   const { data: searchData, error: searchError, isLoading: isSearchLoading } = useSearchPost(searchQuery);
 
+  const [posts, setPosts] = useState<any[]>([]);
+
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-
-    const queryString: QueryString = {};
-    for (const [key, value] of searchParams.entries()) {
-      queryString[key] = value;
-    }
-
-    const { range, title, option, sort } = queryString;
-    if (!title && !option && !sort) {
-      const filterdData =
-        range === 'all' ? initialData : initialData?.filter((post: any) => post.gatheringType.toLowerCase() === range);
-      setPosts(filterdData || []);
-    } else {
+    if (searchQuery) {
       setPosts(searchData || []);
+    } else {
+      switch (postType) {
+        case 'event':
+          setPosts(eventData || []);
+          break;
+        case 'meeting':
+          setPosts(meetingData || []);
+          break;
+        case 'all':
+        default:
+          setPosts(allData || []);
+      }
     }
-  }, [initialData, searchData, location.search]);
+  }, [allData, eventData, meetingData, searchData, searchQuery, postType]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  if (isInitialLoading || isSearchLoading) return <Loader />;
-  if (initialError || searchError) return <div>데이터 에러 : {initialError?.message || searchError?.message}</div>;
-  console.log();
+  if (isAllLoading || isEventLoading || isMeetingLoading || isSearchLoading) return <Loader />;
+  if (allError || eventError || meetingError || searchError)
+    return (
+      <div>
+        데이터 에러 : {allError?.message || eventError?.message || meetingError?.message || searchError?.message}
+      </div>
+    );
+
   return (
     <div className="mb-10">
       <SearchBar onSearch={handleSearch} />
