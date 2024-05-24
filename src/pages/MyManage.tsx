@@ -35,6 +35,11 @@ export default function MyManage() {
         </div>
       </div>
       <div className="w-2/3 mx-auto my-5 md:w-full">
+        {data?.length <= 0 && (
+          <div className="w-full flex justify-center items-center bg-brand_4 h-96 rounded-2xl text-xl">
+            아직 개최한 이벤트나 모임이 없습니다
+          </div>
+        )}
         {data?.map((it: any) => <GatheringCard key={it.gatheringId} data={it} isDelete={isDelete} />)}
       </div>
     </div>
