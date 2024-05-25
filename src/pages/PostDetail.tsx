@@ -58,7 +58,7 @@ export default function PostDetail() {
 
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [id, inn]);
 
   if (!data) {
     return (
@@ -95,7 +95,7 @@ export default function PostDetail() {
       await changeLike(id);
       fetchData();
     } catch (error) {
-      console.error('Error updating like status:', error);
+      console.error(error);
     }
   };
 
@@ -107,7 +107,7 @@ export default function PostDetail() {
       const isInn = await isCheck(id);
       setInn(isInn);
     } catch (error) {
-      console.error('Error checking participation status:', error);
+      console.error(error);
     }
     scrollToTop();
   };
@@ -118,7 +118,18 @@ export default function PostDetail() {
       setIng(count);
       fetchData();
     } catch (error) {
-      console.error('Error updating participation count:', error);
+      console.error(error);
+    }
+  };
+
+  const handleCancel = async (id: any) => {
+    try {
+      await cancelParticipation(id);
+      setInn(false);
+      fetchData();
+      scrollToTop();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -129,7 +140,13 @@ export default function PostDetail() {
     });
   };
 
-  console.log('데이터 확인수정 : ', data);
+  const A = data.recruitmentEndDt;
+  const B = new Date().toDateString();
+
+  const dateA = new Date(A);
+  const dateB = new Date(B);
+
+  const isPast = dateA < dateB;
 
   return (
     <div className="mx-auto mt-5 mb-10">
@@ -227,11 +244,13 @@ export default function PostDetail() {
         <KakaoMap coords={location} />
         <p className="mt-5 text-center border-2 p-2 dark:bg-brand_3">상세주소 : {data.detailedAddress}</p>
         <div className="flex">
-          {inn ? (
+          {isPast ? (
+            <span className="bg-red-300 w-full text-center p-3 mt-5 rounded-2xl text-white">모집기간이 지났습니다</span>
+          ) : inn ? (
             <button
               disabled={userId === undefined}
-              onClick={() => cancelParticipation(id)}
-              className={`${userId === undefined ? 'bg-red-300' : 'bg-brand_1'} mt-5 w-full  p-2 rounded-2xl text-xl text-white hover:bg-red-300`}
+              onClick={() => handleCancel(id)}
+              className={`${userId === undefined ? 'bg-red-300' : 'bg-brand_1'} mt-5 w-full p-2 rounded-2xl text-xl text-white hover:bg-red-300`}
             >
               {userId !== undefined ? (
                 <div>
@@ -252,7 +271,9 @@ export default function PostDetail() {
           ) : (
             <button
               onClick={() => {
-                addParticipation(id, data.memberId, data.participantsType), handleInn(id), handleCount(id);
+                addParticipation(id, data.memberId, data.participantsType);
+                handleInn(id);
+                handleCount(id);
               }}
               className="mt-5 w-full bg-brand_2 p-2 rounded-2xl hover:bg-brand_1 text-xl text-white"
             >

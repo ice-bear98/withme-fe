@@ -6,41 +6,75 @@ import useGetPost from '../Hooks/useGetPost';
 import useSearchPost from '../Hooks/useSearchPost';
 import Loader from '../components/common/Loader';
 
-type QueryString = { [key: string]: string };
-
 export default function Post() {
-  const [posts, setPosts] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const postType = searchParams.get('range');
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [pageRange, setPageRange] = useState<number[]>([0, 1, 2, 3, 4]);
 
-  const { data: initialData, error: initialError, isLoading: isInitialLoading } = useGetPost();
+  const { data: allData, error: allError, isLoading: isAllLoading } = useGetPost('all', currentPage);
+  const { data: eventData, error: eventError, isLoading: isEventLoading } = useGetPost('event', currentPage);
+  const { data: meetingData, error: meetingError, isLoading: isMeetingLoading } = useGetPost('meeting', currentPage);
   const { data: searchData, error: searchError, isLoading: isSearchLoading } = useSearchPost(searchQuery);
 
+  const [posts, setPosts] = useState<any[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(0);
+
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-
-    const queryString: QueryString = {};
-    for (const [key, value] of searchParams.entries()) {
-      queryString[key] = value;
-    }
-
-    const { range, title, option, sort } = queryString;
-    if (!title && !option && !sort) {
-      const filterdData =
-        range === 'all' ? initialData : initialData?.filter((post: any) => post.gatheringType.toLowerCase() === range);
-      setPosts(filterdData || []);
+    if (searchQuery) {
+      setPosts(searchData?.content || []);
+      setTotalPages(searchData?.totalPages || 0);
     } else {
-      setPosts(searchData || []);
+      let data;
+      switch (postType) {
+        case 'event':
+          data = eventData;
+          break;
+        case 'meeting':
+          data = meetingData;
+          break;
+        case 'all':
+        default:
+          data = allData;
+      }
+      setPosts(data?.content || []);
+      setTotalPages(data?.totalPages || 0);
     }
-  }, [initialData, searchData, location.search]);
+    console.log('데이터 다시 불러옴');
+  }, [allData, eventData, meetingData, searchData, searchQuery, postType]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    setCurrentPage(0);
+    console.log('검색완료');
   };
 
-  if (isInitialLoading || isSearchLoading) return <Loader />;
-  if (initialError || searchError) return <div>데이터 에러 : {initialError?.message || searchError?.message}</div>;
-  console.log();
+  useEffect(() => {
+    setCurrentPage(0); // Reset to first page when postType changes
+  }, [postType]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    const middle = Math.floor(pageRange.length / 2);
+    const newRange = Array.from({ length: 5 }, (_, i) => currentPage - middle + i).filter(
+      (page) => page >= 0 && page < totalPages,
+    );
+    setPageRange(newRange);
+  }, [currentPage, totalPages]);
+
+  if (isAllLoading || isEventLoading || isMeetingLoading || isSearchLoading) return <Loader />;
+  if (allError || eventError || meetingError || searchError)
+    return (
+      <div>
+        데이터 에러 : {allError?.message || eventError?.message || meetingError?.message || searchError?.message}
+      </div>
+    );
+
   return (
     <div className="mb-10">
       <SearchBar onSearch={handleSearch} />
@@ -52,6 +86,31 @@ export default function Post() {
             posts.map((it: any) => <PostCard key={it.gatheringId} data={it} />)
           )}
         </div>
+      </div>
+      <div className="flex justify-center mt-10">
+        <button
+          onClick={() => handlePageChange(0)}
+          disabled={currentPage === 0}
+          className="px-3 py-1 mx-1 bg-brand_1 text-white"
+        >
+          처음
+        </button>
+        {pageRange.map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={`px-3 py-1 mx-1 ${page === currentPage ? 'bg-brand_2' : 'bg-brand_3'}`}
+          >
+            {page + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(totalPages - 1)}
+          disabled={currentPage === totalPages - 1}
+          className="px-3 py-1 mx-1  bg-brand_1 text-white"
+        >
+          마지막
+        </button>
       </div>
     </div>
   );
