@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useFormat from '../../Hooks/useFormat';
 
 // 알림 api 로직 다 떼어내자 너무 길다
 interface Notification {
@@ -24,6 +25,7 @@ const AlarmModal: React.FC<AlarmModalProps> = ({ initialNotifications }) => {
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const accessToken = localStorage.getItem('accessToken');
+  const { formatDate, formatTime } = useFormat();
 
   // 모든 알림
   const fetchListNotifications = async (page: number) => {
@@ -142,8 +144,7 @@ const AlarmModal: React.FC<AlarmModalProps> = ({ initialNotifications }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">알림 리스트</h2>
-      <div className="mb-4">
+      <div className="my-3 flex justify-center">
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
           onClick={handleToggleUnread}
@@ -151,16 +152,21 @@ const AlarmModal: React.FC<AlarmModalProps> = ({ initialNotifications }) => {
           {showUnread ? '모든 알림 보기' : '읽지 않은 알림 보기'}
         </button>
       </div>
+      {notifications.length <= 0 && (
+        <div className="rounded-xl bg-gray-100 w-96 p-3 text-center">읽지 않은 알림이 없습니다.</div>
+      )}
       <ul>
         {notifications.map((notification) => (
-          <li key={notification.id} className="mb-2">
+          <li key={notification.id} className="mb-5 border-2 p-3 rounded-xl">
             <div>
-              <span className={notification.readDttm ? 'text-gray-500' : 'font-semibold'}>{notification.message}</span>{' '}
-              - {notification.createdDttm}
+              <span className={notification.readDttm ? 'text-gray-800' : 'font-semibold'}>{notification.message}</span>{' '}
+              <p className="text-gray-500 text-center mt-1">
+                {formatDate(notification.createdDttm)} {formatTime(notification.createdDttm)}{' '}
+              </p>
             </div>
-            <div className="mt-1">
+            <div className="mt-3">
               <button
-                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded mr-2"
+                className="bg-green-500 hover:bg-green-600 cursor-pointer text-white font-semibold py-1 px-2 rounded mr-2"
                 onClick={() => markAsRead(notification.id)}
                 disabled={!!notification.readDttm}
               >
