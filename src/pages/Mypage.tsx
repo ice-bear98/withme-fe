@@ -29,7 +29,7 @@ export default function Mypage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {},
     reset,
     setError,
     watch,
