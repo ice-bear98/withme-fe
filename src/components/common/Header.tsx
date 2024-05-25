@@ -1,5 +1,5 @@
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoPersonCircle } from 'react-icons/io5';
 import { FaUserFriends, FaSketch, FaMagic, FaCalendarAlt } from 'react-icons/fa';
 import { AiFillAppstore } from 'react-icons/ai';
@@ -7,18 +7,14 @@ import useUserStore from '../../store/userStore';
 import ScrollTopBtn from './ScrollUpBtn';
 import ThemeButton from './ThemeBtn';
 import axios from 'axios';
-import Modal from '../../pages/modal/Modal';
-import { useState } from 'react';
-import AlarmModal from '../../pages/modal/AlarmModal';
 import useParticipation from '../../Hooks/useParticipation';
-import { useEffect } from 'react';
+import NotificationButton from './NotificationBurron';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-export default function Header() {
+const Header = () => {
   const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useUserStore();
-  const [isOpen, setOpen] = useState(false);
   const navbarStyle = "cursor-pointer font-['LINESeedKR-Bd']";
 
   const { getList } = useParticipation();
@@ -62,7 +58,7 @@ export default function Header() {
     <header className="flex-col w-full h-[90px] bg-white shadow-md dark:bg-brand_1 fixed top-0 z-50 xs:h-[130px]">
       <ScrollTopBtn />
       <div className="flex justify-center items-center py-5 space-x-14 ml:justify-evenly ml:space-x-0 s:py-2 s:justify-between xs:flex-col">
-        <Link to={'/'} className="flex items-center">
+        <Link to={'/'}>
           <h1 className="pt-1 dark:text-white text-brand_1 pb-3 rounded-xl text-4xl font-['BagelFatOne-Regular'] ml:text-3xl s:text-xl">
             With Me
           </h1>
@@ -126,17 +122,12 @@ export default function Header() {
             </li>
           </Link>
           <li>
-            <div className="text-2xl cursor-pointer" onClick={() => setOpen(true)}>
-              <HiOutlineBellAlert />
-            </div>
+            <NotificationButton />
           </li>
         </ul>
       </div>
-      {isOpen && (
-        <Modal title="알림" isOpen={isOpen} onClose={() => setOpen(false)}>
-          <AlarmModal />
-        </Modal>
-      )}
     </header>
   );
-}
+};
+
+export default Header;
