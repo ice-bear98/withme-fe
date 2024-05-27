@@ -314,18 +314,18 @@ export default function Write() {
       <h3 className="flex mb-5 items-center space-x-2 dark:text-white">
         <CiCircleInfo />
         <span>제목과 카테고리 분류를 입력해주세요.</span>
-        {errors.title && <span className="text-red-500">{errors.title.message}</span>}
-        {errors.category && <span className="text-red-500">{errors.category.message}</span>}
+        {errors.title && <span className="text-red-500 ssm:hidden">{errors.title.message}</span>}
+        {errors.category && <span className="text-red-500 ssm:hidden">{errors.category.message}</span>}
       </h3>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 최상단바 (제목, 카테고리 분류) */}
-        <div className="flex justify-around border-2 mb-5 dark:bg-brand_2">
-          <label className="py-3 font-['LINESeedKR-Bd']" htmlFor="title">
+        <div className="flex justify-around border-2 mb-5 dark:bg-brand_2 md:text-sm ssm:justify-evenly">
+          <label className="py-3 font-['LINESeedKR-Bd'] ssm:hidden" htmlFor="title">
             제목
           </label>
           <input
-            className="w-2/4 placeholder:text-center p-3 outline-none text-center"
+            className="w-2/4 placeholder:text-center p-3 outline-none text-center md:w-1/4"
             type="text"
             {...register('title', {
               required: true,
@@ -335,11 +335,11 @@ export default function Write() {
             placeholder="제목을 입력하세요"
             name="title"
           />
-          <label className="py-3 font-['LINESeedKR-Bd']" htmlFor="category">
+          <label className="py-3 font-['LINESeedKR-Bd'] ssm:hidden" htmlFor="category">
             카테고리
           </label>
           <input
-            className="placeholder:text-center p-3 outline-none text-center"
+            className="placeholder:text-center p-3 outline-none text-center md:w-1/4"
             type="text"
             {...register('category', {
               required: true,
@@ -350,7 +350,7 @@ export default function Write() {
             name="category"
           />
           <div className="flex space-x-5 items-center">
-            <label className="font-['LINESeedKR-Bd']" htmlFor="kind">
+            <label className="font-['LINESeedKR-Bd'] ssm:hidden" htmlFor="kind">
               분류를 골라주세요
             </label>
             <select
@@ -370,12 +370,14 @@ export default function Write() {
         <h3 className="flex mt-8 items-center space-x-2 dark:text-white">
           <CiCircleInfo />
           <span>대표로 노출되는 썸네일 이미지와 설정을 입력해주세요.</span>
-          {errors.maximumParticipant && <p className="text-red-500 text-center">{errors.maximumParticipant.message}</p>}
-          {errors.fee && <p className="text-red-500 text-center">{errors.fee.message}</p>}
+          {errors.maximumParticipant && (
+            <p className="text-red-500 text-center ssm:hidden">{errors.maximumParticipant.message}</p>
+          )}
+          {errors.fee && <p className="text-red-500 text-center ssm:hidden">{errors.fee.message}</p>}
         </h3>
 
-        <div className="flex justify-between space-x-5 mt-8">
-          <div className="flex justify-center items-center border-2 w-1/2 h-96 relative">
+        <div className="flex justify-between space-x-5 mt-8 md:flex-col ml:space-x-0">
+          <div className="flex justify-center items-center border-2 w-1/2 h-96 relative md:w-full">
             <label htmlFor="title_img">
               <FaPlusCircle
                 className={`cursor-pointer w-12 h-12 text-brand_1
@@ -388,10 +390,13 @@ export default function Write() {
             {images[0] && <img src={images[0]} className="w-full h-full object-cover" />}
           </div>
 
-          <div className="flex-col content-center space-y-3 w-1/2 h-96">
+          <div className="flex-col content-center space-y-3 w-1/2 h-96 md:w-full md:h-auto md:mt-5">
             <div className="flex justify-center items-center p-2 border-2 dark:bg-gray-300 dark:border-none">
-              <label htmlFor="date_st" className="mr-2 font-['LINESeedKR-Bd']">
+              <label htmlFor="date_st" className="mr-2 font-['LINESeedKR-Bd'] ssm:hidden">
                 모집 시작일
+              </label>
+              <label htmlFor="date_st" className="mr-2 font-['LINESeedKR-Bd'] hidden ssm:block">
+                모집
               </label>
               <input
                 className="text-center px-1"
@@ -401,8 +406,11 @@ export default function Write() {
                   required: true,
                 })}
               />
-              <label htmlFor="date_ed" className="ml-2 mr-2 font-['LINESeedKR-Bd']">
+              <label htmlFor="date_ed" className="ml-2 mr-2 font-['LINESeedKR-Bd'] ssm:hidden">
                 모집 마감일
+              </label>
+              <label htmlFor="date_ed" className="ml-2 mr-2 font-['LINESeedKR-Bd'] hidden ssm:block">
+                마감
               </label>
               <input
                 className="text-center px-1"
@@ -534,9 +542,9 @@ export default function Write() {
           <CiImageOn />
           <span>관련 이미지를 등록하여 관심도를 높이세요.</span>
         </h3>
-        <div className="flex space-x-5 mt-5">
+        <div className="flex space-x-5 mt-5 md:flex-col md:space-x-0 md:space-y-5">
           {[1, 2, 3].map((index) => (
-            <div key={index} className="flex justify-center items-center border-2 w-1/2 h-96 relative">
+            <div key={index} className="flex justify-center items-center border-2 w-1/2 h-96 relative md:w-full">
               <label htmlFor={`sub_img${index}`}>
                 <FaPlusCircle
                   className={`cursor-pointer w-12 h-12 text-brand_1 ${
@@ -564,7 +572,7 @@ export default function Write() {
         <h3 className="flex mt-5 items-center space-x-2 dark:text-white">
           <CiPen />
           <span>주최하는 모임 및 이벤트 내용에 대해 설명해주세요.</span>
-          {errors.content && <p className="text-red-500">{errors.content.message}</p>}
+          {errors.content && <p className="text-red-500 ssm:ssm:hidden">{errors.content.message}</p>}
         </h3>
         <div className="border-2 mt-5 p-4 dark:bg-white dark:border-none">
           <textarea
@@ -600,7 +608,9 @@ export default function Write() {
               })}
             />
           </div>
-          {errors.detailedAddress && <p className="text-red-500 text-center mb-5">{errors.detailedAddress.message}</p>}
+          {errors.detailedAddress && (
+            <p className="text-red-500 text-center mb-5 ssm:hidden">{errors.detailedAddress.message}</p>
+          )}
         </div>
 
         {/* 최하단바 (등록버튼) */}

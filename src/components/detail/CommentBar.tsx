@@ -207,7 +207,7 @@ export default function CommentBar() {
       </div>
       <div className="flex justify-center space-x-2">{renderPageNumbers()}</div>
       {comments.map((comment: any) => (
-        <div key={comment.id}>
+        <div key={comment.id} className="w-full">
           <div className="bg-gray-200 py-2 px-5 flex items-center justify-between rounded-tl-lg rounded-tr-lg dark:bg-slate-400">
             <span className="flex items-center space-x-2">
               <img
@@ -215,14 +215,14 @@ export default function CommentBar() {
                 alt="유저 프로필"
                 className="w-9 h-9 rounded-full object-cover"
               />
-              <b>{comment.nickName} </b>
+              <b className="ml:text-sm">{comment.nickName} </b>
             </span>
-            <div>
+            <div className="ml:text-sm">
               {formatDate(comment.updatedDttm)} {formatTime(comment.updatedDttm)} 작성
             </div>
           </div>
 
-          <div className="flex justify-between bg-gray-100 py-2 px-5 rounded-bl-lg rounded-br-lg dark:bg-slate-500 dark:text-white">
+          <div className="flex justify-between bg-gray-100 py-2 px-5 rounded-bl-lg rounded-br-lg dark:bg-slate-500 dark:text-white ml:flex-col">
             {editStates[comment.id] ? (
               <input
                 className="w-4/5 border-2 border-brand_1 dark:text-black dark:bg-gray-200"
@@ -231,11 +231,11 @@ export default function CommentBar() {
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{comment.commentContent} </p>
+              <p className="overflow-scroll">{comment.commentContent} </p>
             )}
 
             {comment.nickName === userName && (
-              <div className="space-x-5">
+              <div className="space-x-5 ml:mt-3">
                 {editStates[comment.id] ? (
                   <button className="px-2 rounded-lg bg-brand_3 dark:text-black" onClick={() => handleEdit(comment.id)}>
                     저장
