@@ -56,7 +56,7 @@ export default function Mypage() {
     }, 1000);
   };
 
-  // ?
+  // ? ?
 
   const handleNicknameChange = async (data: any) => {
     if (nicknameAvailable === true && user?.memberId) {
