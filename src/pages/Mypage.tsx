@@ -14,12 +14,14 @@ import useFormat from '../Hooks/useFormat';
 import useParticipation from '../Hooks/useParticipation';
 import defaultImg from '../assets/default_profile.jpg';
 import useLike from '../Hooks/useLikes';
+import PaymentModal from './modal/PaymentModal';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
 export default function Mypage() {
   const { user, setUser } = useUserStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isPhone, setIsPhone] = useState(false);
+  const [isPay, setIsPay] = useState(false);
   const [image, setImage] = useState(user?.profileImg || defaultImg);
   const [editMode, setEditMode] = useState(false);
   const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null);
@@ -43,8 +45,15 @@ export default function Mypage() {
   const { getList } = useParticipation();
   const { getLikes } = useLike();
 
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
+  const togglePhone = () => {
+    setIsPhone(!isPhone);
+  };
+
+  const togglePay = () => {
+    setIsPay(true);
+    setTimeout(() => {
+      setIsPay(false);
+    }, 1000);
   };
 
   const handleNicknameChange = async (data: any) => {
@@ -243,7 +252,10 @@ export default function Mypage() {
               {user.isCertification ? (
                 <span className="flex px-2 items-center  bg-yellow-200 rounded-xl text-sm">인증완료</span>
               ) : (
-                <button onClick={() => setIsOpen(true)} className="px-2 bg-sky-100 rounded-xl text-sm hover:bg-sky-200">
+                <button
+                  onClick={() => setIsPhone(true)}
+                  className="px-2 bg-sky-100 rounded-xl text-sm hover:bg-sky-200"
+                >
                   핸드폰 인증
                 </button>
               )}
@@ -259,6 +271,13 @@ export default function Mypage() {
             </p>
             <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
               멤버 등급 : <span className="ml-1 bg-brand_3 px-2 rounded-lg">{user.membership}</span>
+              <button
+                onClick={() => togglePay()}
+                className="bg-brand_1 px-2 ml-2 rounded-xl text-white hover:bg-brand_2"
+              >
+                멤버쉽 결제
+              </button>
+              {isPay && <PaymentModal />}
             </p>
             <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
               가입 경로 :<span className="ml-1 bg-brand_3 px-2 rounded-lg">{user.signupPath}</span>
@@ -267,7 +286,7 @@ export default function Mypage() {
               성별 : {genderText}
             </p>
             <div className="absolute top-96 right-0 flex justify-center items-start space-x-3">
-              <Modal title="휴대폰 인증" isOpen={isOpen} onClose={toggleModal}>
+              <Modal title="휴대폰 인증" isOpen={isPhone} onClose={togglePhone}>
                 <PhoneCertificationModal />
               </Modal>
             </div>

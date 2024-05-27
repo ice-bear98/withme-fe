@@ -192,35 +192,46 @@ export default function PostDetail() {
           {data.gatheringType === 'MEETING' ? '모임' : '이벤트'}
         </span>
       </h1>
-      <div className="flex justify-between mt-5 h-[450px]">
+      <div className="flex justify-between mt-5 h-[450px] ml:flex-col ml:h-auto">
         <img
-          className="bg-slate-200 min-w-[830px] max-w-[850px]  object-cover"
+          className="bg-slate-200 min-w-[830px] max-w-[850px] object-cover ml:min-w-full max-h-[450px]"
           src={data.mainImg?.length <= 0 ? noImg : data.mainImg}
           alt="썸네일 이미지"
         />
-        <ul className="max-w-2/4 text-center space-y-3 my-auto">
-          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">
+        <ul className="max-w-2/4 text-center space-y-3 my-auto ml:mt-3 ml:w-full ml:space-y-0 ml:text-start">
+          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl ml:bg-brand_4 ml:rounded-none ml:pl-10 ml:border-white">
             모집기간 : {data.recruitmentStartDt} ~ {data.recruitmentEndDt} 까지
           </li>
-          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">모집장소 : {data.address}</li>
-          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">모임날짜 : {formatDate(data.day)}</li>
-          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">모임시간 : {formatTime(data.time)}</li>
-          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">모집인원 : {data.maximumParticipant} 명</li>
-          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">참가비용 : {data.fee} 원</li>
-          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">
+          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl ml:bg-brand_4 ml:rounded-none ml:pl-10 ml:border-white">
+            모집장소 : {data.address}
+          </li>
+          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl ml:bg-brand_4 ml:rounded-none ml:pl-10 ml:border-white">
+            모임날짜 : {formatDate(data.day)}
+          </li>
+          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl ml:bg-brand_4 ml:rounded-none ml:pl-10 ml:border-white">
+            모임시간 : {formatTime(data.time)}
+          </li>
+          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl ml:bg-brand_4 ml:rounded-none ml:pl-10 ml:border-white">
+            모집인원 : {data.maximumParticipant} 명
+          </li>
+          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl ml:bg-brand_4 ml:rounded-none ml:pl-10 ml:border-white">
+            참가비용 : {data.fee} 원
+          </li>
+          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl ml:bg-brand_4 ml:rounded-none ml:pl-10 ml:border-white">
             신청방법 : {data.participantSelectionMethod === 'FIRST_COME' ? '선착순' : '신청선별'}
           </li>
-          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl">
+          <li className="bg-white p-1 border-2 border-brand_1 rounded-xl ml:border-white ml:rounded-none ml:pl-10 ml:bg-brand_2">
             나이제한 : {getLimited(data.participantsType)}
           </li>
           <li
-            className={`${isMax(ing) ? 'bg-red-300 border-slate-200 text-white' : 'bg-brand_3'} p-1 border-2 border-brand_1 rounded-xl`}
+            className={`${isMax(ing) ? 'bg-red-300 border-slate-200 text-white' : 'bg-brand_3'} p-1 border-2 border-brand_1 rounded-xl ml:border-white ml:rounded-none ml:pl-10`}
           >
             {isMax(ing) ? '신청 인원 마감' : `신청 가능 ( ${ing} / ${data.maximumParticipant} )`}
           </li>
         </ul>
       </div>
-      <div className="flex mt-5 justify-between">
+
+      <div className="flex mt-5 justify-between ml:overflow-x-scroll ml:gap-4">
         <img
           className="bg-green-300 w-[380px] h-96 object-cover"
           src={data.subImg1.length <= 0 ? noImg : data.subImg1}

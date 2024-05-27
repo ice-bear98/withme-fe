@@ -2,23 +2,21 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
-const useGetPost = (range: any, page = 0, size = 10) => {
+const useGetPost = (range: any) => {
   const URL = import.meta.env.VITE_SERVER_URL;
 
   const fetchPosts = async () => {
     const queryParams = {
-      size,
-      page,
+      size: 10,
       range,
     };
     try {
       const response = await axios.get(`${URL}/api/gathering/list`, {
         params: queryParams,
       });
-      return {
-        content: response.data.content,
-        totalPages: response.data.totalPages,
-      };
+      console.log(`${range} 게시글 통신 :`, response.data.content);
+
+      return response.data.content;
     } catch (error) {
       console.error(`${range} 게시글 로드 실패:`, error);
       throw error;
@@ -26,7 +24,7 @@ const useGetPost = (range: any, page = 0, size = 10) => {
   };
 
   const queryOption: UseQueryOptions<any, Error> = {
-    queryKey: ['posts', range, page, size],
+    queryKey: ['posts', range],
     queryFn: fetchPosts,
     staleTime: 2 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
