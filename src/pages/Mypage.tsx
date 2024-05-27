@@ -270,13 +270,20 @@ export default function Mypage() {
               생년월일 : {user.birthDate}
             </p>
             <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
-              멤버 등급 : <span className="ml-1 bg-brand_3 px-2 rounded-lg">{user.membership}</span>
-              <button
-                onClick={() => togglePay()}
-                className="bg-brand_1 px-2 ml-2 rounded-xl text-white hover:bg-brand_2"
+              멤버 등급 :{' '}
+              <span
+                className={`ml-1  px-2 rounded-lg ${user.membership === 'PREMIUM' ? 'bg-brand_1 text-white' : 'bg-brand_3'}`}
               >
-                멤버쉽 결제
-              </button>
+                {user.membership}
+              </span>
+              {user.membership !== 'PREMIUM' && (
+                <button
+                  onClick={() => togglePay()}
+                  className="bg-brand_1 px-2 ml-2 rounded-xl text-white hover:bg-brand_2"
+                >
+                  멤버쉽 결제
+                </button>
+              )}
               {isPay && <PaymentModal />}
             </p>
             <p className="flex justify-center bg-white rounded-md text-black py-1 px-5 placeholder-brand_2 placeholder:text-center font-sans">
