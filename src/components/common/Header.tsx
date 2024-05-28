@@ -32,7 +32,7 @@ const Header = () => {
         {},
         {
           headers: {
-            Authorization: `${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       );
@@ -116,14 +116,14 @@ const Header = () => {
           <li className="text-xl pt-1.5">
             <ThemeButton />
           </li>
+          <li className="text-3xl">
+            <NotificationButton />
+          </li>
           <Link to={`/mypage/${user?.memberId}`}>
-            <li className="text-2xl">
+            <li className="pl-3 text-4xl cursor-pointer s:text-3xl">
               <IoPersonCircle />
             </li>
           </Link>
-          <li>
-            <NotificationButton />
-          </li>
         </ul>
       </div>
     </header>

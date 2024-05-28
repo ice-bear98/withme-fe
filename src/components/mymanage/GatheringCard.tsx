@@ -10,6 +10,8 @@ import Modal from '../../pages/modal/Modal';
 import useFormat from '../../Hooks/useFormat';
 import useParticipation from '../../Hooks/useParticipation';
 import useWrite from '../../Hooks/useWrite';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface GatheringCardProps {
   data: any;
@@ -20,6 +22,9 @@ const GatheringCard: React.FC<GatheringCardProps> = ({ data, isDelete }) => {
   const [isOpen, setOpen] = useState(false);
   const { formatDate, formatTime } = useFormat();
   const [count, setCount] = useState<any>();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const URL = import.meta.env.VITE_SERVER_URL;
 
   const { getCount } = useParticipation();
   const { goEdit } = useWrite();
@@ -40,6 +45,27 @@ const GatheringCard: React.FC<GatheringCardProps> = ({ data, isDelete }) => {
     if (type === 'ADULT') return '성인';
     if (type === 'MINOR') return '미성년';
     return '나이제한 없음';
+  };
+
+  const handleCreateChatroom = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      setLoading(true);
+      const response = await axios.post(`${URL}/api/chatroom`, null, {
+        headers: { Authorization: accessToken },
+        params: { gatheringid: data.gatheringId },
+      });
+      console.log('Chatroom created:', response.data);
+      navigate(`/chat/${data.gatheringid}`, { state: { gatheringData: data } });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response ? error.response.data : error.message);
+      } else {
+        console.error('Unexpected error:', (error as Error).message);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const isMethod = (method: string) => (method === 'FIRST_COME' ? '선착순 참여' : '신청선별 참여');
@@ -102,9 +128,15 @@ const GatheringCard: React.FC<GatheringCardProps> = ({ data, isDelete }) => {
                   <span className="ml-2 bg-green-400 px-3 text-lg rounded-2xl text-white ss:text-sm">모집완료</span>
                 )}
               </p>
-              <button className="flex items-center bg-brand_1 text-white px-2 py-1 rounded-lg ss:mr-3 hover:bg-slate-400 hover:text-white">
+              <button
+                onClick={handleCreateChatroom}
+                className={`flex items-center bg-brand_1 text-white px-2 py-1 rounded-lg ss:mr-3 hover:bg-slate-400 hover:text-white ${
+                  loading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={loading}
+              >
                 <BsChatQuoteFill className="mr-1" />
-                채팅방 개설하기
+                {loading ? '생성 중...' : '채팅방 개설하기'}
               </button>
             </div>
           </div>

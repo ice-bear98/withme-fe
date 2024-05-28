@@ -43,7 +43,6 @@ const router = createBrowserRouter([
           { path: '/myfollow/:id', element: <MyFollow /> },
           { path: '/write', element: <Write /> },
           { path: '/write/:id', element: <Write /> },
-          { path: '/write/:id', element: <Chat /> },
         ],
       },
     ],
