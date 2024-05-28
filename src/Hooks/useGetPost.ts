@@ -7,7 +7,7 @@ const useGetPost = (range: any) => {
 
   const fetchPosts = async () => {
     const queryParams = {
-      size: 10,
+      size: 100,
       range,
     };
     try {

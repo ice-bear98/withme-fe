@@ -5,6 +5,7 @@ import SearchBar from '../components/post/SearchBar';
 import useGetPost from '../Hooks/useGetPost';
 import useSearchPost from '../Hooks/useSearchPost';
 import Loader from '../components/common/Loader';
+import { all } from 'axios';
 
 export default function Post() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -33,9 +34,24 @@ export default function Post() {
         case 'all':
         default:
           setPosts(allData || []);
+          break;
       }
     }
-  }, [allData, eventData, meetingData, searchData, searchQuery, postType]);
+  }, [allData, eventData, meetingData, searchData, searchQuery]);
+
+  useEffect(() => {
+    switch (postType) {
+      case 'event':
+        setPosts(eventData || []);
+        break;
+      case 'meeting':
+        setPosts(meetingData || []);
+        break;
+      case 'all':
+      default:
+        setPosts(allData || []);
+    }
+  }, [postType]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
