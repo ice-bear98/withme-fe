@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import useFormat from '../../Hooks/useFormat';
 
-// 알림 api 로직 다 떼어내자 너무 길다
 interface Notification {
   id: number;
   message: string;
@@ -20,7 +19,6 @@ const AlarmModal: React.FC<AlarmModalProps> = ({ initialNotifications }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [showUnread, setShowUnread] = useState(false);
-  const [unreadPage, setUnreadPage] = useState(0);
   const [listPage, setListPage] = useState(0);
   const URL = import.meta.env.VITE_SERVER_URL;
 

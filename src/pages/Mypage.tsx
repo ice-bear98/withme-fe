@@ -30,14 +30,7 @@ export default function Mypage() {
   const [myLikeList, setMyLikeList] = useState<any>();
   const [chatroomList, setChatroomList] = useState<any[]>([]);
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: {},
-    reset,
-    setError,
-    watch,
-  } = useForm({
+  const { register, handleSubmit, reset, setError, watch } = useForm({
     defaultValues: {
       nickName: user?.nickName,
     },
@@ -58,12 +51,6 @@ export default function Mypage() {
     }, 1000);
   };
 
-  // ? ?
-
-  useEffect(() => {
-    fetchChatroomList();
-  }, []);
-
   const fetchChatroomList = async () => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -73,8 +60,10 @@ export default function Mypage() {
         },
       });
       console.log(res.data.content);
+
       if (res.status === 200) {
         setChatroomList(res.data.content);
+        console.log(res.data.content);
       } else {
         console.error('채팅방 목록을 가져오지 못했습니다:', res.statusText);
       }
@@ -194,13 +183,13 @@ export default function Mypage() {
 
       const likeList = await getLikes();
       setMyLikeList(likeList);
+      fetchChatroomList();
     };
     fetchData();
   }, []);
 
   const handleChatroomClick = (roomId: number) => {
-    console.log(roomId);
-    navigate(`/chat/${roomId}`, { state: { roomId: roomId } });
+    navigate(`/chat/${roomId}`, { state: { roomId } });
   };
 
   const genderText =
@@ -356,11 +345,11 @@ export default function Mypage() {
       <div className="flex space-x-3 custom-scrollbar overflow-x-auto">
         {chatroomList.map((chatroom: any, index: number) => (
           <div
-            onClick={() => handleChatroomClick(chatroomList.chatroomId)}
+            onClick={() => handleChatroomClick(chatroom.chatroomId)}
             key={index}
             className="min-w-72 min-h-64 bg-brand_3"
           >
-            <p className="text-center">{chatroom.title}</p>
+            <p>{chatroom.title}</p>
           </div>
         ))}
       </div>

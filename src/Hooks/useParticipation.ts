@@ -20,11 +20,11 @@ const useParticipation = () => {
     } else if (user.user?.isCertification === false) {
       alert('마이페이지에서 휴대폰 인증 후 신청가능합니다');
       return;
-    } else if (memberId === user.user.memberId) {
+    } else if (memberId === user?.user?.memberId) {
       alert('본인의 모집에 본인이 참여신청을 할 수는 없습니다');
-    } else if (participantsType === 'ADULT' && calculateAge(user.user.birthDate) < 19) {
+    } else if (participantsType === 'ADULT' && calculateAge(user?.user?.birthDate) < 19) {
       alert('성인 제한 모임입니다');
-    } else if (participantsType === 'MINOR' && calculateAge(user.user.birthDate) >= 19) {
+    } else if (participantsType === 'MINOR' && calculateAge(user?.user?.birthDate) >= 19) {
       alert('미성년자 제한 모임입니다.');
     }
 
