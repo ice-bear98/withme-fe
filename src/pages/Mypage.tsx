@@ -15,6 +15,7 @@ import useParticipation from '../Hooks/useParticipation';
 import defaultImg from '../assets/default_profile.jpg';
 import useLike from '../Hooks/useLikes';
 import PaymentModal from './modal/PaymentModal';
+import { useNavigate } from 'react-router-dom';
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
@@ -27,7 +28,8 @@ export default function Mypage() {
   const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null);
   const [myAppList, setMyAppList] = useState<any>();
   const [myLikeList, setMyLikeList] = useState<any>();
-
+  const [chatroomList, setChatroomList] = useState<any[]>([]);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -57,6 +59,29 @@ export default function Mypage() {
   };
 
   // ? ?
+
+  useEffect(() => {
+    fetchChatroomList();
+  }, []);
+
+  const fetchChatroomList = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await axios.get(`${URL}/api/chatroom/my-list`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(res.data.content);
+      if (res.status === 200) {
+        setChatroomList(res.data.content);
+      } else {
+        console.error('채팅방 목록을 가져오지 못했습니다:', res.statusText);
+      }
+    } catch (error) {
+      console.error('채팅방 목록을 가져오지 못했습니다:', error);
+    }
+  };
 
   const handleNicknameChange = async (data: any) => {
     if (nicknameAvailable === true && user?.memberId) {
@@ -93,7 +118,7 @@ export default function Mypage() {
       const token = localStorage.getItem('accessToken');
       const res = await axios.get(`${URL}/api/member/check/nickname?nickname=${nickname}`, {
         headers: {
-          Authorization: `${token}`,
+          Authorization: token,
         },
       });
 
@@ -119,7 +144,7 @@ export default function Mypage() {
       const res = await axios.put(`${URL}/api/member/profile_img`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `${token}`,
+          Authorization: token,
         },
       });
 
@@ -139,7 +164,7 @@ export default function Mypage() {
       const token = localStorage.getItem('accessToken');
       const res = await axios.get(`${URL}/api/member/detail`, {
         headers: {
-          Authorization: `${token}`,
+          Authorization: token,
         },
       });
 
@@ -173,8 +198,10 @@ export default function Mypage() {
     fetchData();
   }, []);
 
-  console.log(myAppList);
-  console.log(myLikeList);
+  const handleChatroomClick = (roomId: number) => {
+    console.log(roomId);
+    navigate(`/chat/${roomId}`, { state: { roomId: roomId } });
+  };
 
   const genderText =
     user?.gender === 'MALE' ? (
@@ -327,10 +354,15 @@ export default function Mypage() {
         <RiMessage3Fill className="mr-2 text-2xl" />내 참여 채팅방 목록
       </div>
       <div className="flex space-x-3 custom-scrollbar overflow-x-auto">
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
-        <div className="min-w-72 min-h-64 bg-brand_3">아이템 카드</div>
+        {chatroomList.map((chatroom: any, index: number) => (
+          <div
+            onClick={() => handleChatroomClick(chatroomList.chatroomId)}
+            key={index}
+            className="min-w-72 min-h-64 bg-brand_3"
+          >
+            <p className="text-center">{chatroom.title}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
