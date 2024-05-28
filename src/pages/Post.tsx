@@ -5,7 +5,6 @@ import SearchBar from '../components/post/SearchBar';
 import useGetPost from '../Hooks/useGetPost';
 import useSearchPost from '../Hooks/useSearchPost';
 import Loader from '../components/common/Loader';
-import { all } from 'axios';
 
 export default function Post() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -13,9 +12,27 @@ export default function Post() {
   const searchParams = new URLSearchParams(location.search);
   const postType = searchParams.get('range');
 
-  const { data: allData, error: allError, isLoading: isAllLoading } = useGetPost('all');
-  const { data: eventData, error: eventError, isLoading: isEventLoading } = useGetPost('event');
-  const { data: meetingData, error: meetingError, isLoading: isMeetingLoading } = useGetPost('meeting');
+  const {
+    data: allData,
+    error: allError,
+    isLoading: isAllLoading,
+    handleMore: handleMoreAll,
+    defaultMore: defaultMoreAll,
+  } = useGetPost('all');
+  const {
+    data: eventData,
+    error: eventError,
+    isLoading: isEventLoading,
+    handleMore: handleMoreEvent,
+    defaultMore: defaultMoreEvent,
+  } = useGetPost('event');
+  const {
+    data: meetingData,
+    error: meetingError,
+    isLoading: isMeetingLoading,
+    handleMore: handleMoreMeeting,
+    defaultMore: defaultMoreMeeting,
+  } = useGetPost('meeting');
   const { data: searchData, error: searchError, isLoading: isSearchLoading } = useSearchPost(searchQuery);
 
   const [posts, setPosts] = useState<any[]>([]);
@@ -37,19 +54,32 @@ export default function Post() {
           break;
       }
     }
-  }, [allData, eventData, meetingData, searchData, searchQuery]);
+  }, [allData, eventData, meetingData, searchData, searchQuery, postType]);
+
+  const setDefaultMore = () => {
+    if (postType === 'all') {
+      defaultMoreAll();
+    } else if (postType === 'event') {
+      defaultMoreEvent();
+    } else if (postType === 'meeting') {
+      defaultMoreMeeting();
+    }
+  };
 
   useEffect(() => {
     switch (postType) {
       case 'event':
         setPosts(eventData || []);
+        setDefaultMore();
         break;
       case 'meeting':
         setPosts(meetingData || []);
+        setDefaultMore();
         break;
       case 'all':
       default:
         setPosts(allData || []);
+        setDefaultMore();
     }
   }, [postType]);
 
@@ -65,6 +95,16 @@ export default function Post() {
       </div>
     );
 
+  const handleClick = () => {
+    if (postType === 'all') {
+      handleMoreAll();
+    } else if (postType === 'event') {
+      handleMoreEvent();
+    } else if (postType === 'meeting') {
+      handleMoreMeeting();
+    }
+  };
+
   return (
     <div className="mb-10">
       <SearchBar onSearch={handleSearch} />
@@ -76,6 +116,11 @@ export default function Post() {
             posts.map((it: any) => <PostCard key={it.gatheringId} data={it} />)
           )}
         </div>
+      </div>
+      <div className="w-full flex justify-center mt-10">
+        <button className="w-2/3 p-2 bg-brand_3 rounded-3xl hover:bg-brand_2" onClick={handleClick}>
+          더 보기
+        </button>
       </div>
     </div>
   );
