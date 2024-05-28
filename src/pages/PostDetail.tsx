@@ -18,7 +18,7 @@ import useLike from '../Hooks/useLikes';
 
 export default function PostDetail() {
   const [data, setData] = useState<any>(null);
-  const [status, setStatus] = useState<string>('');
+  const [_, setStatus] = useState<string>('');
   const [location, setLocation] = useState<any>({ lat: '', lng: '' });
   const [ing, setIng] = useState<number>(0);
   const [inn, setInn] = useState<boolean>(false);

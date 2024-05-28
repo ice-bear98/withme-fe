@@ -95,7 +95,7 @@ const useWrite = () => {
   /** 게시글 수정 */
   const editPost = async (data: any, img: any, id: string) => {
     try {
-      const res = await axios.put(
+      await axios.put(
         `${URL}/api/gathering/${id}`,
         {
           title: data.title,
