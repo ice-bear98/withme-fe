@@ -1,21 +1,33 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 const useGetPost = (range: any) => {
   const URL = import.meta.env.VITE_SERVER_URL;
 
+  const [more, setMore] = useState<number>(10);
+  const [totalElements, setTotalElements] = useState<number>(0);
+
+  const handleMore = () => {
+    setMore(more + 10);
+  };
+
+  console.log(totalElements);
+
+  const defaultMore = () => {
+    setMore(10);
+  };
+
   const fetchPosts = async () => {
     const queryParams = {
-      size: 100,
+      size: more,
       range,
     };
     try {
       const response = await axios.get(`${URL}/api/gathering/list`, {
         params: queryParams,
       });
-      console.log(`${range} 게시글 통신 :`, response.data.content);
-
+      setTotalElements(response.data.totalElements);
       return response.data.content;
     } catch (error) {
       console.error(`${range} 게시글 로드 실패:`, error);
@@ -38,7 +50,7 @@ const useGetPost = (range: any) => {
     }
   }, [error]);
 
-  return { data, error, isLoading, fetchPosts };
+  return { data, error, isLoading, fetchPosts, handleMore, defaultMore };
 };
 
 export default useGetPost;
