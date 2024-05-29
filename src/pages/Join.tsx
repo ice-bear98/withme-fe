@@ -101,8 +101,8 @@ export default function Join() {
                   message: '이메일 형식에 맞춰 작성해주세요',
                 },
                 maxLength: {
-                  value: 20,
-                  message: '20글자 미만 작성해주세요',
+                  value: 30,
+                  message: '30글자 미만 작성해주세요',
                 },
               })}
               type="email"

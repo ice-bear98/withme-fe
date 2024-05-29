@@ -68,9 +68,9 @@ export default function AppList({ data, acceptApp, cancelApp }: any) {
             >
               {isGender(data.gender)}
             </span>
-            <span className={`${myStatusClass(data.status)} py-1 px-2 rounded-xl dark:text-black`}>
+            {/* <span className={`${myStatusClass(data.status)} py-1 px-2 rounded-xl dark:text-black`}>
               {myStatusText(data.status)}
-            </span>
+            </span> */}
             <button
               onClick={() => acceptApp(data.id)}
               className={`py-2 px-3 rounded-lg dark:text-black ${
